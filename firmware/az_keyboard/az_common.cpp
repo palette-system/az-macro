@@ -370,6 +370,8 @@ void AzCommon::get_keyboard_type_int() {
         keyboard_type_int = 1;
     } else if (t.equals("az_macro_foot")) {
         keyboard_type_int = 2;
+    } else if (t.equals("az_macro_foot_r")) {
+        keyboard_type_int = 3;
     }
 }
 
@@ -482,8 +484,8 @@ void AzCommon::pin_setup() {
 
 // キー入力ピン初期化のキーボード別の処理
 void AzCommon::pin_setup_sub_process() {
-    if (keyboard_type_int == 2) {
-        // 踏みキー
+    if (keyboard_type_int == 3) {
+        // 踏みキー(反転)
         pinMode(27, INPUT_PULLUP);
     }
 }
@@ -605,8 +607,8 @@ void AzCommon::key_read(void) {
 
 // キーボード別の後処理
 void AzCommon::key_read_sub_process(void) {
-    if (keyboard_type_int == 2) {
-        // 踏みキー
+    if (keyboard_type_int == 3) {
+        // 踏みキー(反転)
         if (digitalRead(27) == 0) {
             // ジャックが刺されている間はON/OFF を反転
             input_key[8] = ! input_key[8];

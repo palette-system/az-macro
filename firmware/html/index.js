@@ -162,6 +162,56 @@ mst.key_pattern_list["az_macro_foot"] = {
     ]
 };
 
+// AZ macro 踏みボタン(反転)
+mst.key_pattern_list["az_macro_foot_r"] = {
+    "name": "AZ Macro 踏みキー(反転)",
+    "pin": {
+        "row": [],
+        "col": [],
+        "direct": [23, 22, 21, 19, 16, 17, 5, 18, 25, 26],
+        "touch": []
+    },
+    "size": {"width": 600, "height": 560},
+    "keys": [
+        {"id": 0, "x": 11, "y": 35, "width": 115, "height": 115 },
+        {"id": 1, "x": 163, "y": 35, "width": 115, "height": 115 },
+        {"id": 2, "x": 317, "y": 35, "width": 115, "height": 115 },
+        {"id": 3, "x": 471, "y": 35, "width": 115, "height": 115 },
+        {"id": 4, "x": 11, "y": 188, "width": 115, "height": 115 },
+        {"id": 5, "x": 163, "y": 188, "width": 115, "height": 115 },
+        {"id": 6, "x": 317, "y": 188, "width": 115, "height": 115 },
+        {"id": 7, "x": 471, "y": 188, "width": 115, "height": 115 },
+        {"id": 8, "x": 140, "y": 380, "width": 110, "height": 150 },
+        {"id": 9, "x": 340, "y": 380, "width": 110, "height": 150 }
+    ],
+    "parts": [
+        {
+            "type": "polygon",
+            "fill_color": "#666",
+            "fill": true, // 塗りつぶし
+            "path": [[2,2], [598,2], [598,338], [2,338]]
+        },
+        {
+            "type": "polygon",
+            "line_width": 4,
+            "line_color": "black",
+            "path": [[2,2], [598,2], [598,338], [2,338]]
+        },
+        {
+            "type": "polygon",
+            "fill_color": "#666",
+            "fill": true, // 塗りつぶし
+            "path": [[120,360], [480,360], [480,550], [120,550]]
+        },
+        {
+            "type": "polygon",
+            "line_width": 4,
+            "line_color": "black",
+            "path": [[120,360], [480,360], [480,550], [120,550]]
+        },
+    ]
+};
+
 
 // キーのボタンリスト
 mst.key_list = [
@@ -1251,7 +1301,7 @@ mst.view_keytype_setting = function(select_type) {
     s += "<b style='font-size: 30px;'>キーボードの種類設定</b><br><br><br><br>";
     if (!select_type) select_type = mst.setting_data.keyboard_type;
     s += "　　<b style='font-size: 32px;'>" + mst.key_pattern_list[select_type].name + "</b>";
-    s += "<div style='text-align: right;padding: 0 50px;'><a href='#' class='update_button' onClick='javascript:mst.keytype_select(\""+select_type+"\"); return false;'>変更</a></div>";
+    s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' class='update_button' onClick='javascript:mst.keytype_select(\""+select_type+"\"); return false;'>変更</a></div>";
     s += "<br><br><br><br><br><br>";
     s += "<center><div id='wifi_setting_btn_box'>";
     s += "<a href='#' class='button' onClick='javascript:mst.keytype_setting_btn_click(1, \""+select_type+"\");return false;'>決定</a>　　";
