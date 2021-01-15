@@ -8,12 +8,13 @@
 
 - [作成マニュアル](/docs/az-macro-create-manual.pdf)
 - [設定マニュアル](/docs/az-macro-setting-manual.pdf)
+- [WEBHookマニュアル](/docs/webhook/)
 
 
 ## ファームウェア
 
 - [ソース](/firmware/)
-
+- [binファイル](/firmware/bin/)
 
 ## リンク
 
