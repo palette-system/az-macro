@@ -454,7 +454,7 @@ void AzCommon::pin_setup() {
     int col_len = setting_obj["keyboard_pin"]["col"].size();
     ESP_LOGD(LOG_TAG, "col len : %D\r\n", col_len);
     for (i=0; i<col_len; i++) {
-        pinMode(setting_obj["keyboard_pin"]["col"][i].as<signed int>(), OUTPUT);
+        pinMode(setting_obj["keyboard_pin"]["col"][i].as<signed int>(), OUTPUT_OPEN_DRAIN);
         ESP_LOGD(LOG_TAG, "output : %D\r\n", setting_obj["keyboard_pin"]["col"][i].as<signed int>());
     }
     // row で定義されているピンを全てinputにする
