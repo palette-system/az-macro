@@ -32,7 +32,7 @@
 #define WIFI_AP_SSI_NAME    "AZ-Macro"
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000002"
+#define FIRMWARE_VERSION   "000003"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM001"
@@ -44,7 +44,8 @@
 #define EEPROM_BUF_SIZE   256
 
 // WEBフック用のバッファサイズ
-#define WEBFOOK_BUF_SIZE 5120
+// #define WEBFOOK_BUF_SIZE 5120
+#define WEBFOOK_BUF_SIZE 512
 
 // 今押されているボタンの情報
 struct press_key_data {
