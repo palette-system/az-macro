@@ -222,7 +222,7 @@ mst.key_list = [
     {"key": "228", "char": "RCtrl", "value": "Right Ctrl"},
     {"key": "229", "char": "RShift", "value": "Right Shift"},
     {"key": "230", "char": "RAlt", "value": "Right Alt"},
-    {"key": "331", "char": "RGUI", "value": "Right GUI"},
+    {"key": "231", "char": "RGUI", "value": "Right GUI"},
     {"key": "82", "char": "↑", "value": "↑"},
     {"key": "81", "char": "↓", "value": "↓"},
     {"key": "80", "char": "←", "value": "←"},

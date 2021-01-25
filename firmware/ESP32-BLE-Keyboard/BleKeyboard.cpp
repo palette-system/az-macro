@@ -422,10 +422,19 @@ size_t BleKeyboard::press_set(uint8_t k)
 		setWriteError();
 		return 0;
 	}
-	if (kk & SHIFT) {
-		_keyReport.modifiers = 0x02;
-	} else {
-		_keyReport.modifiers = 0x00;
+	_keyReport.modifiers = 0x00;
+	if (kk == 224 || kk == 228) { // ctrl
+		_keyReport.modifiers |= 0x01;
+	}
+	if (kk & SHIFT) { // shift
+		_keyReport.modifiers |= 0x02;
+		kk &= 0xFF;
+	}
+	if (kk == 226 || kk == 230) { // alt
+		_keyReport.modifiers |= 0x04;
+	}
+	if (kk == 227 || kk == 231) { // gui
+		_keyReport.modifiers |= 0x08;
 	}
 	kk &= 0xFF;
 	_keyReport.keys[0] = kk;
@@ -459,10 +468,19 @@ size_t BleKeyboard::press_raw(unsigned short k)
 	unsigned short kk;
 	kk = code_convert(k);
 	ESP_LOGD(LOG_TAG, "press_raw: %D", kk);
-	if (kk & SHIFT) {
+	if (kk == 224 || kk == 228) { // ctrl
+		_keyReport.modifiers |= 0x01;
+	}
+	if (kk & SHIFT) { // shift
 		_keyReport.modifiers |= 0x02;
 		kk &= 0xFF;
 		ESP_LOGD(LOG_TAG, "press_raw: %D on shift", kk);
+	}
+	if (kk == 226 || kk == 230) { // alt
+		_keyReport.modifiers |= 0x04;
+	}
+	if (kk == 227 || kk == 231) { // gui
+		_keyReport.modifiers |= 0x08;
 	}
 	ESP_LOGD(LOG_TAG, "press_raw modifiers: %D", _keyReport.modifiers);
 	if (_keyReport.keys[0] != kk && _keyReport.keys[1] != kk &&
@@ -536,9 +554,18 @@ size_t BleKeyboard::release_raw(unsigned short k)
 	uint8_t i;
 	unsigned short kk;
 	kk = code_convert(k);
-	if (kk & SHIFT) {
+	if (kk == 224 || kk == 228) { // ctrl
+		_keyReport.modifiers &= ~0x01;
+	}
+	if (kk & SHIFT) { // shift
 		_keyReport.modifiers &= ~0x02;
 		kk &= 0xFF;
+	}
+	if (kk == 226 || kk == 230) { // alt
+		_keyReport.modifiers &= ~0x04;
+	}
+	if (kk == 227 || kk == 231) { // gui
+		_keyReport.modifiers &= ~0x08;
 	}
 
 	// Test the key report to see if k is present.  Clear it if it exists.
