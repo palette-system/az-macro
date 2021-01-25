@@ -8,6 +8,7 @@
 
 #include "BleConnectionStatus.h"
 #include "KeyboardOutputCallbacks.h"
+#include "NimBleCallbacks.h"
 #include "BleKeyboard.h"
 
 #if defined(CONFIG_ARDUHAL_ESP_LOG)
@@ -88,6 +89,9 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
   END_COLLECTION(0)                  // END_COLLECTION
 };
 
+static DescriptorCallbacks dscCallbacks;
+static CharacteristicCallbacks chrCallbacks;
+
 BleKeyboard::BleKeyboard(std::string deviceName, std::string deviceManufacturer, uint8_t batteryLevel) : hid(0)
 {
   this->deviceName = deviceName;
@@ -112,45 +116,111 @@ bool BleKeyboard::isConnected(void) {
 
 void BleKeyboard::setBatteryLevel(uint8_t level) {
   this->batteryLevel = level;
-  if (hid != 0)
-    this->hid->setBatteryLevel(this->batteryLevel);
+  // if (hid != 0)
+  //   this->hid->setBatteryLevel(this->batteryLevel);
 }
 
+
+
 void BleKeyboard::taskServer(void* pvParameter) {
-  BleKeyboard* bleKeyboardInstance = (BleKeyboard *) pvParameter; //static_cast<BleKeyboard *>(pvParameter);
-  NimBLEDevice::init(bleKeyboardInstance->deviceName);
-  NimBLEServer *pServer = NimBLEDevice::createServer();
-  pServer->setCallbacks(bleKeyboardInstance->connectionStatus);
 
-  bleKeyboardInstance->hid = new NimBLEHIDDevice(pServer);
-  bleKeyboardInstance->inputKeyboard = bleKeyboardInstance->hid->inputReport(KEYBOARD_ID); // <-- input REPORTID from report map
-  bleKeyboardInstance->outputKeyboard = bleKeyboardInstance->hid->outputReport(KEYBOARD_ID);
-  bleKeyboardInstance->inputMediaKeys = bleKeyboardInstance->hid->inputReport(MEDIA_KEYS_ID);
-  bleKeyboardInstance->connectionStatus->inputKeyboard = bleKeyboardInstance->inputKeyboard;
-  bleKeyboardInstance->connectionStatus->outputKeyboard = bleKeyboardInstance->outputKeyboard;
-	bleKeyboardInstance->connectionStatus->inputMediaKeys = bleKeyboardInstance->inputMediaKeys;
+   BleKeyboard* bleKeyboardInstance = (BleKeyboard *) pvParameter; //static_cast<BleKeyboard *>(pvParameter);
 
-  bleKeyboardInstance->outputKeyboard->setCallbacks(new KeyboardOutputCallbacks());
+    /** sets device name */
+    NimBLEDevice::init(bleKeyboardInstance->deviceName);
+    NimBLEDevice::setPower(ESP_PWR_LVL_P9); /** +9db */
+    NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
 
-  bleKeyboardInstance->hid->manufacturer()->setValue(bleKeyboardInstance->deviceManufacturer);
+    NimBLEServer* pServer = NimBLEDevice::createServer();
+    pServer->setCallbacks(bleKeyboardInstance->connectionStatus);
 
-  bleKeyboardInstance->hid->pnp(0x02, 0xe502, 0xa111, 0x0210);
-  bleKeyboardInstance->hid->hidInfo(0x00,0x01);
+    //DeviceInfoService
+    NimBLEService* pDeviceInfoService = pServer->createService("180A"); // <-デバイスインフォのUUID
+    NimBLECharacteristic* pPnpCharacteristic = pDeviceInfoService->createCharacteristic("2A50", NIMBLE_PROPERTY::READ);
+    uint8_t sig = 0x02;
+    uint16_t vid = 0xe502;
+    uint16_t pid = 0xa111;
+    uint16_t version = 0x0210; 
+    uint8_t pnp[] = { sig, (uint8_t) (vid >> 8), (uint8_t) vid, (uint8_t) (pid >> 8), (uint8_t) pid, (uint8_t) (version >> 8), (uint8_t) version };
+    pPnpCharacteristic->setValue(pnp, sizeof(pnp));
+    pPnpCharacteristic->setCallbacks(&chrCallbacks);
 
-  NimBLESecurity *pSecurity = new BLESecurity();
+    //DeviceInfoService-Manufacturer
+    NimBLECharacteristic* pManufacturerCharacteristic = pDeviceInfoService->createCharacteristic("2A29", NIMBLE_PROPERTY::READ); // 0x2a29 = メーカー名
+    pManufacturerCharacteristic->setValue(bleKeyboardInstance->deviceManufacturer);
+    pManufacturerCharacteristic->setCallbacks(&chrCallbacks);
 
-  pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
+    //HidService
+    NimBLEService* pHidService = pServer->createService(NimBLEUUID("1812"), 40);
 
-  bleKeyboardInstance->hid->reportMap((uint8_t*)_hidReportDescriptor, sizeof(_hidReportDescriptor));
-  bleKeyboardInstance->hid->startServices();
+    //HidService-hidInfo
+    NimBLECharacteristic* pHidInfoCharacteristic = pHidService->createCharacteristic("2A4A", NIMBLE_PROPERTY::READ);// HID Information 会社名？とか？あと何かのフラグ
+    uint8_t country = 0x00;
+    uint8_t flags = 0x01;
+    uint8_t info[] = { 0x11, 0x1, country, flags };                                              
+    pHidInfoCharacteristic->setValue(info, sizeof(info));
+    pHidInfoCharacteristic->setCallbacks(&chrCallbacks);
 
-  bleKeyboardInstance->onStarted(pServer);
+    //HidService-reportMap
+    NimBLECharacteristic* pReportMapCharacteristic = pHidService->createCharacteristic("2A4B",NIMBLE_PROPERTY::READ); // HID Report Map (ここでHIDのいろいろ設定
+    pReportMapCharacteristic->setValue((uint8_t*)_hidReportDescriptor, sizeof(_hidReportDescriptor));
+    pReportMapCharacteristic->setCallbacks(&chrCallbacks);
 
-  NimBLEAdvertising *pAdvertising = pServer->getAdvertising();
-  pAdvertising->setAppearance(HID_KEYBOARD);
-  pAdvertising->addServiceUUID(bleKeyboardInstance->hid->hidService()->getUUID());
-  pAdvertising->start();
-  bleKeyboardInstance->hid->setBatteryLevel(bleKeyboardInstance->batteryLevel);
+    //HidService-HidControl
+    NimBLECharacteristic* pHidControlCharacteristic = pHidService->createCharacteristic("2A4C", NIMBLE_PROPERTY::WRITE_NR);// HID Control Point
+    pHidControlCharacteristic->setCallbacks(&chrCallbacks);
+
+    //HidService-protocolMode
+    NimBLECharacteristic* pProtocolModeCharacteristic = pHidService->createCharacteristic("2A4E",NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::READ); // Protocol Mode
+    const uint8_t pMode[] = { 0x01 }; // 0: Boot Protocol 1: Rport Protocol
+    pProtocolModeCharacteristic->setValue((uint8_t*) pMode, 1);
+    pProtocolModeCharacteristic->setCallbacks(&chrCallbacks);
+
+    //HidService-input
+    NimBLECharacteristic* pInputCharacteristic = pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC); // Report
+    NimBLEDescriptor* pC01Ddsc = pInputCharacteristic->createDescriptor( "2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20); // Report Reference
+    uint8_t desc1_val[] = { 0x01, 0x01 }; // Report ID 1 を Input に設定
+    pC01Ddsc->setValue((uint8_t*) desc1_val, 2);
+    pC01Ddsc->setCallbacks(&dscCallbacks);
+
+    //HidService-input2 media port
+    NimBLECharacteristic* pInputCharacteristic2 = pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC); // Report
+    NimBLEDescriptor* pC01Ddsc2 = pInputCharacteristic2->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
+    uint8_t desc1_val2[] = { 0x02, 0x01 }; // Report ID 2 を Input に設定
+    pC01Ddsc2->setValue((uint8_t*) desc1_val2, 2);
+    pC01Ddsc2->setCallbacks(&dscCallbacks);
+
+    // HidService-output
+    NimBLECharacteristic* pOutputCharacteristic = pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+    pOutputCharacteristic->setCallbacks(new KeyboardOutputCallbacks());
+    NimBLEDescriptor* pDesc3 = pOutputCharacteristic->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
+    uint8_t desc1_val3[] = { 0x01, 0x02}; // Report ID 1 を Output に設定
+    pDesc3->setValue((uint8_t*) desc1_val3, 2);
+
+    //BatteryService
+    NimBLEService* pBatteryService = pServer->createService("180F");
+    NimBLECharacteristic* pBatteryLevelCharacteristic = pBatteryService->createCharacteristic("2A19", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+    NimBLE2904* pBatteryLevelDescriptor = (NimBLE2904*)pBatteryLevelCharacteristic->createDescriptor("2904"); 
+    pBatteryLevelDescriptor->setFormat(NimBLE2904::FORMAT_UTF8);
+    pBatteryLevelDescriptor->setNamespace(1);
+    pBatteryLevelDescriptor->setUnit(0x27ad);
+    pBatteryLevelDescriptor->setCallbacks(&dscCallbacks);
+
+    /** Start the services when finished creating all Characteristics and Descriptors */
+    pDeviceInfoService->start();
+    pHidService->start();
+    pBatteryService->start();
+
+    NimBLEAdvertising* pAdvertising = NimBLEDevice::getAdvertising();
+    pAdvertising->setAppearance(HID_KEYBOARD); //HID_KEYBOARD / HID_MOUSE
+    pAdvertising->addServiceUUID(pHidService->getUUID());
+    pAdvertising->setScanResponse(true);
+    pAdvertising->start();
+
+    bleKeyboardInstance->inputKeyboard = pInputCharacteristic;
+    bleKeyboardInstance->inputMediaKeys = pInputCharacteristic2;
+    bleKeyboardInstance->outputKeyboard = pOutputCharacteristic;
+
 
   ESP_LOGD(LOG_TAG, "Advertising started!");
   vTaskDelay(portMAX_DELAY); //delay(portMAX_DELAY);

@@ -11,7 +11,18 @@
 #include "NimBLECharacteristic.h"
 #include "Print.h"
 
+#define GENERIC_HID		0x03C0
+#define HID_KEYBOARD	   0x03C1
+#define HID_MOUSE		  0x03C2
+#define HID_JOYSTICK	   0x03C3
+#define HID_GAMEPAD		0x03C4
+#define HID_TABLET		 0x03C5
+#define HID_CARD_READER	0x03C6
+#define HID_DIGITAL_PEN	0x03C7
+#define HID_BARCODE		0x03C8
 
+
+/*
 const uint8_t KEY_LEFT_CTRL = 0x80;
 const uint8_t KEY_LEFT_SHIFT = 0x81;
 const uint8_t KEY_LEFT_ALT = 0x82;
@@ -29,7 +40,7 @@ const uint8_t KEY_BACKSPACE = 0xB2;
 const uint8_t KEY_TAB = 0xB3;
 const uint8_t KEY_RETURN = 0xB0;
 const uint8_t KEY_ESC = 0xB1;
-const uint8_t KEY_INSERT = 0xD1;
+const uint8_t KEY_INSERT_N = 0xD1;
 const uint8_t KEY_DELETE = 0xD4;
 const uint8_t KEY_PAGE_UP = 0xD3;
 const uint8_t KEY_PAGE_DOWN = 0xD6;
@@ -60,6 +71,7 @@ const uint8_t KEY_F21 = 0xF8;
 const uint8_t KEY_F22 = 0xF9;
 const uint8_t KEY_F23 = 0xFA;
 const uint8_t KEY_F24 = 0xFB;
+*/
 
 typedef uint8_t MediaKeyReport[2];
 

@@ -18,7 +18,7 @@ void AzKeyboard::start_keyboard() {
     status_led_mode = 4;
 
     // メモリ空けるためファイルシステム終了
-    // SPIFFS.end();
+    SPIFFS.end();
 
     // EEPROMも終了
     EEPROM.end();
@@ -121,11 +121,11 @@ void AzKeyboard::send_string(char *send_char) {
         // 連続して同じ文字の入力だったら一回離す
         if (i > 0 && send_char[i] == send_char[i - 1]) {
             bleKeyboard.releaseAll();
-            delay(20);
+            delay(70);
         }
         // 指定したキーだけ押す
         bleKeyboard.press_set(send_char[i]);
-        delay(20);
+        delay(70);
         i++;
     }
     // 全て離す
