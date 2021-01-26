@@ -118,6 +118,8 @@ public:
   void end(void);
   void sendReport(KeyReport* keys);
   void sendReport(MediaKeyReport* keys);
+  unsigned short modifiers_press(unsigned short k);
+  unsigned short modifiers_release(unsigned short k);
   size_t press(uint8_t k);
   size_t press(const MediaKeyReport k);
   size_t press_set(uint8_t k);

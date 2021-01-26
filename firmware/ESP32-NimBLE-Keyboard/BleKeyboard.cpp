@@ -183,12 +183,6 @@ void BleKeyboard::taskServer(void* pvParameter) {
     pC01Ddsc->setValue((uint8_t*) desc1_val, 2);
     pC01Ddsc->setCallbacks(&dscCallbacks);
 
-    //HidService-input2 media port
-    NimBLECharacteristic* pInputCharacteristic2 = pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC); // Report
-    NimBLEDescriptor* pC01Ddsc2 = pInputCharacteristic2->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
-    uint8_t desc1_val2[] = { 0x02, 0x01 }; // Report ID 2 ‚ð Input ‚ÉÝ’è
-    pC01Ddsc2->setValue((uint8_t*) desc1_val2, 2);
-    pC01Ddsc2->setCallbacks(&dscCallbacks);
 
     // HidService-output
     NimBLECharacteristic* pOutputCharacteristic = pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
@@ -196,6 +190,15 @@ void BleKeyboard::taskServer(void* pvParameter) {
     NimBLEDescriptor* pDesc3 = pOutputCharacteristic->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
     uint8_t desc1_val3[] = { 0x01, 0x02}; // Report ID 1 ‚ð Output ‚ÉÝ’è
     pDesc3->setValue((uint8_t*) desc1_val3, 2);
+
+
+    //HidService-input2 media port
+    NimBLECharacteristic* pInputCharacteristic2 = pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC); // Report
+    NimBLEDescriptor* pC01Ddsc2 = pInputCharacteristic2->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
+    uint8_t desc1_val2[] = { 0x02, 0x01 }; // Report ID 2 ‚ð Input ‚ÉÝ’è
+    pC01Ddsc2->setValue((uint8_t*) desc1_val2, 2);
+    pC01Ddsc2->setCallbacks(&dscCallbacks);
+
 
     //BatteryService
     NimBLEService* pBatteryService = pServer->createService("180F");
@@ -205,6 +208,7 @@ void BleKeyboard::taskServer(void* pvParameter) {
     pBatteryLevelDescriptor->setNamespace(1);
     pBatteryLevelDescriptor->setUnit(0x27ad);
     pBatteryLevelDescriptor->setCallbacks(&dscCallbacks);
+
 
     /** Start the services when finished creating all Characteristics and Descriptors */
     pDeviceInfoService->start();
@@ -421,6 +425,40 @@ const unsigned short _codemap_us[64] PROGMEM =
 };
 
 
+unsigned short BleKeyboard::modifiers_press(unsigned short k) {
+	if (k & SHIFT) { // shift
+		_keyReport.modifiers |= 0x02;	// the left shift modifier
+		k &= 0xFF;
+	}
+	if (k == 224) _keyReport.modifiers |= 0x01; // LEFT Ctrl
+	if (k == 228) _keyReport.modifiers |= 0x10; // RIGHT Ctrl
+	if (k == 225) _keyReport.modifiers |= 0x02; // LEFT Shift
+	if (k == 229) _keyReport.modifiers |= 0x20; // RIGHT Shift
+	if (k == 226) _keyReport.modifiers |= 0x04; // LEFT Alt
+	if (k == 230) _keyReport.modifiers |= 0x40; // RIGHT Alt
+	if (k == 227) _keyReport.modifiers |= 0x08; // LEFT GUI
+	if (k == 231) _keyReport.modifiers |= 0x80; // RIGHT GUI
+	return k;
+};
+
+
+unsigned short BleKeyboard::modifiers_release(unsigned short k) {
+	if (k & SHIFT) { // shift
+		_keyReport.modifiers &= ~(0x02);	// the left shift modifier
+		k &= 0xFF;
+	}
+	if (k == 224) _keyReport.modifiers &= ~(0x01); // LEFT Ctrl
+	if (k == 228) _keyReport.modifiers &= ~(0x10); // RIGHT Ctrl
+	if (k == 225) _keyReport.modifiers &= ~(0x02); // LEFT Shift
+	if (k == 229) _keyReport.modifiers &= ~(0x20); // RIGHT Shift
+	if (k == 226) _keyReport.modifiers &= ~(0x04); // LEFT Alt
+	if (k == 230) _keyReport.modifiers &= ~(0x40); // RIGHT Alt
+	if (k == 227) _keyReport.modifiers &= ~(0x08); // LEFT GUI
+	if (k == 231) _keyReport.modifiers &= ~(0x80); // RIGHT GUI
+	return k;
+};
+
+
 uint8_t USBPutChar(uint8_t c);
 
 // press() adds the specified key (printing, non-printing, or modifier)
@@ -436,10 +474,7 @@ size_t BleKeyboard::press(uint8_t k)
 		setWriteError();
 		return 0;
 	}
-	if (kk & SHIFT) {						// it's a capital letter or other character reached with shift
-		_keyReport.modifiers |= 0x02;	// the left shift modifier
-		kk &= 0xFF;
-	}
+	kk = modifiers_press(kk);
 
 	// Add k to the key report only if it's not already present
 	// and if there is an empty slot.
@@ -484,12 +519,8 @@ size_t BleKeyboard::press_set(uint8_t k)
 		setWriteError();
 		return 0;
 	}
-	if (kk & SHIFT) {
-		_keyReport.modifiers = 0x02;
-	} else {
-		_keyReport.modifiers = 0x00;
-	}
-	kk &= 0xFF;
+	_keyReport.modifiers = 0x00;
+	kk = modifiers_press(kk);
 	_keyReport.keys[0] = kk;
 	_keyReport.keys[1] = 0x00;
 	_keyReport.keys[2] = 0x00;
@@ -521,11 +552,7 @@ size_t BleKeyboard::press_raw(unsigned short k)
 	unsigned short kk;
 	kk = code_convert(k);
 	ESP_LOGD(LOG_TAG, "press_raw: %D", kk);
-	if (kk & SHIFT) {
-		_keyReport.modifiers |= 0x02;
-		kk &= 0xFF;
-		ESP_LOGD(LOG_TAG, "press_raw: %D on shift", kk);
-	}
+	kk = modifiers_press(kk);
 	ESP_LOGD(LOG_TAG, "press_raw modifiers: %D", _keyReport.modifiers);
 	if (_keyReport.keys[0] != kk && _keyReport.keys[1] != kk &&
 		_keyReport.keys[2] != kk && _keyReport.keys[3] != kk &&
@@ -557,10 +584,7 @@ size_t BleKeyboard::release(uint8_t k)
 	if (!kk) {
 		return 0;
 	}
-	if (kk & SHIFT) {							// it's a capital letter or other character reached with shift
-		_keyReport.modifiers &= ~(0x02);	// the left shift modifier
-		kk &= 0xFF;
-	}
+	kk = modifiers_release(kk);
 
 	
 	// Test the key report to see if k is present.  Clear it if it exists.
@@ -592,10 +616,7 @@ size_t BleKeyboard::release_raw(unsigned short k)
 	uint8_t i;
 	unsigned short kk;
 	kk = code_convert(k);
-	if (kk & SHIFT) {
-		_keyReport.modifiers &= ~0x02;
-		kk &= 0xFF;
-	}
+	kk = modifiers_release(kk);
 
 	// Test the key report to see if k is present.  Clear it if it exists.
 	// Check all positions in case the key is present more than once (which it shouldn't be)

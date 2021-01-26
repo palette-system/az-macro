@@ -5,7 +5,7 @@
 
 
 // セッティングJSONを保持する領域
-DynamicJsonDocument setting_doc(5012);
+DynamicJsonDocument setting_doc(10240);
 JsonObject setting_obj;
 
 // ステータス表示用ピン番号
