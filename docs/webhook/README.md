@@ -1,29 +1,31 @@
 # WEBHook 
-AZ-Macro��WEBHook���g�p����ꍇ�̒��ӎ�����T���v�����Љ�܂��B  
-http:// ��URL�� https:// ��URL���w��ł��܂��� https:// �̕��ł͈Í����̏����Ɏ��Ԃ��������Ă��܂��A1�`2�b�قǂ�����܂��B  
-�Z�L�����e�B�̕K�v�̂Ȃ��ʐM�ł���� http:// �ł̃A�N�Z�X�̕��������������ł��B  
+WEBHookを使用する事でIFTTTと連携できるSNSやスマートリモコンを操作したり、サーバー上に置いた自分のプログラムを実行する事ができます。  
+ここではAZ-MacroでWEBHookを使用する場合の注意事項やサンプルを紹介します。  
+  
+AZ-Macroでは http:// のURLも https:// のURLも指定できますが https:// の方では暗号化の処理に時間がかかってしまい、1～2秒ほどかかります。  
+セキュリティの必要のない通信であれば http:// でのアクセスの方が処理が早いです。  
 
 
-## AZ-Macro �� WEBHook�łł��鎖
+## AZ-Macro の WEBHookでできる事
 
-- http�Ahttps �ł̃��N�G�X�g���M
-- GET�APOST �ł̃��N�G�X�g���M
-- �Ǝ��̃w�b�_�[�ǉ�
-- GET�p�����[�^�[���M
-- POST�p�����[�^�[���M
-- �擾�������e���L�[���͂���
-- �擾�����X�e�[�^�X�R�[�h���L�[���͂���
-
-
-## AZ-Macro �� WEBHook�łł��Ȃ���
-
-- ftp:// �Ȃǂ�HTTP�v���g�R���ȊO�̃��N�G�X�g���M
-- POST�p�����[�^�Ƀo�C�i���f�[�^���܂߂�
-- �L�[���͂����鎞�ɑS�p����������Ɛ���ɓ��͂ł��Ȃ�
+- http、https でのリクエスト送信
+- GET、POST でのリクエスト送信
+- 独自のヘッダー追加
+- GETパラメーター送信
+- POSTパラメーター送信
+- 取得した内容をキー入力する
+- 取得したステータスコードをキー入力する
 
 
-## �T���v��
+## AZ-Macro の WEBHookでできない事
 
-- [�������тɑ�����J�E���^](/docs/webhook/sample/counter/)
+- ftp:// などのHTTPプロトコル以外のリクエスト送信
+- POSTパラメータにバイナリデータを含める
+- キー入力させる時に全角文字があると正常に入力できない
+
+
+## サンプル
+
+- [押すたびに増えるカウンタ](/docs/webhook/sample/counter/)
 
 
