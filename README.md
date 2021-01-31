@@ -10,6 +10,7 @@
 - [設定マニュアル](/docs/az-macro-setting-manual.pdf)
 - [WEBHookマニュアル](/docs/webhook/)
 - [ファームウェアの更新手順](/docs/firmware_update/)
+- [入力できるキーの一覧](/docs/key_list/)
 
 
 ## ファームウェア
