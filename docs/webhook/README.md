@@ -27,9 +27,3 @@ http:// のURLも https:// のURLも指定できますが https:// の方では暗号化の処理に時
 - [押すたびに増えるカウンタ](/docs/webhook/sample/counter/)
 
 
-## 注意点
-
-- https を使用する場合は version 0.0.2 のファームウェアをご使用下さい。
-
-[az_macro_0.0.2.bin](/firmware/bin/az_macro_0.0.2.bin)
-
