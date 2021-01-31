@@ -37,6 +37,8 @@ void setup() {
     // 0番目のキーが押されていたら設定モードにする
     common_cls.key_read(); // キーの状態を取得
     if (common_cls.input_key[0]) boot_type = 1;
+    // 4～5番目のキーが押されていたらデフォルトレイヤーを切り替える
+    common_cls.set_default_layer_no();
     if (boot_type == 1) {
         ESP_LOGD(LOG_TAG, "設定モード起動\n");
         // 設定モード開始

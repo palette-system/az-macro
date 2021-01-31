@@ -32,7 +32,7 @@
 #define WIFI_AP_SSI_NAME    "AZ-Macro"
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000006"
+#define FIRMWARE_VERSION   "000007"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM001"
@@ -81,12 +81,14 @@ class AzCommon
         String http_request(char *url, const JsonObject &prm); // httpリクエスト送信
         bool create_setting_json(); // デフォルトの設定json作成
         void load_setting_json(); // jsonデータロード
+        void set_default_layer_no(); // デフォルトレイヤー設定
         void get_keyboard_type_int(); // キーボードのタイプ番号を取得
         int read_file(char *file_path, String &read_data); // ファイルからデータを読み出す
         int write_file(char *file_path, String &write_data); // ファイルにデータを保存する
         int remove_file(char *file_path); // ファイルを削除する
         void pin_setup(); // キーの入力ピンの初期化
         void pin_setup_sub_process(); // 入力ピン初期化のキーボード別の処理
+        bool layers_exists(int layer_no); // レイヤーが存在するか確認
         JsonObject get_key_setting(int key_num); // 指定したキーの入力設定を取得する
         void load_data(); // EEPROMからデータをロードする
         void save_data(); // EEPROMに保存する

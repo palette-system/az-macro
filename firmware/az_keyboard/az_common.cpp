@@ -353,7 +353,7 @@ void AzCommon::load_setting_json() {
     ESP_LOGD(LOG_TAG, "status_pin: %D\r\n", setting_obj["status_pin"].as<signed int>());
     // ステータス表示用ピン番号取得
     status_pin = setting_obj["status_pin"].as<signed int>();
-    // デフォルトのレイヤー番号取得
+    // デフォルトのレイヤー番号設定
     default_layer_no = setting_obj["default_layer"].as<signed int>();
     // 今選択してるレイヤーをデフォルトに
     select_layer_no = default_layer_no;
@@ -361,6 +361,21 @@ void AzCommon::load_setting_json() {
     get_keyboard_type_int();
 }
 
+// デフォルトレイヤー番号設定
+void AzCommon::set_default_layer_no() {
+    // 設定されているデフォルトレイヤー取得
+    default_layer_no = setting_obj["default_layer"].as<signed int>();
+    // キー4が押されていた時 デフォルトを1へ
+    if (common_cls.input_key[4] && layers_exists(1)) default_layer_no = 1;
+    // キー5が押されていた時 デフォルトを2へ
+    if (common_cls.input_key[5] && layers_exists(2)) default_layer_no = 2;
+    // キー6が押されていた時 デフォルトを3へ
+    if (common_cls.input_key[6] && layers_exists(3)) default_layer_no = 3;
+    // キー7が押されていた時 デフォルトを4へ
+    if (common_cls.input_key[7] && layers_exists(4)) default_layer_no = 4;
+    // 今選択してるレイヤーをデフォルトに
+    select_layer_no = default_layer_no;
+}
 
 // キーボードタイプの番号を取得する
 void AzCommon::get_keyboard_type_int() {
@@ -490,6 +505,17 @@ void AzCommon::pin_setup_sub_process() {
     }
 }
 
+// レイヤーが存在するか確認
+bool AzCommon::layers_exists(int layer_no) {
+    char lkey[16];
+    // レイヤーのキー名取得
+    sprintf(lkey, "layer_%D", layer_no);
+    // キーの設定があるか確認
+    if (!setting_obj["layers"].containsKey(lkey)) {
+      return false;
+    }
+    return true;
+}
 
 // 指定したキーの入力設定オブジェクトを取得する
 JsonObject AzCommon::get_key_setting(int key_num) {

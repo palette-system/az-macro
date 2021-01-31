@@ -69,7 +69,7 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
   LOGICAL_MAXIMUM(1), 0x01,          //   LOGICAL_MAXIMUM (1)
   REPORT_SIZE(1),     0x01,          //   REPORT_SIZE (1)
   REPORT_COUNT(1),    0x10,          //   REPORT_COUNT (16)
-  USAGE(1),           0xB5,          //   USAGE (Scan Next Track)     ; bit 0: 1
+  USAGE(1),           0xB8,          //   USAGE (Scan Next Track)     ; bit 0: 1
   USAGE(1),           0xB6,          //   USAGE (Scan Previous Track) ; bit 1: 2
   USAGE(1),           0xB7,          //   USAGE (Stop)                ; bit 2: 4
   USAGE(1),           0xCD,          //   USAGE (Play/Pause)          ; bit 3: 8
@@ -550,6 +550,11 @@ size_t BleKeyboard::press_raw(unsigned short k)
 {
 	uint8_t i;
 	unsigned short kk;
+	if (k == 184) { // Eject
+		MediaKeyReport send_media = {1, 0};
+		sendReport(&send_media);
+		return 1;
+	}
 	kk = code_convert(k);
 	ESP_LOGD(LOG_TAG, "press_raw: %D", kk);
 	kk = modifiers_press(kk);
@@ -615,6 +620,11 @@ size_t BleKeyboard::release_raw(unsigned short k)
 {
 	uint8_t i;
 	unsigned short kk;
+	if (k == 184) { // Eject
+		MediaKeyReport send_media = {0, 0};
+		sendReport(&send_media);
+		return 1;
+	}
 	kk = code_convert(k);
 	kk = modifiers_release(kk);
 

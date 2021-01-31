@@ -243,6 +243,7 @@ mst.key_list = [
     {"key": "75", "char": "PgUp", "value": "PageUp"},
     {"key": "78", "char": "PgDw", "value": "PageDown"},
     {"key": "136", "char": "H/K", "value": "Hira / Kana"},
+    {"key": "184", "char": "EJC", "value": "Eject"},
     {"key": "138", "char": "変換", "value": "変換"},
     {"key": "139", "char": "無変換", "value": "無変換"},
     {"key": "144", "char": "Kana", "value": "Kana(mac)"},
