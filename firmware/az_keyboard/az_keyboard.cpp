@@ -2,10 +2,14 @@
 #include "az_keyboard.h"
 #include "az_common.h"
 #include "ble_keyboard_jis.h"
+#include "custom_func.h"
 
 
 // BLEキーボードクラス
 BleKeyboardJIS bleKeyboard("az-macro");
+
+// 拡張関数クラス
+CustomFunc my_function = CustomFunc();
 
 // コンストラクタ
 AzKeyboard::AzKeyboard() {
@@ -46,6 +50,9 @@ void AzKeyboard::start_keyboard() {
     // bleKeyboard.setBatteryLevel(100);
 
     press_key_all_clear = -1;
+
+    // 拡張関数 開始処理
+    my_function.begin();
   
 }
 
@@ -183,6 +190,9 @@ void AzKeyboard::key_down_action(int key_num) {
         send_webhook(key_set["press"]["webhook"]);
         
     }
+
+    // 拡張メソッド実行
+    my_function.key_press(key_num, key_set);
     
 }
 
@@ -210,6 +220,9 @@ void AzKeyboard::key_up_action(int key_num) {
         }
         // スグクリアしない。離したよカウンターカウント開始
         press_key_list[i].unpress_time = 1;
+        // 拡張メソッド実行
+        my_function.key_release(press_key_list[i].key_num, press_key_list[i]);
+        
     }
 }
 
@@ -277,6 +290,9 @@ void AzKeyboard::loop_exec(void) {
 
     // キー入力クリア処理
     press_data_clear();
+
+    // 拡張関数 ループ処理
+    my_function.loop();
 
     // 現在のキーの状態を前回部分にコピー
     common_cls.key_old_copy();

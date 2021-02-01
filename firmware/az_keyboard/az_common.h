@@ -49,7 +49,7 @@
 
 // 今押されているボタンの情報
 struct press_key_data {
-    short action_type; // キーの動作タイプ 0=設定なし / 1=通常入力 / 2=テキスト入力 / 3=レイヤー変更
+    short action_type; // キーの動作タイプ 0=設定なし / 1=通常入力 / 2=テキスト入力 / 3=レイヤー変更 / 4=WEBフック
     short key_num; // キー番号
     short key_id; // 送信した文字
     short layer_id; // レイヤー切り替えボタンだった場合レイヤーIDが入る(デフォルト：-1)
