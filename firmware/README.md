@@ -14,7 +14,6 @@ AZ-Macroで使用しているファームウェアソースです。
 - esp32 1.0.4
 - ESP OTA 0.0.3
 - NimBLE-Arduino 1.0.2
-- ESP32-BLE-Keyboard 0.2.2
 - ArduinoJson 6.17.2
 
 
@@ -30,9 +29,7 @@ AZ-Macroで使用しているファームウェアソースです。
 
 ## こちらのライブラリを使用させて頂いています
 
-- [ESP32-NimBLE-Keyboard](https://github.com/wakwak-koba/ESP32-NimBLE-Keyboard)
 - [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino)
 
 ※ ZIPファイルでライブラリ追加
-※ ESP32-BLE-Keyboard は日本語キーボード対応用に修正しています。ライブラリインストール後にESP32-NimBLE-Keyboardディレクトリの中のファイルを置き換えて下さい。
 

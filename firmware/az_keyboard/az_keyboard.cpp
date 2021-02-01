@@ -1,12 +1,11 @@
 #include "Arduino.h"
 #include "az_keyboard.h"
 #include "az_common.h"
-
-#include <BleKeyboard.h>
+#include "ble_keyboard_jis.h"
 
 
 // BLEキーボードクラス
-BleKeyboard bleKeyboard("az-macro");
+BleKeyboardJIS bleKeyboard("az-macro");
 
 // コンストラクタ
 AzKeyboard::AzKeyboard() {
@@ -44,7 +43,7 @@ void AzKeyboard::start_keyboard() {
     common_cls.key_old_copy();
 
     // バッテリーレベル
-    bleKeyboard.setBatteryLevel(100);
+    // bleKeyboard.setBatteryLevel(100);
 
     press_key_all_clear = -1;
   

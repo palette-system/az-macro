@@ -1,6 +1,7 @@
+#include <NimBLEServer.h>
 
 #include "Arduino.h"
-#include "NimBleCallbacks.h"
+#include "ble_callbacks.h"
 
 #if defined(CONFIG_ARDUHAL_ESP_LOG)
   #include "esp32-hal-log.h"
@@ -11,7 +12,9 @@
 #endif
 
 
-/** Handler class for characteristic actions */
+/* ====================================================================================================================== */
+/** Characteristic コールバック クラス */
+/* ====================================================================================================================== */
 
 CharacteristicCallbacks::CharacteristicCallbacks(void) {
 };
@@ -61,8 +64,9 @@ void CharacteristicCallbacks::onSubscribe(NimBLECharacteristic* pCharacteristic,
     // Serial.println(str);
 };
 
-
-/** Handler class for descriptor actions */    
+/* ====================================================================================================================== */
+/** Descriptor コールバック クラス */
+/* ====================================================================================================================== */
 
 DescriptorCallbacks::DescriptorCallbacks(void) {
 };
@@ -78,4 +82,31 @@ void DescriptorCallbacks::onRead(NimBLEDescriptor* pDescriptor) {
     // Serial.println(" Descriptor read");
 };
 
+/* ====================================================================================================================== */
+/** コネクションクラス */
+/* ====================================================================================================================== */
 
+BleConnectionStatus::BleConnectionStatus(void) {
+};
+
+void BleConnectionStatus::onConnect(NimBLEServer* pServer)
+{
+  this->connected = true;
+};
+
+void BleConnectionStatus::onDisconnect(NimBLEServer* pServer)
+{
+  this->connected = false;
+};
+
+/* ====================================================================================================================== */
+/** Output コールバック クラス */
+/* ====================================================================================================================== */
+
+KeyboardOutputCallbacks::KeyboardOutputCallbacks(void) {
+}
+
+void KeyboardOutputCallbacks::onWrite(NimBLECharacteristic* me) {
+  uint8_t* value = (uint8_t*)(me->getValue().c_str());
+  ESP_LOGI(LOG_TAG, "special keys: %d", *value);
+}
