@@ -1,68 +1,70 @@
-# �t�@�[���E�F�A�̏����Z�b�g�A�b�v
-AZ-Macro�̃t�@�[���E�F�A�̏����Z�b�g�A�b�v�菇�̐��������܂��B  
+# ファームウェアの初期セットアップ
+AZ-Macroのファームウェアの初期セットアップ手順の説明をします。  
+  <br><br>
   
-  
-## �Ώۂ�bin�t�@�C���̃_�E�����[�h
-�܂��̓A�b�v�f�[�g����bin�t�@�C����github����_�E�����[�h���܂��B  
-���L�����N���J���Ώۂ�bin�t�@�C�����_�E�����[�h���ĉ������B  
+## 対象のbinファイルのダウンロード
+まずはアップデートするbinファイルをgithubからダウンロードします。  
+下記リンクを開き最新のbinファイルをダウンロードして下さい。  
+  <br><br>
 
-[�t�@�[���E�F�A ���X�g �����N](/firmware/bin/)  
+[こちらからファームウェアをダウンロード](/firmware/bin/)  
+  <br><br><br>
   
 
 
-�Ώۂ̃t�@�C����I�т܂��B  
-![�t�@�C���̑I��](/images/github_bin.png)  
+対象のファイルを選びます。  
+![ファイルの選択](/images/github_bin.png)  
   
   
-�uDownload�v�������܂��B  
-![�t�@�C���̑I��](/images/github_bin_download.png)  
+「Download」を押します。  
+![ファイルの選択](/images/github_bin_download.png)  
   
   
-�u�t�@�C����ۑ�����v��I�����āuOK�v�������܂��B  
-![�t�@�C���̑I��](/images/github_bin_download_ok.png)  
+「ファイルを保存する」を選択して「OK」を押します。  
+![ファイルの選択](/images/github_bin_download_ok.png)  
   
   
-## AZ-Macro�Ƀo�b�e���[���q���d����ON�ɂ���
-�܂��o�b�e���[��PH�v���O���o�����肪���������ɂ���PCB�{�[�h�֐ڑ����ĉ������B<br><br>
-�v���O�͍d�߂Ȃ̂ŋ�����������ŉ������B�ʐ^�̏��܂ō������߂���OK�ł��B<br><br>
+## AZ-Macroにバッテリーを繋ぎ電源をONにする
+まずバッテリーのPHプラグを出っ張りがある方を上にしてPCBボードへ接続して下さい。<br><br>
+プラグは硬めなので強く差し込んで下さい。写真の所まで差し込めたらOKです。<br><br>
 
-![�t�@�C���̑I��](/images/batset.jpg)  
+![ファイルの選択](/images/batset.jpg)  
 <br><br>
 
-�o�b�e���[���ڑ��ł���ƕ\�ʂɂ���X�C�b�`�����ɉ�����Γd��������܂��B<br><br>
-�d��������ƗΐF�̓d��LED���_�ł��܂��B<br><br>
+バッテリーが接続できると表面にあるスイッチを下に下げれば電源が入ります。<br><br>
+電源が入ると緑色の電源LEDが点滅します。<br><br>
 
-![�t�@�C���̑I��](/images/green_led.jpg)  
+![ファイルの選択](/images/green_led.jpg)  
 <br><br>
 
   
-## �ݒ��ʂ���t�@�[���E�F�A������
+## 設定画面からファームウェア書込み
 
-- AZ-Macro�̗ΐF��LED���_�ł���WiFi�̃A�N�Z�X�|�C���g�ƂȂ��Ă���̂ŁAPC����AZ-Macro��WiFi�֐ڑ����܂��B
+- AZ-Macroの緑色のLEDが点滅してWiFiのアクセスポイントとなっているので、PCからAZ-MacroのWiFiへ接続します。
   
   
-- �ڑ��ł���ƃt�@�[���E�F�A�����݉�ʂ��\������܂��B  
-![�t�@�C���̑I��](/images/firm_setup.jpg)  
+- 接続できるとファームウェア書込み画面が表示されます。  
+![ファイルの選択](/images/firm_setup.jpg)  
   
   
-- �_�E�����[�h����bin�t�@�C����I�����܂�  
-![�t�@�C���̑I��](/images/firm_setup_file.jpg)  
+- ダウンロードしたbinファイルを選択します  
+![ファイルの選択](/images/firm_setup_file.jpg)  
   
   
-- �u�����݁v�������܂�  
+- 「書込み」を押します  
   
   
-- bin�t�@�C����AZ-Macro�ɑ����܂�  
-![�t�@�C�����M��](/images/firm_setup_upload.jpg)  
+- binファイルがAZ-Macroに送られます  
+![ファイル送信中](/images/firm_setup_upload.jpg)  
   
   
-- ���M�����������AZ-Macro���t�@�[���E�F�A�����ݍ�Ƃ��n�܂�܂��B(1���قǂ�����܂��̂ł��̂܂܂��҂�������)  
-![�t�@�[���E�F�A�X�V��](/images/firm_setup_write.jpg)  
+- 送信が完了するとAZ-Macroがファームウェア書込み作業が始まります。(1分ほどかかりますのでそのままお待ち下さい)  
+![ファームウェア更新中](/images/firm_setup_write.jpg)  
   
   
-- ��������Ɖ�ʂ��؂�ւ��܂��̂Ńy�[�W����ĉ������B  
-![����](/images/firm_setup_comp.jpg)  
+- 完了すると画面が切り替わりますのでページを閉じて下さい。  
+![完了](/images/firm_setup_comp.jpg)  
   
   
-- �ȏ�Ńt�@�[���E�F�A�̏����Z�b�g�A�b�v�����ł��B
+- 以上でファームウェアの初期セットアップ完了です。
 
