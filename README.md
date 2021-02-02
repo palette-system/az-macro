@@ -5,7 +5,11 @@
 
 
 ## ドキュメント
-
+  
+  ※キット購入の方も、組み立て済みの方もまずは「ファームウェアの初期セットアップ」を行って下さい。
+  
+- [ファームウェアの初期セットアップ](/docs/firmware_write/)  
+  
 - [作成マニュアル](/docs/az-macro-create-manual.pdf)
 - [設定マニュアル](/docs/az-macro-setting-manual.pdf)
 - [WEBHookマニュアル](/docs/webhook/)
