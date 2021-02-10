@@ -3,10 +3,10 @@
 ![ボード設定](/images/az_macro_top.jpg)
 
 
-## 紹介サイト
+## メディア
 <br>
 Daihuku Keyboard 様<br>
-[![](https://img.youtube.com/vi/hTy6ZXIW0Vs/0.jpg)](https://www.youtube.com/watch?v=hTy6ZXIW0Vs)
+https://www.youtube.com/watch?v=hTy6ZXIW0Vs
 <br><br>
 
 ## ドキュメント
@@ -20,12 +20,14 @@ Daihuku Keyboard 様<br>
 - [WEBHookマニュアル](/docs/webhook/)
 - [ファームウェアの更新手順](/docs/firmware_update/)
 - [入力できるキーの一覧](/docs/key_list/)
+<br><br>
 
 
 ## ファームウェア
 
 - [ソース](/firmware/)
 - [binファイル](/firmware/bin/)
+<br><br>
 
 ## リンク
 
