@@ -1,28 +1,33 @@
 # AZ-Macro
 
-![ƒ{[ƒhİ’è](/images/az_macro_top.jpg)
+![ãƒœãƒ¼ãƒ‰è¨­å®š](/images/az_macro_top.jpg)
 
 
+## ç´¹ä»‹ã‚µã‚¤ãƒˆ
+<br>
+Daihuku Keyboard æ§˜<br>
+[![](https://img.youtube.com/vi/hTy6ZXIW0Vs/0.jpg)](https://www.youtube.com/watch?v=hTy6ZXIW0Vs)
+<br><br>
 
-## ƒhƒLƒ…ƒƒ“ƒg
+## ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ
   
-  ¦ƒLƒbƒgw“ü‚Ì•û‚àA‘g‚İ—§‚ÄÏ‚İ‚Ì•û‚à‚Ü‚¸‚Íuƒtƒ@[ƒ€ƒEƒFƒA‚Ì‰ŠúƒZƒbƒgƒAƒbƒvv‚ğs‚Á‚Ä‰º‚³‚¢B
+  â€»ã‚­ãƒƒãƒˆè³¼å…¥ã®æ–¹ã‚‚ã€çµ„ã¿ç«‹ã¦æ¸ˆã¿ã®æ–¹ã‚‚ã¾ãšã¯ã€Œãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã®åˆæœŸã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã€ã‚’è¡Œã£ã¦ä¸‹ã•ã„ã€‚
   
-- [ƒtƒ@[ƒ€ƒEƒFƒA‚Ì‰ŠúƒZƒbƒgƒAƒbƒv](/docs/firmware_write/)  
+- [ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã®åˆæœŸã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—](/docs/firmware_write/)  
   
-- [ì¬ƒ}ƒjƒ…ƒAƒ‹](/docs/az-macro-create-manual.pdf)
-- [İ’èƒ}ƒjƒ…ƒAƒ‹](/docs/az-macro-setting-manual.pdf)
-- [WEBHookƒ}ƒjƒ…ƒAƒ‹](/docs/webhook/)
-- [ƒtƒ@[ƒ€ƒEƒFƒA‚ÌXVè‡](/docs/firmware_update/)
-- [“ü—Í‚Å‚«‚éƒL[‚Ìˆê——](/docs/key_list/)
+- [ä½œæˆãƒãƒ‹ãƒ¥ã‚¢ãƒ«](/docs/az-macro-create-manual.pdf)
+- [è¨­å®šãƒãƒ‹ãƒ¥ã‚¢ãƒ«](/docs/az-macro-setting-manual.pdf)
+- [WEBHookãƒãƒ‹ãƒ¥ã‚¢ãƒ«](/docs/webhook/)
+- [ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã®æ›´æ–°æ‰‹é †](/docs/firmware_update/)
+- [å…¥åŠ›ã§ãã‚‹ã‚­ãƒ¼ã®ä¸€è¦§](/docs/key_list/)
 
 
-## ƒtƒ@[ƒ€ƒEƒFƒA
+## ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢
 
-- [ƒ\[ƒX](/firmware/)
-- [binƒtƒ@ƒCƒ‹](/firmware/bin/)
+- [ã‚½ãƒ¼ã‚¹](/firmware/)
+- [binãƒ•ã‚¡ã‚¤ãƒ«](/firmware/bin/)
 
-## ƒŠƒ“ƒN
+## ãƒªãƒ³ã‚¯
 
-- [ƒpƒŒƒbƒgƒVƒXƒeƒ€’Ê”ÌƒTƒCƒg](https://palette-system.booth.pm/)
+- [ãƒ‘ãƒ¬ãƒƒãƒˆã‚·ã‚¹ãƒ†ãƒ é€šè²©ã‚µã‚¤ãƒˆ](https://palette-system.booth.pm/)
 
