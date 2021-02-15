@@ -13,6 +13,14 @@
 #include "ble_callbacks.h"
 
 #define JIS_SHIFT 0x1000
+#define MOUSE_CODE 0x2000
+
+// マウスボタン
+#define MOUSE_BUTTON_LEFT  0x01
+#define MOUSE_BUTTON_RIGHT  0x02
+#define MOUSE_BUTTON_MIDDLE 0x04
+#define MOUSE_BUTTON_BACK   0x08
+
 
 // メディアキー構造
 typedef uint8_t MediaKeyReport[2];
@@ -28,6 +36,8 @@ typedef struct
 // HIDのデバイスID
 #define REPORT_KEYBOARD_ID 0x01
 #define REPORT_MEDIA_KEYS_ID 0x02
+#define REPORT_MOUSE_ID 0x03
+
 
 // HID レポートデフォルト
 const uint8_t _hidReportDescriptorDefault[] PROGMEM = {
@@ -92,7 +102,48 @@ const uint8_t _hidReportDescriptorDefault[] PROGMEM = {
   USAGE(2),           0x83, 0x01,    //   Usage (Media sel)   ; bit 6: 64
   USAGE(2),           0x8A, 0x01,    //   Usage (Mail)        ; bit 7: 128
   HIDINPUT(1),        0x02,          //   INPUT (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-  END_COLLECTION(0)                  // END_COLLECTION
+  END_COLLECTION(0),                 // END_COLLECTION
+
+  // ------------------------------------------------- Mouse
+  USAGE_PAGE(1),       0x01, // USAGE_PAGE (Generic Desktop)
+  USAGE(1),            0x02, // USAGE (Mouse)
+  COLLECTION(1),       0x01, // COLLECTION (Application)
+  USAGE(1),            0x01, //   USAGE (Pointer)
+  COLLECTION(1),       0x00, //   COLLECTION (Physical)
+  REPORT_ID(1),        REPORT_MOUSE_ID, //     REPORT_ID (1)
+  // ------------------------------------------------- Buttons (Left, Right, Middle, Back, Forward)
+  USAGE_PAGE(1),       0x09, //     USAGE_PAGE (Button)
+  USAGE_MINIMUM(1),    0x01, //     USAGE_MINIMUM (Button 1)
+  USAGE_MAXIMUM(1),    0x05, //     USAGE_MAXIMUM (Button 5)
+  LOGICAL_MINIMUM(1),  0x00, //     LOGICAL_MINIMUM (0)
+  LOGICAL_MAXIMUM(1),  0x01, //     LOGICAL_MAXIMUM (1)
+  REPORT_SIZE(1),      0x01, //     REPORT_SIZE (1)
+  REPORT_COUNT(1),     0x05, //     REPORT_COUNT (5)
+  HIDINPUT(1),         0x02, //     INPUT (Data, Variable, Absolute) ;5 button bits
+  // ------------------------------------------------- Padding
+  REPORT_SIZE(1),      0x03, //     REPORT_SIZE (3)
+  REPORT_COUNT(1),     0x01, //     REPORT_COUNT (1)
+  HIDINPUT(1),         0x03, //     INPUT (Constant, Variable, Absolute) ;3 bit padding
+  // ------------------------------------------------- X/Y position, Wheel
+  USAGE_PAGE(1),       0x01, //     USAGE_PAGE (Generic Desktop)
+  USAGE(1),            0x30, //     USAGE (X)
+  USAGE(1),            0x31, //     USAGE (Y)
+  USAGE(1),            0x38, //     USAGE (Wheel)
+  LOGICAL_MINIMUM(1),  0x81, //     LOGICAL_MINIMUM (-127)
+  LOGICAL_MAXIMUM(1),  0x7f, //     LOGICAL_MAXIMUM (127)
+  REPORT_SIZE(1),      0x08, //     REPORT_SIZE (8)
+  REPORT_COUNT(1),     0x03, //     REPORT_COUNT (3)
+  HIDINPUT(1),         0x06, //     INPUT (Data, Variable, Relative) ;3 bytes (X,Y,Wheel)
+  // ------------------------------------------------- Horizontal wheel
+  USAGE_PAGE(1),       0x0c, //     USAGE PAGE (Consumer Devices)
+  USAGE(2),      0x38, 0x02, //     USAGE (AC Pan)
+  LOGICAL_MINIMUM(1),  0x81, //     LOGICAL_MINIMUM (-127)
+  LOGICAL_MAXIMUM(1),  0x7f, //     LOGICAL_MAXIMUM (127)
+  REPORT_SIZE(1),      0x08, //     REPORT_SIZE (8)
+  REPORT_COUNT(1),     0x01, //     REPORT_COUNT (1)
+  HIDINPUT(1),         0x06, //     INPUT (Data, Var, Rel)
+  END_COLLECTION(0),         //   END_COLLECTION
+  END_COLLECTION(0)          // END_COLLECTION
 };
 
 // 
@@ -294,6 +345,8 @@ class BleKeyboardJIS
     NimBLEDescriptor* pDesc2; //  HID output 1 (capslockとかの情報取得)
     NimBLECharacteristic* pInputCharacteristic2; // HID input 2 (メディアキーコード送信)
     NimBLEDescriptor* pDesc3; // HID input 2 (メディアキーコード送信)
+    NimBLECharacteristic* pInputCharacteristic3; // HID input 3 (マウス送信)
+    NimBLEDescriptor* pDesc4; // HID input 3 (マウス送信)
     NimBLEService* pBatteryService; // バッテリーサービス
     NimBLECharacteristic* pBatteryLevelCharacteristic; // バッテリーサービス レベル
     NimBLE2904* pBatteryLevelDescriptor; // バッテリーサービス レベル
@@ -304,6 +357,7 @@ class BleKeyboardJIS
     uint8_t batteryLevel; // バッテリーレベル 0-100
     KeyReport _keyReport;
     MediaKeyReport _mediaKeyReport;
+    uint8_t _MouseButtons; // マウスボタン情報
     std::string deviceManufacturer; // 会社名
     std::string deviceName; // デバイス名
     unsigned short *_asciimap; // asciiマップ jis
@@ -322,6 +376,10 @@ class BleKeyboardJIS
     unsigned short code_convert(unsigned short k);
     void sendReport(KeyReport* keys);
     void sendReport(MediaKeyReport* keys);
+    void mouse_click(uint8_t b);
+    void mouse_press(uint8_t b);
+    void mouse_release(uint8_t b);
+    void mouse_move(signed char x, signed char y, signed char wheel, signed char hWheel);
     size_t press_set(uint8_t k); // 指定したキーだけ押す
     size_t press_raw(unsigned short k);
     size_t release_raw(unsigned short k);

@@ -215,6 +215,10 @@ mst.key_pattern_list["az_macro_foot_r"] = {
 
 // キーのボタンリスト
 mst.key_list = [
+    {"key": "8193", "char": "LCk", "value": "Left Click"},
+    {"key": "8194", "char": "RCk", "value": "Right Click"},
+    {"key": "8196", "char": "MCk", "value": "Middle Click"},
+
     {"key": "224", "char": "LCtrl", "value": "Left Ctrl"},
     {"key": "225", "char": "LShift", "value": "Left Shift"},
     {"key": "226", "char": "LAlt", "value": "Left Alt"},

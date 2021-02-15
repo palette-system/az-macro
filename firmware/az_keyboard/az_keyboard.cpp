@@ -159,7 +159,13 @@ void AzKeyboard::key_down_action(int key_num) {
         m = key_set["press"]["key"].size();
         for (i=0; i<m; i++) {
             k = key_set["press"]["key"][i].as<signed int>();
-            bleKeyboard.press_raw(k); // キーを押す
+            if (k & MOUSE_CODE) {
+                // マウスボタンだった場合
+                bleKeyboard.mouse_press(k - MOUSE_CODE); // マウスボタンを押す
+            } else {
+                // キーコードだった場合
+                bleKeyboard.press_raw(k); // キーを押す
+            }
             // キー押したよリストに追加
             press_key_list_push(action_type, key_num, k, -1);
             ESP_LOGD(LOG_TAG, "key press : %D %D\r\n", key_num, k);
@@ -207,7 +213,13 @@ void AzKeyboard::key_up_action(int key_num) {
         action_type = press_key_list[i].action_type;
         if (action_type == 1) {
             // 通常入力
-            bleKeyboard.release_raw(press_key_list[i].key_id); // キーを離す
+            if (press_key_list[i].key_id & MOUSE_CODE) {
+                // マウスボタンだった場合
+                bleKeyboard.mouse_release(press_key_list[i].key_id - MOUSE_CODE); // マウスボタンを離す
+            } else {
+                // キーコードだった場合
+                bleKeyboard.release_raw(press_key_list[i].key_id); // キーを離す
+            }
             ESP_LOGD(LOG_TAG, "key release : %D\r\n", press_key_list[i].key_id);
         } else if (action_type == 3) {
             // レイヤー選択
@@ -232,7 +244,7 @@ void AzKeyboard::press_data_clear() {
     int press_count_start = 0, press_count_end = 0;
     // 処理前の押されたままキー数取得
     for (i=0; i<PRESS_KEY_MAX; i++) {
-        if (press_key_list[i].key_num >= 0) {
+        if (press_key_list[i].action_type == 1 && !(press_key_list[i].key_id & MOUSE_CODE) &&  press_key_list[i].key_num >= 0) {
             press_count_start++;
         }
     }

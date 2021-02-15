@@ -17,6 +17,7 @@ BleKeyboardJIS::BleKeyboardJIS(std::string deviceName, std::string deviceManufac
 {
   this->deviceName = deviceName;
   this->deviceManufacturer = deviceManufacturer;
+  this->_MouseButtons = 0x00;
   this->batteryLevel = 100;
   this->connectionStatus = new BleConnectionStatus();
   this->keyboard_language = 0;
@@ -140,6 +141,14 @@ void BleKeyboardJIS::taskServer(void* pvParameter)
     bleKeyboardInstance->pDesc3->setCallbacks(&dscCallbacks);
 
 
+    //HidService-input3 media port
+    bleKeyboardInstance->pInputCharacteristic3 = bleKeyboardInstance->pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC); // Report
+    bleKeyboardInstance->pDesc4 = bleKeyboardInstance->pInputCharacteristic3->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
+    uint8_t desc1_val4[] = { 0x03, 0x01 }; // Report ID 3 を Input に設定
+    bleKeyboardInstance->pDesc4->setValue((uint8_t*) desc1_val4, 2);
+    bleKeyboardInstance->pDesc4->setCallbacks(&dscCallbacks);
+
+    
     //BatteryService
     bleKeyboardInstance->pBatteryService = bleKeyboardInstance->pServer->createService("180F");
     bleKeyboardInstance->pBatteryLevelCharacteristic = bleKeyboardInstance->pBatteryService->createCharacteristic("2A19", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
@@ -232,6 +241,42 @@ void BleKeyboardJIS::sendReport(MediaKeyReport* keys)
     this->pInputCharacteristic2->setValue((uint8_t*)keys, sizeof(MediaKeyReport));
     this->pInputCharacteristic2->notify();
   }
+};
+
+void BleKeyboardJIS::mouse_click(uint8_t b)
+{
+    this->_MouseButtons = b;
+    this->mouse_move(0,0,0,0);
+    delay(10);
+    this->_MouseButtons = 0x00;
+    this->mouse_move(0,0,0,0);
+};
+
+
+void BleKeyboardJIS::mouse_press(uint8_t b)
+{
+    this->_MouseButtons |= b;
+    this->mouse_move(0,0,0,0);
+};
+
+void BleKeyboardJIS::mouse_release(uint8_t b)
+{
+    this->_MouseButtons &= ~(b);
+    this->mouse_move(0,0,0,0);
+};
+
+void BleKeyboardJIS::mouse_move(signed char x, signed char y, signed char wheel, signed char hWheel)
+{
+    if (this->isConnected()) {
+        uint8_t m[5];
+        m[0] = this->_MouseButtons;
+        m[1] = x;
+        m[2] = y;
+        m[3] = wheel;
+        m[4] = hWheel;
+        this->pInputCharacteristic3->setValue(m, 5);
+        this->pInputCharacteristic3->notify();
+    }
 };
 
 size_t BleKeyboardJIS::press_raw(unsigned short k)
