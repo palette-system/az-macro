@@ -11,7 +11,7 @@ https://www.youtube.com/watch?v=hTy6ZXIW0Vs
 
 【記事】AKIBA PC Hotline 様<br>
 https://akiba-pc.watch.impress.co.jp/docs/news/news/1306228.html
-<br><br>
+<br>
 
 【記事】Yahooニュース 様<br>
 https://news.yahoo.co.jp/articles/7b6afe8f1dbb792dc17484e3a8a71e1b7dceda1f
