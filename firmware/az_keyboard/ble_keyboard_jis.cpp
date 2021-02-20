@@ -211,6 +211,80 @@ unsigned short BleKeyboardJIS::modifiers_release(unsigned short k) {
   return k;
 };
 
+unsigned short BleKeyboardJIS::modifiers_media_press(unsigned short k) {
+  if (k == 8193) { // Eject
+    this->_mediaKeyReport[0] |= 0x01;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8194) { // Media Next
+    this->_mediaKeyReport[0] |= 0x02;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8195) { // Media Previous
+    this->_mediaKeyReport[0] |= 0x04;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8196) { // Media Stop
+    this->_mediaKeyReport[0] |= 0x08;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8197) { // Media play / pause
+    this->_mediaKeyReport[0] |= 0x10;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8198) { // Media Mute
+    this->_mediaKeyReport[0] |= 0x20;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8199) { // Media volume +
+    this->_mediaKeyReport[0] |= 0x40;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8200) { // Media volume -
+    this->_mediaKeyReport[0] |= 0x80;
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  }
+  return 0;
+};
+
+unsigned short BleKeyboardJIS::modifiers_media_release(unsigned short k) {
+  if (k == 8193) { // Eject
+    this->_mediaKeyReport[0] &= ~(0x01);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8194) { // Media Next
+    this->_mediaKeyReport[0] &= ~(0x02);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8195) { // Media Previous
+    this->_mediaKeyReport[0] &= ~(0x04);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8196) { // Media Stop
+    this->_mediaKeyReport[0] &= ~(0x08);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8197) { // Media play / pause
+    this->_mediaKeyReport[0] &= ~(0x10);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8198) { // Media Mute
+    this->_mediaKeyReport[0] &= ~(0x20);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8199) { // Media volume +
+    this->_mediaKeyReport[0] &= ~(0x40);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  } else if (k == 8200) { // Media volume -
+    this->_mediaKeyReport[0] &= ~(0x80);
+    this->sendReport(&this->_mediaKeyReport);
+    return 1;
+  }
+  return 0;
+};
+
 unsigned short BleKeyboardJIS::code_convert(unsigned short k)
 {
   short i = 0;
@@ -283,11 +357,8 @@ size_t BleKeyboardJIS::press_raw(unsigned short k)
 {
   uint8_t i;
   unsigned short kk;
-  if (k == 184) { // Eject
-    MediaKeyReport send_media = {1, 0};
-    this->sendReport(&send_media);
-    return 1;
-  }
+  // メディアキー
+  if (modifiers_media_press(k)) return 1;
   kk = this->code_convert(k);
   ESP_LOGD(LOG_TAG, "press_raw: %D", kk);
   kk = this->modifiers_press(kk);
@@ -337,11 +408,8 @@ size_t BleKeyboardJIS::release_raw(unsigned short k)
 {
   uint8_t i;
   unsigned short kk;
-  if (k == 184) { // Eject
-    MediaKeyReport send_media = {0, 0};
-    this->sendReport(&send_media);
-    return 1;
-  }
+  // メディアキー
+  if (modifiers_media_release(k)) return 1;
   kk = this->code_convert(k);
   kk = this->modifiers_release(kk);
 

@@ -215,9 +215,9 @@ mst.key_pattern_list["az_macro_foot_r"] = {
 
 // キーのボタンリスト
 mst.key_list = [
-    {"key": "8193", "char": "LCk", "value": "Left Click"},
-    {"key": "8194", "char": "RCk", "value": "Right Click"},
-    {"key": "8196", "char": "MCk", "value": "Middle Click"},
+    {"key": "16385", "char": "LCk", "value": "Left Click"},
+    {"key": "16386", "char": "RCk", "value": "Right Click"},
+    {"key": "16388", "char": "MCk", "value": "Middle Click"},
 
     {"key": "224", "char": "LCtrl", "value": "Left Ctrl"},
     {"key": "225", "char": "LShift", "value": "Left Shift"},
@@ -247,7 +247,16 @@ mst.key_list = [
     {"key": "75", "char": "PgUp", "value": "PageUp"},
     {"key": "78", "char": "PgDw", "value": "PageDown"},
     {"key": "136", "char": "H/K", "value": "Hira / Kana"},
-    {"key": "184", "char": "EJC", "value": "Eject"},
+
+    {"key": "8193", "char": "EJC", "value": "Eject"},
+    {"key": "8194", "char": "MNX", "value": "Media Next"},
+    {"key": "8195", "char": "MPT", "value": "Media Previous"},
+    {"key": "8196", "char": "MST", "value": "Media Stop"},
+    {"key": "8197", "char": "MPL", "value": "Media Play / Pause"},
+    {"key": "8198", "char": "MMT", "value": "Media Mute"},
+    {"key": "8199", "char": "MVI", "value": "Media Volume +"},
+    {"key": "8200", "char": "MVD", "value": "Media Volume -"},
+
     {"key": "138", "char": "変換", "value": "変換"},
     {"key": "139", "char": "無変換", "value": "無変換"},
     {"key": "144", "char": "Kana", "value": "Kana(mac)"},
@@ -877,7 +886,7 @@ mst.view_key_setting = function(key_id) {
     }
     var pss = mst.key_edit_data.press; // 押された時アクションの設定
     var at = pss.action_type;
-    var i, s = "", st;
+    var f, i, k, s = "", st;
     var hrst = "border: 1px solid #9a9fe3;";
     s += "<table cellpadding='20' style='min-width: 520px;'>";
     s += "<tr><td colspan='2'><b>キー番号：</b> <font style='font-size: 40px;'>" + mst.key_edit_kid + "</font></td></tr>";
@@ -888,9 +897,11 @@ mst.view_key_setting = function(key_id) {
     if (at == 1) {
         // 通常入力
         for (i in pss.key) {
+            k = mst.get_key_char(pss.key[i], "value");
+            if (k.length < 12) { f = 40; } else { f = 30; }
             s += "<tr><td colspan='2' style='padding: 20px 0;'><hr style='"+hrst+"'></td></tr>";
             s += "<tr><td>";
-            s += "<b>キー "+(parseInt(i)+1)+"：</b> <font style='font-size: 40px;'>" + mst.get_key_char(pss.key[i], "value") + "</font>　";
+            s += "<b>キー "+(parseInt(i)+1)+"：</b> <font style='font-size: "+f+"px;'>" + k + "</font>　";
             s += "</td><td align='right'>";
             s += "<a href='#' class='update_button' onClick='javascript:mst.select_input_key("+i+"); return false;'>変更</a>";
             if (pss.key.length > 1) {

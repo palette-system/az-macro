@@ -14,6 +14,7 @@
 
 #define JIS_SHIFT 0x1000
 #define MOUSE_CODE 0x2000
+#define MOUSE_CODE 0x4000
 
 // マウスボタン
 #define MOUSE_BUTTON_LEFT  0x01
@@ -86,13 +87,13 @@ const uint8_t _hidReportDescriptorDefault[] PROGMEM = {
   REPORT_SIZE(1),     0x01,          //   REPORT_SIZE (1)
   REPORT_COUNT(1),    0x10,          //   REPORT_COUNT (16)
   USAGE(1),           0xB8,          //   USAGE (Eject)     ; bit 0: 1
-  USAGE(1),           0xB6,          //   USAGE (Scan Previous Track) ; bit 1: 2
-  USAGE(1),           0xB7,          //   USAGE (Stop)                ; bit 2: 4
-  USAGE(1),           0xCD,          //   USAGE (Play/Pause)          ; bit 3: 8
-  USAGE(1),           0xE2,          //   USAGE (Mute)                ; bit 4: 16
-  USAGE(1),           0xE9,          //   USAGE (Volume Increment)    ; bit 5: 32
-  USAGE(1),           0xEA,          //   USAGE (Volume Decrement)    ; bit 6: 64
-  USAGE(2),           0x23, 0x02,    //   Usage (WWW Home)            ; bit 7: 128
+  USAGE(1),           0xB5,          //   USAGE (Scan Next Track)     ; bit 0: 2
+  USAGE(1),           0xB6,          //   USAGE (Scan Previous Track) ; bit 1: 4
+  USAGE(1),           0xB7,          //   USAGE (Stop)                ; bit 2: 8
+  USAGE(1),           0xCD,          //   USAGE (Play/Pause)          ; bit 3: 16
+  USAGE(1),           0xE2,          //   USAGE (Mute)                ; bit 4: 32
+  USAGE(1),           0xE9,          //   USAGE (Volume Increment)    ; bit 5: 64
+  USAGE(1),           0xEA,          //   USAGE (Volume Decrement)    ; bit 6: 128
   USAGE(2),           0x94, 0x01,    //   Usage (My Computer) ; bit 0: 1
   USAGE(2),           0x92, 0x01,    //   Usage (Calculator)  ; bit 1: 2
   USAGE(2),           0x2A, 0x02,    //   Usage (WWW fav)     ; bit 2: 4
@@ -373,6 +374,8 @@ class BleKeyboardJIS
     bool isConnected(void);
     unsigned short modifiers_press(unsigned short k);
     unsigned short modifiers_release(unsigned short k);
+    unsigned short modifiers_media_press(unsigned short k);
+    unsigned short modifiers_media_release(unsigned short k);
     unsigned short code_convert(unsigned short k);
     void sendReport(KeyReport* keys);
     void sendReport(MediaKeyReport* keys);
