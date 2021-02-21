@@ -21,8 +21,11 @@ https://news.yahoo.co.jp/articles/7b6afe8f1dbb792dc17484e3a8a71e1b7dceda1f
   
   ※キット購入の方も、組み立て済みの方もまずは「ファームウェアの初期セットアップ」を行って下さい。
   
-- [ファームウェアの初期セットアップ](/docs/firmware_write/)  
+[ファームウェアの初期セットアップ](/docs/firmware_write/)  
+<br><br>
+
   
+- [基本操作マニュアル](/docs/use_manual/)
 - [作成マニュアル](/docs/az-macro-create-manual.pdf)
 - [設定マニュアル](/docs/az-macro-setting-manual.pdf)
 - [WEBHookマニュアル](/docs/webhook/)
