@@ -68,7 +68,7 @@ AZ-Macroの基本操作説明をします。
 ![拡張ポート](/images/connecter.jpg)  
 
 ### CONN１
-ESP32-WROOM-32D へ書き込みを行うポートです。<br>
+ESP32-WROOM-32 へ書き込みを行うポートです。<br>
 スイッチサイエンスで購入できる「FLINT ESP Programmer」とピン配置が互換していてそのまま接続できます。<br>
 またコンスル―対応のビアサイズになっているので、コンスル―を使用すれば本体へのはんだ付け無しに接続できます。<br>
 [FLINT ESP Programmer](https://www.switch-science.com/catalog/5241/)
