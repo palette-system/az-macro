@@ -40,6 +40,11 @@ https://news.yahoo.co.jp/articles/7b6afe8f1dbb792dc17484e3a8a71e1b7dceda1f
 - [binファイル](/firmware/bin/)
 <br><br>
 
+## ハードウェアデータ
+
+- [プレートデータ](/plate/)
+<br><br>
+
 ## リンク
 
 - [パレットシステム通販サイト](https://palette-system.booth.pm/)
