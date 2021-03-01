@@ -6,7 +6,15 @@
 ## メディア
 <br>
 【動画】Daihuku Keyboard 様<br>
+組み立て、ZOOM、お絵かきソフト、google apps scriptとの連携<br>
 https://www.youtube.com/watch?v=hTy6ZXIW0Vs
+<br><br>
+
+【動画＆ブログ】さきチャンネル 様<br>
+組み立て、ショートカット設定、おみくじ、IFTTTとの連携<br>
+動画： https://www.youtube.com/watch?v=Y7fYM1RlOd8&t=23s
+<br>
+ブログ： https://sakiot.com/iot-keyboard-az-macro/
 <br><br>
 
 【記事】AKIBA PC Hotline 様<br>
@@ -16,6 +24,7 @@ https://akiba-pc.watch.impress.co.jp/docs/news/news/1306228.html
 【記事】Yahooニュース 様<br>
 https://news.yahoo.co.jp/articles/7b6afe8f1dbb792dc17484e3a8a71e1b7dceda1f
 <br><br>
+
 
 ## ドキュメント
   
