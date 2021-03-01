@@ -46,6 +46,9 @@ void AzKeyboard::start_keyboard() {
     common_cls.key_read();
     common_cls.key_old_copy();
 
+    // マウス移動リスト初期化
+    press_mouse_list_clean();
+
     // バッテリーレベル
     // bleKeyboard.setBatteryLevel(100);
 
@@ -100,6 +103,75 @@ void AzKeyboard::press_key_list_push(int action_type, int key_num, int key_id, i
         press_key_list[k].unpress_time = 0;
     }
 }
+
+
+// マウス移動リストを空にする
+void AzKeyboard::press_mouse_list_clean() {
+    int i;
+    for (i=0; i<PRESS_MOUSE_MAX; i++) {
+        press_mouse_list[i].key_num = -1;
+        press_mouse_list[i].move_x = 0;
+        press_mouse_list[i].move_y = 0;
+        press_mouse_list[i].move_speed = 0;
+        press_mouse_list[i].move_index = 0;
+    }
+}
+
+
+// マウス移動リストに追加
+void AzKeyboard::press_mouse_list_push(int key_num, short move_x, short move_y, short move_speed) {
+    int i;
+    for (i=0; i<PRESS_MOUSE_MAX; i++) {
+        // データが入っていれば次
+        if (press_mouse_list[i].key_num >= 0) continue;
+        // 空いていればデータを入れる
+        press_mouse_list[i].key_num = key_num;
+        press_mouse_list[i].move_x = move_x;
+        press_mouse_list[i].move_y = move_y;
+        press_mouse_list[i].move_speed = move_speed;
+        press_mouse_list[i].move_index = 0;
+        break;
+    }
+}
+
+
+// マウス移動リストから削除
+void AzKeyboard::press_mouse_list_remove(int key_num) {
+    int i;
+    for (i=0; i<PRESS_MOUSE_MAX; i++) {
+        // 該当のキーで無ければ何もしない
+        if (press_mouse_list[i].key_num != key_num) continue;
+        // 該当のキーのデータ削除
+        press_mouse_list[i].key_num = -1;
+        press_mouse_list[i].move_x = 0;
+        press_mouse_list[i].move_y = 0;
+        press_mouse_list[i].move_speed = 0;
+        press_mouse_list[i].move_index = 0;
+    }
+}
+
+
+// マウス移動処理
+void AzKeyboard::move_mouse_loop() {
+    int i;
+    int mx, my;
+    for (i=0; i<PRESS_MOUSE_MAX; i++) {
+        // 入力無しならば何もしない
+        if (press_mouse_list[i].key_num < 0) continue;
+        if (press_mouse_list[i].move_speed == 0 && press_mouse_list[i].move_index == 0) {
+            // スピード0なら最初の1回だけ移動
+            bleKeyboard.mouse_move(press_mouse_list[i].move_x, press_mouse_list[i].move_y, 0, 0);
+        } else {
+            // スピードで割った分だけ移動
+            mx = ((press_mouse_list[i].move_x * press_mouse_list[i].move_speed) / 100);
+            my = ((press_mouse_list[i].move_y * press_mouse_list[i].move_speed) / 100);
+            bleKeyboard.mouse_move(mx, my, 0, 0);
+        }
+        // index をカウント
+        if (press_mouse_list[i].move_index < 1000) press_mouse_list[i].move_index++;
+    }
+}
+
 
 // WEBフックを送信する
 void AzKeyboard::send_webhook(const JsonObject &key_set) {
@@ -182,6 +254,8 @@ void AzKeyboard::key_down_action(int key_num) {
         press_key_list_push(action_type, key_num, -1, -1);
 
     } else if (action_type == 3) {
+        // マウス移動リストクリア
+        press_mouse_list_clean();
         // レイヤーの切り替え
         lid = key_set["press"]["layer"].as<signed int>();
         select_layer_no = lid;
@@ -195,6 +269,14 @@ void AzKeyboard::key_down_action(int key_num) {
         // webフック
         send_webhook(key_set["press"]["webhook"]);
         
+    } else if (action_type == 5) {
+        // マウス移動
+        press_mouse_list_push(key_num,
+            key_set["press"]["move"]["x"].as<signed int>(),
+            key_set["press"]["move"]["y"].as<signed int>(),
+            key_set["press"]["move"]["speed"].as<signed int>());
+        // キー押したよリストに追加
+        press_key_list_push(action_type, key_num, -1, -1);
     }
 
     // 拡張メソッド実行
@@ -229,6 +311,9 @@ void AzKeyboard::key_up_action(int key_num) {
                 select_layer_no = default_layer_no;
                 last_select_layer_key = -1;
             }
+        } else if (action_type == 5) {
+            // マウス移動ボタン
+            press_mouse_list_remove(key_num); // 移動中リストから削除
         }
         // スグクリアしない。離したよカウンターカウント開始
         press_key_list[i].unpress_time = 1;
@@ -299,6 +384,9 @@ void AzKeyboard::loop_exec(void) {
 
     // キー入力のアクション実行
     key_action_exec();
+
+    // マウス移動処理
+    move_mouse_loop();
 
     // キー入力クリア処理
     press_data_clear();

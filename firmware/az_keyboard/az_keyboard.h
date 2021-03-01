@@ -17,6 +17,10 @@ class AzKeyboard
         void key_down_action(int key_num); // キーが押された時のアクション
         void key_up_action(int key_num); // キーが離された時のアクション
         void press_key_list_push(int action_type, int key_num, int key_id, int layer_id); // キーを押しましたリストに追加
+        void press_mouse_list_clean(); // マウス移動中リストを空にする
+        void press_mouse_list_push(int key_num, short move_x, short move_y, short move_speed); // マウス移動中リストに追加
+        void press_mouse_list_remove(int key_num); // マウス移動中リストから削除
+        void move_mouse_loop(); // マウス移動処理
         void press_data_clear(); // キーを押したままリストをクリア
     
     private:

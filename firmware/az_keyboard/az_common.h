@@ -28,11 +28,14 @@
 // レイヤー切り替え同時押し許容数
 #define PRESS_KEY_MAX 6
 
+// マウス移動ボタン同時押し許容数
+#define PRESS_MOUSE_MAX 4
+
 // WIFIアクセスポイントの名前
 #define WIFI_AP_SSI_NAME    "AZ-Macro"
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000009"
+#define FIRMWARE_VERSION   "000010"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM001"
@@ -54,6 +57,16 @@ struct press_key_data {
     short key_id; // 送信した文字
     short layer_id; // レイヤー切り替えボタンだった場合レイヤーIDが入る(デフォルト：-1)
     short unpress_time; // キーを離してからどれくらい経ったか
+};
+
+
+// 今押されているマウスボタン情報
+struct press_mouse_data {
+    short key_num; // キー番号
+    short move_x; // X座標
+    short move_y; // Y座標
+    short move_speed; // 移動速度
+    short move_index; // 移動index
 };
 
 
@@ -140,6 +153,9 @@ extern int last_select_layer_key; // レイヤーボタン最後に押された�
 
 // 押している最中のキーデータ
 extern press_key_data press_key_list[PRESS_KEY_MAX];
+
+// 押している最中のマウス移動
+extern press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
 
 // オールクリア送信フラグ
 extern int press_key_all_clear;

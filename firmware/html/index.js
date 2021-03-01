@@ -1,3 +1,6 @@
+// JavaScript 圧縮ツール
+//   https://tm-webtools.com/Tools/jsMinify
+
 // jquery もどき
 function $(id) {
     return document.getElementById(id);
@@ -357,7 +360,8 @@ mst.input_type_list = {
     "1": "通常キー入力",
     "2": "テキスト入力",
     "3": "レイヤー切り替え",
-    "4": "WEBフック"
+    "4": "WEBフック",
+    "5": "マウス移動"
 };
 
 
@@ -649,6 +653,9 @@ mst.create_key_btn = function() {
         } else if (p.press.action_type == 4) {
             // WEBフック
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>WEB</div>";
+        } else if (p.press.action_type == 5) {
+            // マウス移動
+            h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>MUS</div>";
         }
         h += "</td></tr></table>";
         h += "</div>";
@@ -804,6 +811,9 @@ mst.select_input_type = function() {
         } else if (mst.key_edit_data.press.action_type == 4) {
             // WEBフック
             if (!("webhook" in mst.key_edit_data.press)) mst.key_edit_data.press.webhook = {"url": "http://palette-system.com/ct/", "header": [], "post": "", "keyoutput": 0};
+        } else if (mst.key_edit_data.press.action_type == 5) {
+            // マウス移動
+            if (!("move" in mst.key_edit_data.press)) mst.key_edit_data.press.move = {"x": 0, "y": 0, "speed": 100};
         }
         mst.view_key_setting(mst.key_edit_kid);
     });
@@ -963,6 +973,14 @@ mst.view_key_setting = function(key_id) {
             s += "</td></tr>";
         }
         
+    } else if (at == 5) {
+        // マウス移動
+        s += "<tr><td colspan='2' style='padding: 20px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td colspan='2'>";
+        s += "<b>Ｘ：</b><font id='move_x_val'>"+pss.move.x+"</font><br><input type='range' id='move_x' name='move_x' min='-100' max='100' style='width: 400px;' value='"+pss.move.x+"' onChange='javascript:mst.view_move_input(\"x\");'><br><br>"
+        s += "<b>Ｙ：</b><font id='move_y_val'>"+pss.move.y+"</font><br><input type='range' id='move_y' name='move_y' min='-100' max='100' style='width: 400px;' value='"+pss.move.y+"' onChange='javascript:mst.view_move_input(\"y\");'><br><br>"
+        s += "<b>スピード：</b><font id='move_speed_val'>"+pss.move.speed+"</font><br><input type='range' id='move_speed' name='move_speed' min='0' max='100' style='width: 400px;' value='"+pss.move.speed+"' onChange='javascript:mst.view_move_input(\"speed\");'><br><br>"
+        s += "</td></tr>";
     }
     s += "</table>";
     s += "<br><br>";
@@ -981,6 +999,11 @@ mst.view_key_setting = function(key_id) {
         $("webhook_keyoutput").value = pss.webhook.keyoutput + "";
     }
     mst.view_box(["info_box", "setting_box", "layer_box"]);
+};
+
+// マウス移動のバー情報を画面に反映
+mst.view_move_input = function(t) {
+    set_html("move_"+t+"_val", $("move_"+t).value);
 };
 
 
@@ -1062,17 +1085,19 @@ mst.key_setting_btn_click = function(type_id) {
     var s;
     if (type_id == 1) {
         s = {"action_type": mst.key_edit_data.press.action_type};
-        if (s.action_type == 1) {
+        if (s.action_type == 1) { // 通常キー入力
             s.key =  mst.key_edit_data.press.key;
-        } else if (s.action_type == 2) {
+        } else if (s.action_type == 2) { // テキスト入力
             s.text =  mst.key_edit_data.press.text;
-        } else if (s.action_type == 3) {
+        } else if (s.action_type == 3) { // レイヤー切り替え
             s.layer =  mst.key_edit_data.press.layer;
-        } else if (s.action_type == 4) {
+        } else if (s.action_type == 4) { // WEBフック
             mst.key_edit_data.press.webhook.url = $("url_text").value;
             mst.key_edit_data.press.webhook.post = $("webhook_post_text").value;
             mst.key_edit_data.press.webhook.keyoutput = parseInt($("webhook_keyoutput").value);
             s.webhook =  mst.key_edit_data.press.webhook;
+        } else if (s.action_type == 5) { // マウス移動
+            s.move = {"x": $("move_x").value, "y": $("move_y").value, "speed": $("move_speed").value};
         }
         mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + mst.key_edit_kid].press = s;
     }

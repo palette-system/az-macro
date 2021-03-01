@@ -44,6 +44,9 @@ int last_select_layer_key;
 // 押している最中のキーデータ
 press_key_data press_key_list[PRESS_KEY_MAX];
 
+// 押している最中のマウス移動
+press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
+
 // オールクリア送信フラグ
 int press_key_all_clear;
 
