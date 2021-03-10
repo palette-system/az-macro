@@ -60,7 +60,7 @@ void AzKeyboard::start_keyboard() {
 }
 
 // 前回のキーのステータスと比較して変更があった物だけ処理を実行する
-void AzKeyboard::key_action_exec(void) {
+void AzKeyboard::key_action_exec() {
     int i;
     for (i=0; i<key_input_length; i++) {
         if (common_cls.input_key_last[i] != common_cls.input_key[i]) {
@@ -75,8 +75,44 @@ void AzKeyboard::key_action_exec(void) {
     }
 }
 
+// キー連打処理
+void AzKeyboard::key_repeat_exec() {
+    int i, k;
+    for (i=0; i<PRESS_KEY_MAX; i++) {
+        if (press_key_list[i].key_num < 0) continue;
+        if (press_key_list[i].action_type == 1 && 
+            press_key_list[i].repeat_interval >= 0 &&
+            press_key_list[i].repeat_interval <= 50) { // 通常キー入力で連打設定がある
+            if (press_key_list[i].repeat_index >= press_key_list[i].repeat_interval) {
+                k = press_key_list[i].key_id;
+                if (k & MOUSE_CODE) {
+                    // マウスボタンだった場合
+                    bleKeyboard.mouse_press(k - MOUSE_CODE); // マウスボタンを押す
+                    delay(10);
+                } else {
+                    // キーコードだった場合
+                    bleKeyboard.press_raw(k); // キーを押す
+                    delay(10);
+                }
+                press_key_list[i].repeat_index = 0;
+            }
+            if (press_key_list[i].repeat_index == 0) {
+                // 押してスグキーを離す
+                if (k & MOUSE_CODE) {
+                    // マウスボタンだった場合
+                    bleKeyboard.mouse_release(k - MOUSE_CODE); // マウスボタンを離す
+                } else {
+                    // キーコードだった場合
+                    bleKeyboard.release_raw(k); // キーを離す
+                }
+            }
+            press_key_list[i].repeat_index++;
+        }
+    }
+}
+
 // キーを押しましたリストに追加
-void AzKeyboard::press_key_list_push(int action_type, int key_num, int key_id, int layer_id) {
+void AzKeyboard::press_key_list_push(int action_type, int key_num, int key_id, int layer_id, int repeat_interval) {
     int i, k = -1;
     // 既にリストに自分がいないかチェック(離してスグ押した時とかに自分がいる可能性がある)
     for (i=0; i<PRESS_KEY_MAX; i++) {
@@ -101,6 +137,8 @@ void AzKeyboard::press_key_list_push(int action_type, int key_num, int key_id, i
         press_key_list[k].key_id = key_id;
         press_key_list[k].layer_id = layer_id;
         press_key_list[k].unpress_time = 0;
+        press_key_list[k].repeat_interval = repeat_interval;
+        press_key_list[k].repeat_index = 0;
     }
 }
 
@@ -212,7 +250,7 @@ void AzKeyboard::send_string(char *send_char) {
 
 // キーが押された時の処理
 void AzKeyboard::key_down_action(int key_num) {
-    int i, m, k, lid;
+    int i, m, k, r, lid;
     // キーボードの接続が無ければ何もしない
     if (!bleKeyboard.isConnected()) return;
     // キーの設定取得
@@ -229,17 +267,21 @@ void AzKeyboard::key_down_action(int key_num) {
     if (action_type == 1) {
         // 通常キー入力
         m = key_set["press"]["key"].size();
+        r = -1;
+    	if (key_set["press"].containsKey("repeat_interval")) r = key_set["press"]["repeat_interval"];
         for (i=0; i<m; i++) {
             k = key_set["press"]["key"][i].as<signed int>();
-            if (k & MOUSE_CODE) {
-                // マウスボタンだった場合
-                bleKeyboard.mouse_press(k - MOUSE_CODE); // マウスボタンを押す
-            } else {
-                // キーコードだった場合
-                bleKeyboard.press_raw(k); // キーを押す
+            if (r < 0 || r > 50) {
+                if (k & MOUSE_CODE) {
+                    // マウスボタンだった場合
+                    bleKeyboard.mouse_press(k - MOUSE_CODE); // マウスボタンを押す
+                } else {
+                    // キーコードだった場合
+                    bleKeyboard.press_raw(k); // キーを押す
+                }
             }
             // キー押したよリストに追加
-            press_key_list_push(action_type, key_num, k, -1);
+            press_key_list_push(action_type, key_num, k, -1, r);
             ESP_LOGD(LOG_TAG, "key press : %D %D\r\n", key_num, k);
         }
 
@@ -251,7 +293,7 @@ void AzKeyboard::key_down_action(int key_num) {
         text_str.toCharArray(text_char, 512);
         send_string(text_char); // 特定の文章を送る
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, -1);
+        press_key_list_push(action_type, key_num, -1, -1, -1);
 
     } else if (action_type == 3) {
         // マウス移動リストクリア
@@ -262,7 +304,7 @@ void AzKeyboard::key_down_action(int key_num) {
         // 最後に押されたレイヤーボタン設定
         last_select_layer_key = key_num;
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, lid);
+        press_key_list_push(action_type, key_num, -1, lid, -1);
         ESP_LOGD(LOG_TAG, "key press layer : %D %D\r\n", key_num, lid);
 
     } else if (action_type == 4) {
@@ -276,7 +318,7 @@ void AzKeyboard::key_down_action(int key_num) {
             key_set["press"]["move"]["y"].as<signed int>(),
             key_set["press"]["move"]["speed"].as<signed int>());
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, -1);
+        press_key_list_push(action_type, key_num, -1, -1, -1);
     }
 
     // 拡張メソッド実行
@@ -349,6 +391,8 @@ void AzKeyboard::press_data_clear() {
             press_key_list[i].key_id = -1;
             press_key_list[i].layer_id = -1;
             press_key_list[i].unpress_time = -1;
+            press_key_list[i].repeat_interval = -1;
+            press_key_list[i].repeat_index = -1;
         }
     }
     // 処理後の押されたままキー数取得
@@ -384,6 +428,9 @@ void AzKeyboard::loop_exec(void) {
 
     // キー入力のアクション実行
     key_action_exec();
+
+    // キー連打処理
+    key_repeat_exec();
 
     // マウス移動処理
     move_mouse_loop();

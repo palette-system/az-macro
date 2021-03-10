@@ -801,7 +801,10 @@ mst.select_input_type = function() {
         mst.key_edit_data.press.action_type = parseInt(select_key);
         if (mst.key_edit_data.press.action_type == 1) {
             // 通常入力
-            if (!("key" in mst.key_edit_data.press)) mst.key_edit_data.press.key = [4];
+            if (!("key" in mst.key_edit_data.press)) {
+                mst.key_edit_data.press.key = [4];
+                mst.key_edit_data.press.repeat_interval = 51;
+            }
         } else if (mst.key_edit_data.press.action_type == 2) {
             // テキスト入力
             if (!("text" in mst.key_edit_data.press)) mst.key_edit_data.press.text = "";
@@ -925,6 +928,13 @@ mst.view_key_setting = function(key_id) {
             s += "<br><a href='#' class='update_button' onClick='javascript:mst.add_input_key(); return false;'>入力キー追加</a>";
             s += "</td></tr>";
         }
+        if (pss.repeat_interval === undefined) pss.repeat_interval = 51;
+        console.log(pss);
+        s += "<tr><td colspan='2' style='padding: 20px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td colspan='2'>";
+        s += "<b>連打間隔：</b>　<font id='move_repeat_interval_val'></font><br><br>";
+        s += "<center><input type='range' id='move_repeat_interval' name='move_repeat_interval' min='0' max='51' style='width: 420px;' value='"+pss.repeat_interval+"' onChange='javascript:mst.view_move_input(\"repeat_interval\");'></center>";
+        s += "</td></tr>";
         
     } else if (at == 2) {
         // テキスト入力
@@ -991,7 +1001,9 @@ mst.view_key_setting = function(key_id) {
     s += "<br><br>";
     set_html("setting_box", s);
     // テキストは後からvalueに値を入れる
-    if (at == 2) {
+    if (at == 1) {
+        mst.view_move_input("repeat_interval");
+    } else if (at == 2) {
         $("key_text").value = pss.text;
     } else if (at == 4) {
         $("url_text").value = pss.webhook.url;
@@ -1003,7 +1015,11 @@ mst.view_key_setting = function(key_id) {
 
 // マウス移動のバー情報を画面に反映
 mst.view_move_input = function(t) {
-    set_html("move_"+t+"_val", $("move_"+t).value);
+    var s = $("move_"+t).value;
+    if (t == "repeat_interval") {
+        if (s > 50) s = "連打無し";
+    }
+    set_html("move_"+t+"_val", s);
 };
 
 
@@ -1087,6 +1103,7 @@ mst.key_setting_btn_click = function(type_id) {
         s = {"action_type": mst.key_edit_data.press.action_type};
         if (s.action_type == 1) { // 通常キー入力
             s.key =  mst.key_edit_data.press.key;
+            s.repeat_interval = $("move_repeat_interval").value
         } else if (s.action_type == 2) { // テキスト入力
             s.text =  mst.key_edit_data.press.text;
         } else if (s.action_type == 3) { // レイヤー切り替え

@@ -26,7 +26,7 @@
 #define KEY_INPUT_MAX  16
 
 // レイヤー切り替え同時押し許容数
-#define PRESS_KEY_MAX 6
+#define PRESS_KEY_MAX 16
 
 // マウス移動ボタン同時押し許容数
 #define PRESS_MOUSE_MAX 4
@@ -35,7 +35,7 @@
 #define WIFI_AP_SSI_NAME    "AZ-Macro"
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000010"
+#define FIRMWARE_VERSION   "000011"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM001"
@@ -57,6 +57,8 @@ struct press_key_data {
     short key_id; // 送信した文字
     short layer_id; // レイヤー切り替えボタンだった場合レイヤーIDが入る(デフォルト：-1)
     short unpress_time; // キーを離してからどれくらい経ったか
+    short repeat_interval; // 連打の間隔
+    short repeat_index; // 現在の連打カウント
 };
 
 
