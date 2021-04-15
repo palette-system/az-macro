@@ -115,6 +115,18 @@ bool handleUrl(String path) {
         json_file.close();
         return true;
 
+    } else if (path.indexOf("/file_list") == 0) {
+        // ファイルリストの取得
+        File dirp = SPIFFS.open("/");
+        File filep = dirp.openNextFile();
+        String res = "{\"data\": [";
+        while(filep){
+            res += "\"" + String(filep.name()) + "\",";
+            filep = dirp.openNextFile();
+        }
+        res += "\".\"]}";
+        server.send(200,"text/plan", res.c_str());
+
     } else if (path.indexOf("/read_file_") == 0) {
         // 指定したファイルを読み込み ( /read_file_{ファイル名} でアクセス)
         // パスの後ろがファイル名

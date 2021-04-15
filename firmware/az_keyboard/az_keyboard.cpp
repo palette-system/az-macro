@@ -251,8 +251,6 @@ void AzKeyboard::send_string(char *send_char) {
 // キーが押された時の処理
 void AzKeyboard::key_down_action(int key_num) {
     int i, m, k, r, lid;
-    // キーボードの接続が無ければ何もしない
-    if (!bleKeyboard.isConnected()) return;
     // キーの設定取得
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     JsonObject key_set = common_cls.get_key_setting(key_num);
@@ -264,6 +262,9 @@ void AzKeyboard::key_down_action(int key_num) {
     }
     // キーが押された時の動作タイプ取得
     int action_type = key_set["press"]["action_type"].as<signed int>();
+    // キーボードの接続が無ければ何もしない(レイヤー切り替え、WEBフック以外)
+    if (action_type != 3 && action_type != 4 && !bleKeyboard.isConnected()) return;
+    // 動作タイプ別の動作
     if (action_type == 1) {
         // 通常キー入力
         m = key_set["press"]["key"].size();
@@ -328,13 +329,13 @@ void AzKeyboard::key_down_action(int key_num) {
 
 // キーが離された時の処理
 void AzKeyboard::key_up_action(int key_num) {
-    // キーボードの接続が無ければ何もしない
-    if (!bleKeyboard.isConnected()) return;
     int i, action_type;
     for (i=0; i<PRESS_KEY_MAX; i++) {
         if (press_key_list[i].key_num != key_num) continue;
         ESP_LOGD(LOG_TAG, "key release action_type: %D - %D - %D\r\n", key_num, i, press_key_list[i].action_type);
         action_type = press_key_list[i].action_type;
+        // キーボードの接続が無ければ何もしない(レイヤー切り替え、WEBフック以外)
+        if (action_type != 3 && action_type != 4 && !bleKeyboard.isConnected()) continue;
         if (action_type == 1) {
             // 通常入力
             if (press_key_list[i].key_id & MOUSE_CODE) {
