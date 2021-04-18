@@ -5,6 +5,12 @@
 
 ## メディア
 <br>
+【twitter】 山本アヒル 先生<br>
+ツイッターPR<br>
+https://twitter.com/AHIRU_7/status/1379755170599346183
+<br><br>
+
+<br>
 【動画】Daihuku Keyboard 様<br>
 組み立て、ZOOM、お絵かきソフト、google apps scriptとの連携<br>
 https://www.youtube.com/watch?v=hTy6ZXIW0Vs
