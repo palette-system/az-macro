@@ -18,7 +18,7 @@ function Drop( event ) {
     var code = "<pre><code>"
     code += "// " + "file name : " + f.name + "\n";
     code += "// " + "file size : " + f.size + " bytes\n\n";
-    code += "const char index_bin[] PROGMEM = {";
+    code += "const char "+f.name.replace(/\./g, "_")+"_bin[] PROGMEM = {";
     var reader = new FileReader();
     reader.onloadend = function(){
         var uint8array = new Uint8Array(reader.result);

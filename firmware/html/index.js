@@ -23,6 +23,10 @@ function set_html(id, html) {
 function obj_clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+// オブジェクトの比較
+function obj_eq(obj_a, obj_b) {
+    return (JSON.stringify(obj_a) == JSON.stringify(obj_b));
+}
 // GETメソッド送信
 function ajax(path, cb_func) {
     var req = new XMLHttpRequest();
@@ -64,307 +68,6 @@ function ajax_post(path, send_data, cb_func) {
 if (!window.mst) window.mst = {};
 
 
-// キーボード画像上のキーの位置
-mst.key_pattern = {};
-
-// キーボードの言語リスト
-mst.key_language_list = [
-    "日本語 キーボード",
-    "US キーボード"
-];
-
-// キーボードのタイプデフォルト
-mst.key_pattern_default = "az_macro";
-
-// 各キーボード別の設定
-mst.key_pattern_list = {};
-
-// AZ macro 標準
-mst.key_pattern_list["az_macro"] = {
-    "name": "AZ Macro",
-    "pin": {
-        "row": [],
-        "col": [],
-        "direct": [23, 22, 21, 19, 16, 17, 5, 18],
-        "touch": []
-    },
-    "size": {"width": 600, "height": 340},
-    "keys": [
-        {"id": 0, "x": 11, "y": 35, "width": 115, "height": 115 },
-        {"id": 1, "x": 163, "y": 35, "width": 115, "height": 115 },
-        {"id": 2, "x": 317, "y": 35, "width": 115, "height": 115 },
-        {"id": 3, "x": 471, "y": 35, "width": 115, "height": 115 },
-        {"id": 4, "x": 11, "y": 188, "width": 115, "height": 115 },
-        {"id": 5, "x": 163, "y": 188, "width": 115, "height": 115 },
-        {"id": 6, "x": 317, "y": 188, "width": 115, "height": 115 },
-        {"id": 7, "x": 471, "y": 188, "width": 115, "height": 115 }
-    ],
-    "parts": [
-        {
-            "type": "polygon",
-            "fill_color": "#666",
-            "fill": true, // 塗りつぶし
-            "path": [[2,2], [598,2], [598,338], [2,338]]
-        },
-        {
-            "type": "polygon",
-            "line_width": 4,
-            "line_color": "black",
-            "path": [[2,2], [598,2], [598,338], [2,338]]
-        },
-    ]
-};
-
-// AZ macro 踏みボタン
-mst.key_pattern_list["az_macro_foot"] = {
-    "name": "AZ Macro 踏みキー",
-    "pin": {
-        "row": [],
-        "col": [],
-        "direct": [23, 22, 21, 19, 16, 17, 5, 18, 25, 26],
-        "touch": []
-    },
-    "size": {"width": 600, "height": 560},
-    "keys": [
-        {"id": 0, "x": 11, "y": 35, "width": 115, "height": 115 },
-        {"id": 1, "x": 163, "y": 35, "width": 115, "height": 115 },
-        {"id": 2, "x": 317, "y": 35, "width": 115, "height": 115 },
-        {"id": 3, "x": 471, "y": 35, "width": 115, "height": 115 },
-        {"id": 4, "x": 11, "y": 188, "width": 115, "height": 115 },
-        {"id": 5, "x": 163, "y": 188, "width": 115, "height": 115 },
-        {"id": 6, "x": 317, "y": 188, "width": 115, "height": 115 },
-        {"id": 7, "x": 471, "y": 188, "width": 115, "height": 115 },
-        {"id": 8, "x": 140, "y": 380, "width": 110, "height": 150 },
-        {"id": 9, "x": 340, "y": 380, "width": 110, "height": 150 }
-    ],
-    "parts": [
-        {
-            "type": "polygon",
-            "fill_color": "#666",
-            "fill": true, // 塗りつぶし
-            "path": [[2,2], [598,2], [598,338], [2,338]]
-        },
-        {
-            "type": "polygon",
-            "line_width": 4,
-            "line_color": "black",
-            "path": [[2,2], [598,2], [598,338], [2,338]]
-        },
-        {
-            "type": "polygon",
-            "fill_color": "#666",
-            "fill": true, // 塗りつぶし
-            "path": [[120,360], [480,360], [480,550], [120,550]]
-        },
-        {
-            "type": "polygon",
-            "line_width": 4,
-            "line_color": "black",
-            "path": [[120,360], [480,360], [480,550], [120,550]]
-        },
-    ]
-};
-
-// AZ macro 踏みボタン(反転)
-mst.key_pattern_list["az_macro_foot_r"] = {
-    "name": "AZ Macro 踏みキー(反転)",
-    "pin": {
-        "row": [],
-        "col": [],
-        "direct": [23, 22, 21, 19, 16, 17, 5, 18, 25, 26],
-        "touch": []
-    },
-    "size": {"width": 600, "height": 560},
-    "keys": [
-        {"id": 0, "x": 11, "y": 35, "width": 115, "height": 115 },
-        {"id": 1, "x": 163, "y": 35, "width": 115, "height": 115 },
-        {"id": 2, "x": 317, "y": 35, "width": 115, "height": 115 },
-        {"id": 3, "x": 471, "y": 35, "width": 115, "height": 115 },
-        {"id": 4, "x": 11, "y": 188, "width": 115, "height": 115 },
-        {"id": 5, "x": 163, "y": 188, "width": 115, "height": 115 },
-        {"id": 6, "x": 317, "y": 188, "width": 115, "height": 115 },
-        {"id": 7, "x": 471, "y": 188, "width": 115, "height": 115 },
-        {"id": 8, "x": 140, "y": 380, "width": 110, "height": 150 },
-        {"id": 9, "x": 340, "y": 380, "width": 110, "height": 150 }
-    ],
-    "parts": [
-        {
-            "type": "polygon",
-            "fill_color": "#666",
-            "fill": true, // 塗りつぶし
-            "path": [[2,2], [598,2], [598,338], [2,338]]
-        },
-        {
-            "type": "polygon",
-            "line_width": 4,
-            "line_color": "black",
-            "path": [[2,2], [598,2], [598,338], [2,338]]
-        },
-        {
-            "type": "polygon",
-            "fill_color": "#666",
-            "fill": true, // 塗りつぶし
-            "path": [[120,360], [480,360], [480,550], [120,550]]
-        },
-        {
-            "type": "polygon",
-            "line_width": 4,
-            "line_color": "black",
-            "path": [[120,360], [480,360], [480,550], [120,550]]
-        },
-    ]
-};
-
-
-// キーのボタンリスト
-mst.key_list = [
-    {"key": "16385", "char": "LCk", "value": "Left Click"},
-    {"key": "16386", "char": "RCk", "value": "Right Click"},
-    {"key": "16388", "char": "MCk", "value": "Middle Click"},
-
-    {"key": "224", "char": "LCtrl", "value": "Left Ctrl"},
-    {"key": "225", "char": "LShift", "value": "Left Shift"},
-    {"key": "226", "char": "LAlt", "value": "Left Alt"},
-    {"key": "227", "char": "LGUI", "value": "Left GUI"},
-    {"key": "228", "char": "RCtrl", "value": "Right Ctrl"},
-    {"key": "229", "char": "RShift", "value": "Right Shift"},
-    {"key": "230", "char": "RAlt", "value": "Right Alt"},
-    {"key": "231", "char": "RGUI", "value": "Right GUI"},
-    {"key": "82", "char": "↑", "value": "↑"},
-    {"key": "81", "char": "↓", "value": "↓"},
-    {"key": "80", "char": "←", "value": "←"},
-    {"key": "79", "char": "→", "value": "→"},
-
-    {"key": "42", "char": "BS", "value": "BackSpace"},
-    {"key": "43", "char": "TAB", "value": "Tab"},
-    {"key": "40", "char": "ENT", "value": "Enter"},
-    {"key": "41", "char": "ESC", "value": "Esc"},
-    {"key": "73", "char": "INS", "value": "Insert"},
-    {"key": "74", "char": "HOME", "value": "Home"},
-    {"key": "76", "char": "DEL", "value": "Delete"},
-    {"key": "77", "char": "END", "value": "End"},
-    {"key": "57", "char": "CPL", "value": "CaplLock"},
-    {"key": "70", "char": "PrtSc", "value": "PrtSc"},
-    {"key": "71", "char": "SL", "value": "ScrollLock"},
-    {"key": "72", "char": "Pause", "value": "Pause"},
-    {"key": "75", "char": "PgUp", "value": "PageUp"},
-    {"key": "78", "char": "PgDw", "value": "PageDown"},
-    {"key": "136", "char": "H/K", "value": "Hira / Kana"},
-
-    {"key": "8193", "char": "EJC", "value": "Eject"},
-    {"key": "8194", "char": "MNX", "value": "Media Next"},
-    {"key": "8195", "char": "MPT", "value": "Media Previous"},
-    {"key": "8196", "char": "MST", "value": "Media Stop"},
-    {"key": "8197", "char": "MPL", "value": "Media Play / Pause"},
-    {"key": "8198", "char": "MMT", "value": "Media Mute"},
-    {"key": "8199", "char": "MVI", "value": "Media Volume +"},
-    {"key": "8200", "char": "MVD", "value": "Media Volume -"},
-
-    {"key": "138", "char": "変換", "value": "変換"},
-    {"key": "139", "char": "無変換", "value": "無変換"},
-    {"key": "144", "char": "Kana", "value": "Kana(mac)"},
-    {"key": "145", "char": "Eisu", "value": "Eisu(mac)"},
-    {"key": "101", "char": "App", "value": "App"},
-    {"key": "102", "char": "Power", "value": "Power"},
-    {"key": "58", "char": "F1", "value": "F1"},
-    {"key": "59", "char": "F2", "value": "F2"},
-    {"key": "60", "char": "F3", "value": "F3"},
-    {"key": "61", "char": "F4", "value": "F4"},
-    {"key": "62", "char": "F5", "value": "F5"},
-    {"key": "63", "char": "F6", "value": "F6"},
-    {"key": "64", "char": "F7", "value": "F7"},
-    {"key": "65", "char": "F8", "value": "F8"},
-    {"key": "66", "char": "F9", "value": "F9"},
-    {"key": "67", "char": "F10", "value": "F10"},
-    {"key": "68", "char": "F11", "value": "F11"},
-    {"key": "69", "char": "F12", "value": "F12"},
-
-    {"key": "44", "char": "SP", "value": "Space"},
-    {"key": "4126", "char": "!", "value": "!"}, // 30 + shift
-    {"key": "4148", "char": "*", "value": "*"}, // 52 + shift
-    {"key": "4128", "char": "#", "value": "#"}, // 32 + shift
-    {"key": "4129", "char": "$", "value": "$"}, // 33 + shift
-    {"key": "4130", "char": "%", "value": "%"}, // 34 + shift
-    {"key": "4132", "char": "'", "value": "'"}, // 36 + shift
-    {"key": "52", "char": ":", "value": ":"},
-    {"key": "4134", "char": ")", "value": ")"}, // 38 + shift
-    {"key": "4133", "char": "(", "value": "("}, // 37 + shift
-    {"key": "4142", "char": "~", "value": "~"}, // 46 + shift
-    {"key": "4143", "char": "`", "value": "`"}, // 47 + shift
-    {"key": "54", "char": ",", "value": ","},
-    {"key": "45", "char": "-", "value": "-"},
-    {"key": "4231", "char": "_", "value": "_"}, // 135 + shift
-    {"key": "55", "char": ".", "value": "."},
-    {"key": "56", "char": "/", "value": "/"},
-    {"key": "4147", "char": "+", "value": "+"}, // 51 + shift
-    {"key": "51", "char": ";", "value": ";"},
-    {"key": "4150", "char": "<", "value": "<"}, // 54 + shift
-    {"key": "46", "char": "^", "value": "^"},
-    {"key": "4151", "char": ">", "value": ">"}, // 55 + shift
-    {"key": "4152", "char": "?", "value": "?"}, // 56 + shift
-    {"key": "4127", "char": "\"", "value": "\""}, // 31 + shift
-    {"key": "47", "char": "@", "value": "@"},
-    {"key": "50", "char": "]", "value": "]"},
-    {"key": "4233", "char": "|", "value": "|"}, // 137 + shift
-    {"key": "48", "char": "[", "value": "["},
-    {"key": "4144", "char": "{", "value": "{"}, // 48 + shift
-    {"key": "4146", "char": "}", "value": "}"}, // 50 + shift
-    {"key": "4131", "char": "&", "value": "&"}, // 35 + shift
-    {"key": "4141", "char": "=", "value": "="}, // 45 + shift
-    {"key": "135", "char": "<span style='font-family: Arial;'>\\</span>", "value": "<span style='font-family: Arial;'>\\</span>"},
-    {"key": "137", "char": "&yen;", "value": "&yen;"},
-    {"key": "53", "char": "h/w", "value": "半角/全角"},
-
-    {"key": "39", "char": "0", "value": "0"},
-    {"key": "30", "char": "1", "value": "1"},
-    {"key": "31", "char": "2", "value": "2"},
-    {"key": "32", "char": "3", "value": "3"},
-    {"key": "33", "char": "4", "value": "4"},
-    {"key": "34", "char": "5", "value": "5"},
-    {"key": "35", "char": "6", "value": "6"},
-    {"key": "36", "char": "7", "value": "7"},
-    {"key": "37", "char": "8", "value": "8"},
-    {"key": "38", "char": "9", "value": "9"},
-
-    {"key": "4",  "char": "a", "value": "a"},
-    {"key": "5",  "char": "b", "value": "b"},
-    {"key": "6",  "char": "c", "value": "c"},
-    {"key": "7", "char": "d", "value": "d"},
-    {"key": "8", "char": "e", "value": "e"},
-    {"key": "9", "char": "f", "value": "f"},
-    {"key": "10", "char": "g", "value": "g"},
-    {"key": "11", "char": "h", "value": "h"},
-    {"key": "12", "char": "i", "value": "i"},
-    {"key": "13", "char": "j", "value": "j"},
-    {"key": "14", "char": "k", "value": "k"},
-    {"key": "15", "char": "l", "value": "l"},
-    {"key": "16", "char": "m", "value": "m"},
-    {"key": "17", "char": "n", "value": "n"},
-    {"key": "18", "char": "o", "value": "o"},
-    {"key": "19", "char": "p", "value": "p"},
-    {"key": "20", "char": "q", "value": "q"},
-    {"key": "21", "char": "r", "value": "r"},
-    {"key": "22", "char": "s", "value": "s"},
-    {"key": "23", "char": "t", "value": "t"},
-    {"key": "24", "char": "u", "value": "u"},
-    {"key": "25", "char": "v", "value": "v"},
-    {"key": "26", "char": "w", "value": "w"},
-    {"key": "27", "char": "x", "value": "x"},
-    {"key": "28", "char": "y", "value": "y"},
-    {"key": "29", "char": "z", "value": "z"}
-];
-
-// 入力タイプのリスト
-mst.input_type_list = {
-    "0": "動作無し",
-    "1": "通常キー入力",
-    "2": "テキスト入力",
-    "3": "レイヤー切り替え",
-    "4": "WEBフック",
-    "5": "マウス移動"
-};
-
-
 // 設定JSONデータ
 mst.setting_data = {
     "ap": {"pass": ""},
@@ -392,7 +95,8 @@ mst.setting_data = {
                 }
             }
         }
-    }
+    },
+    "option_set": {"type": ""}
 };
 
 // ファームウェアのバージョン
@@ -412,6 +116,9 @@ mst.wifi_edit_data = null;
 mst.key_edit_kid = -1;
 mst.key_edit_data = null;
 
+// 編集中のオプションデータ
+mst.option_edit_data = null;
+
 // ファームウェア選択されたファイルの情報
 mst.firmware_file_data = null;
 
@@ -423,6 +130,7 @@ mst.end_flag = false;
 
 // 終了タイプ
 mst.end_type = 0;
+
 
 // 初期処理
 mst.init = function() {
@@ -473,11 +181,22 @@ mst.get_setting_json = function() {
         }
         mst.setting_data = JSON.parse(res);
         set_html("info_box", "キー設定 読み込み 完了 ");
+        // 必須項目が無い場合はここで追加
+        if (!mst.setting_data.option_set) mst.setting_data.option_set = {"type": ""};
         // キーボードの設定を選ぶ
         if (mst.key_pattern_list[mst.setting_data.keyboard_type]) {
             mst.key_pattern = mst.key_pattern_list[mst.setting_data.keyboard_type];
         } else {
             mst.key_pattern = mst.key_pattern_list[ mst.key_pattern_default ];
+        }
+        // ユニットが設定されていればユニットの設定を反映
+        if (mst.setting_data.option_set.type && mst.option_list[mst.setting_data.option_set.type]) {
+            var optset = mst.option_list[mst.setting_data.option_set.type];
+            var check_list = ["pin", "size", "keys", "parts"];
+            var i;
+            for (i in check_list) {
+                if (optset[check_list[i]]) mst.key_pattern[check_list[i]] = optset[check_list[i]];
+            }
         }
         // ページタイトルをキータイプにする
         set_html("top_title", mst.key_pattern.name);
@@ -487,6 +206,27 @@ mst.get_setting_json = function() {
         mst.view_layer();
     });
 };
+
+
+// 設定JSON保存
+mst.save_setting_json = function() {
+    mst.setting_data.keyboard_pin = mst.key_pattern_list[ mst.setting_data.keyboard_type ].pin;
+    // ユニットが設定されていればユニットのpinを入れる
+    if (mst.setting_data.option_set.type && mst.option_list[mst.setting_data.option_set.type] && mst.option_list[mst.setting_data.option_set.type].pin) {
+        mst.setting_data.keyboard_pin = mst.option_list[mst.setting_data.option_set.type].pin;
+    }
+    api_path = "/upload_setting_json";
+    if (mst.end_type == 2) api_path = "/upload_setting_json_reload";
+    ajax_post(api_path, JSON.stringify(mst.setting_data), function(stat, res) {
+        if (!stat) {
+            set_html("info_box", "ページを閉じて下さい");
+            mst.view_box(["info_box"]);
+            return;
+        }
+        set_html("info_box", "終了中..");
+    });
+};
+
 
 // スマホ判定
 mst.is_mobile = function() {
@@ -1153,22 +893,6 @@ mst.end_setting = function(end_type) {
 };
 
 
-// 設定JSON保存
-mst.save_setting_json = function() {
-    mst.setting_data.keyboard_pin = mst.key_pattern_list[ mst.setting_data.keyboard_type ].pin;
-    api_path = "/upload_setting_json";
-    if (mst.end_type == 2) api_path = "/upload_setting_json_reload";
-    ajax_post(api_path, JSON.stringify(mst.setting_data), function(stat, res) {
-        if (!stat) {
-            set_html("info_box", "ページを閉じて下さい");
-            mst.view_box(["info_box"]);
-            return;
-        }
-        set_html("info_box", "終了中..");
-    });
-};
-
-
 // wifi 設定画面表示(リスト表示)
 mst.view_wifi_setting = function() {
     var i;
@@ -1361,6 +1085,11 @@ mst.view_keytype_setting = function(select_type) {
     s += "　　<b style='font-size: 32px;'>" + mst.key_pattern_list[select_type].name + "</b>";
     s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' class='update_button' onClick='javascript:mst.keytype_select(\""+select_type+"\"); return false;'>変更</a></div>";
     s += "<br><br><br><br><br><br>";
+    // タイプが変更されていたら再起動されるメッセージを出す
+    if (mst.setting_data.keyboard_type != select_type) {
+        s += "<div style='margin: 0 40px;'>※ キーボードがが変更されたので「決定」を押すと設定を保存して再起動します。</div>";
+        s += "<br><br><br>";
+    }
     s += "<center><div id='wifi_setting_btn_box'>";
     s += "<a href='#' class='button' onClick='javascript:mst.keytype_setting_btn_click(1, \""+select_type+"\");return false;'>決定</a>　　";
     s += "<a href='#' class='button' onClick='javascript:mst.keytype_setting_btn_click(0, \""+select_type+"\");return false;'>キャンセル</a>";
@@ -1391,9 +1120,105 @@ mst.keytype_setting_btn_click = function(save_flag, select_type) {
     }
     // 設定が変更されていて決定が押された時
     mst.setting_data.keyboard_type = select_type; // キーボードタイプ変更
+    mst.setting_data.option_set = {"type": ""}; // ユニットもリセット
     // 設定ファイルを保存して設定モードで再起動
     mst.end_setting(2);
 };
+
+
+mst.view_option_setting = function(option_set) {
+    var s = "";
+    var hrst = "border: 1px solid #9a9fe3; margin: 40px 0;";
+    s += "<b style='font-size: 30px;'>ユニット設定</b><br><br><br><br>";
+    if (!option_set) mst.option_edit_data = obj_clone(mst.setting_data.option_set);
+    if (mst.option_edit_data.type) {
+        s += "<b>ユニット ：</b>　　<b style='font-size: 32px;'>" + mst.option_list[mst.option_edit_data.type].name + "</b>";
+    } else {
+        s += "<b>ユニット ：</b>　　<b style='font-size: 32px;'>なし</b>";
+    }
+    s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' class='update_button' onClick='javascript:mst.option_type_select(); return false;'>変更</a></div>";
+    s += "<br>";
+    s += "<table style='min-width: 520px;'>";
+    if (mst.option_edit_data.type == "foot_m") {
+        // 踏みキー用ユニット設定
+        var invstr = "しない";
+        if (mst.option_edit_data.inversion == "1") invstr = "する";
+        s += "<tr><td colspan='2' style='padding: 12px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td><b>入力反転：</b>　　<b style='font-size: 27px;'>"+invstr+"</b></td><td align='right'>";
+        s += "<a href='#' class='update_button' onClick='javascript:mst.foot_inv_edit_btn();return false;'>変更</a>";
+        s += "</td></tr>";
+        
+    }
+    s += "</table>";
+    s += "<br><br><br><br><br><br>";
+    // タイプが変更されていたら再起動されるメッセージを出す
+    if (mst.option_edit_data.type != mst.setting_data.option_set.type) {
+        s += "<div style='margin: 0 40px;'>※ ユニットが変更されたので「決定」を押すと設定を保存して再起動します。</div>";
+        s += "<br><br><br>";
+    }
+    s += "<center><div id='wifi_setting_btn_box'>";
+    s += "<a href='#' class='button' onClick='javascript:mst.option_setting_btn_click(1);return false;'>決定</a>　　";
+    s += "<a href='#' class='button' onClick='javascript:mst.option_setting_btn_click(0);return false;'>キャンセル</a>";
+    s += "</div></center>";
+    set_html("setting_box", s);
+    set_html("info_box", "");
+    mst.view_box(["info_box", "setting_box"]);
+};
+
+// ユニットタイプ選択
+mst.option_type_select = function() {
+    var i;
+    var l = [];
+    l.push({"key": "", "value": "なし"});
+    for (i in mst.option_list) {
+        if (mst.option_list[i].keyboard_type.indexOf(mst.setting_data.keyboard_type) >= 0) {
+            l.push({"key": i, "value": mst.option_list[i].name});
+        }
+    }
+    select_type = "";
+    if (mst.option_edit_data.type) select_type = mst.option_edit_data.type;
+    mst.select_exec(l, select_type, function(select_key) {
+        mst.option_edit_data.type = select_key;
+        // 踏みキーで反転項目が無ければ追加
+        if (select_key == "foot_m") {
+            if (!("inversion" in mst.option_edit_data)) {
+                mst.option_edit_data.inversion = "0";
+            }
+        }
+        mst.view_option_setting(1);
+    });
+    
+};
+
+// 踏みキー入力反転選択
+mst.foot_inv_edit_btn = function() {
+    var l = [
+        {"key": "0", "value": "しない"},
+        {"key": "1", "value": "する"}
+    ];
+    mst.select_exec(l, mst.option_edit_data.inversion, function(select_key) {
+        mst.option_edit_data.inversion = select_key;
+        mst.view_option_setting(1);
+    });
+};
+
+// ユニット設定決定
+mst.option_setting_btn_click = function(save_flag) {
+    // キャンセルなら何もしない
+    if (!save_flag) {
+        mst.view_detail_setting();
+        return;
+    }
+    // タイプの変更が無ければ配列に反映するだけ
+    if (mst.option_edit_data.type == mst.setting_data.option_set.type) {
+        mst.setting_data.option_set = mst.option_edit_data;
+        mst.view_detail_setting();
+        return;
+    }
+    // ユニットタイプが変更されたら設定を保存して再起動
+    mst.setting_data.option_set = mst.option_edit_data;
+    mst.end_setting(2);
+}
 
 
 // 詳細設定表示
@@ -1403,6 +1228,7 @@ mst.view_detail_setting = function() {
     s += "<b style='font-size: 30px;'>設定メニュー</b><br><br>";
     s += "<a href='#' class='update_button' "+bs+" onClick='javascript:mst.view_language_setting();return false;'>日本語/US 切り替え</a><br><br>";
     s += "<a href='#' class='update_button' "+bs+" onClick='javascript:mst.view_keytype_setting();return false;'>キーボードの種類</a><br><br>";
+    s += "<a href='#' class='update_button' "+bs+" onClick='javascript:mst.view_option_setting();return false;'>ユニット設定</a><br><br>";
     s += "<a href='#' class='update_button' "+bs+" onClick='javascript:mst.view_switch_check();return false;'>スイッチ接触確認</a><br><br>";
     s += "<a href='#' class='update_button' "+bs+" onClick='javascript:mst.view_wifi_setting();return false;'>WIFI設定</a><br><br>";
     s += "<a href='#' class='update_button' "+bs+" onClick='javascript:mst.view_wifi_pass_setting();return false;'>ログイン設定</a><br><br>";

@@ -9,6 +9,7 @@
 #include "az_setting.h"
 
 #include "index_bin.h"
+#include "config_js_bin.h"
 #include "index_js_bin.h"
 
 
@@ -69,12 +70,17 @@ bool handleUrl(String path) {
     ESP_LOGD(LOG_TAG, "url path: %S", scmd);
     if (path.equals("/")){
         // メインページ
-        server.send(200,"text/html", index_bin);
+        server.send(200,"text/html", index_html_bin);
         return true;
 
     } else if (path.indexOf("/index.js") == 0) {
         // メインjs
-        server.send(200,"text/js", index_js_bin);
+        server.send(200,"text/js", index_min_js_bin);
+        return true;
+
+    } else if (path.indexOf("/config.js") == 0) {
+        // メインjs
+        server.send(200,"text/js", config_js_bin);
         return true;
 
     } else if (path.indexOf("/firmware_version") == 0) {

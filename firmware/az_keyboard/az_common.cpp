@@ -35,6 +35,9 @@ int key_input_length;
 // キーボードタイプの番号
 int keyboard_type_int;
 
+// オプションタイプの番号
+int option_type_int;
+
 // デフォルトのレイヤー番号と、今選択しているレイヤー番号と、最後に押されたレイヤーボタン
 int default_layer_no;
 int select_layer_no;
@@ -362,6 +365,8 @@ void AzCommon::load_setting_json() {
     select_layer_no = default_layer_no;
     // キーボードのタイプ番号を取得
     get_keyboard_type_int();
+    // オプションタイプの番号を取得
+    get_option_type_int();
 }
 
 // デフォルトレイヤー番号設定
@@ -386,10 +391,15 @@ void AzCommon::get_keyboard_type_int() {
     keyboard_type_int = 0;
     if (t.equals("az_macro")) {
         keyboard_type_int = 1;
-    } else if (t.equals("az_macro_foot")) {
-        keyboard_type_int = 2;
-    } else if (t.equals("az_macro_foot_r")) {
-        keyboard_type_int = 3;
+    }
+}
+
+// オプションのタイプ番号を取得する
+void AzCommon::get_option_type_int() {
+    String t = setting_obj["option_set"]["type"].as<String>();
+    option_type_int = 0;
+    if (t.equals("foot_m")) {
+        option_type_int = 1;
     }
 }
 
@@ -445,7 +455,6 @@ int AzCommon::remove_file(char *file_path) {
 }
 
 
-
 // デフォルトのsetting.jsonを生成する
 bool AzCommon::create_setting_json() {
     // 書込みモードでファイルオープン
@@ -455,7 +464,7 @@ bool AzCommon::create_setting_json() {
         return false;
     }
     // 書込み
-    if(!json_file.print(setting_default_bin)){
+    if(!json_file.print(setting_default_json_bin)){
         ESP_LOGD(LOG_TAG, "create_setting_json print error");
         json_file.close();
         return false;
@@ -502,8 +511,8 @@ void AzCommon::pin_setup() {
 
 // キー入力ピン初期化のキーボード別の処理
 void AzCommon::pin_setup_sub_process() {
-    if (keyboard_type_int == 3) {
-        // 踏みキー(反転)
+    if (option_type_int == 1) {
+        // 踏みキー
         pinMode(27, INPUT_PULLUP);
     }
 }
@@ -636,9 +645,9 @@ void AzCommon::key_read(void) {
 
 // キーボード別の後処理
 void AzCommon::key_read_sub_process(void) {
-    if (keyboard_type_int == 3) {
-        // 踏みキー(反転)
-        if (digitalRead(27) == 0) {
+    if (option_type_int == 1) {
+        // 踏みキー
+        if (setting_obj["option_set"]["inversion"].as<signed int>() && digitalRead(27) == 0) {
             // ジャックが刺されている間はON/OFF を反転
             input_key[8] = ! input_key[8];
             input_key[9] = ! input_key[9];

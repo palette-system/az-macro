@@ -35,7 +35,7 @@
 #define WIFI_AP_SSI_NAME    "AZ-Macro"
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000012"
+#define FIRMWARE_VERSION   "000013"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM001"
@@ -98,6 +98,7 @@ class AzCommon
         void load_setting_json(); // jsonデータロード
         void set_default_layer_no(); // デフォルトレイヤー設定
         void get_keyboard_type_int(); // キーボードのタイプ番号を取得
+        void get_option_type_int(); // オプションタイプの番号を取得
         int read_file(char *file_path, String &read_data); // ファイルからデータを読み出す
         int write_file(char *file_path, String &write_data); // ファイルにデータを保存する
         int remove_file(char *file_path); // ファイルを削除する
@@ -146,6 +147,9 @@ extern int key_input_length;
 
 // キーボードタイプの番号
 extern int keyboard_type_int;
+
+// オプションタイプの番号
+extern int option_type_int;
 
 // デフォルトのレイヤー番号と、今選択しているレイヤー番号
 extern int default_layer_no;
