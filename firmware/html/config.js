@@ -110,6 +110,58 @@ mst.option_list["foot_m"] = {
     ]
 };
 
+
+// トラックボール
+mst.option_list["trackball_m"] = {
+    "keyboard_type": ["az_macro"], // 対応しているキーボードタイプ
+    "name": "トラックボール",
+    "pin": {
+        "row": [],
+        "col": [],
+        "direct": [23, 22, 21, 19, 16, 17, 5, 18, 25, 26],
+        "touch": []
+    },
+    "size": {"width": 600, "height": 520},
+    "keys": [
+        {"id": 0, "x": 11, "y": 35, "width": 115, "height": 115 },
+        {"id": 1, "x": 163, "y": 35, "width": 115, "height": 115 },
+        {"id": 2, "x": 317, "y": 35, "width": 115, "height": 115 },
+        {"id": 3, "x": 471, "y": 35, "width": 115, "height": 115 },
+        {"id": 4, "x": 11, "y": 188, "width": 115, "height": 115 },
+        {"id": 5, "x": 163, "y": 188, "width": 115, "height": 115 },
+        {"id": 6, "x": 317, "y": 188, "width": 115, "height": 115 },
+        {"id": 7, "x": 471, "y": 188, "width": 115, "height": 115 },
+        {"id": 8, "x": 140, "y": 380, "width": 110, "height": 110 },
+        {"id": 9, "x": 340, "y": 380, "width": 110, "height": 110 }
+    ],
+    "parts": [
+        {
+            "type": "polygon",
+            "fill_color": "#666",
+            "fill": true, // 塗りつぶし
+            "path": [[2,2], [598,2], [598,338], [2,338]]
+        },
+        {
+            "type": "polygon",
+            "line_width": 4,
+            "line_color": "black",
+            "path": [[2,2], [598,2], [598,338], [2,338]]
+        },
+        {
+            "type": "polygon",
+            "fill_color": "#666",
+            "fill": true, // 塗りつぶし
+            "path": [[120,360], [480,360], [480,510], [120,510]]
+        },
+        {
+            "type": "polygon",
+            "line_width": 4,
+            "line_color": "black",
+            "path": [[120,360], [480,360], [480,510], [120,510]]
+        },
+    ]
+};
+
 // キーのボタンリスト
 mst.key_list = [
     {"key": "16385", "char": "LCk", "value": "Left Click"},

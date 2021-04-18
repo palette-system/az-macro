@@ -3,6 +3,8 @@
 #include "az_common.h"
 #include "ble_keyboard_jis.h"
 #include "custom_func.h"
+#include "paw3204.h"
+
 
 
 // BLEキーボードクラス
@@ -10,6 +12,9 @@ BleKeyboardJIS bleKeyboard("az-macro");
 
 // 拡張関数クラス
 CustomFunc my_function = CustomFunc();
+
+// トラックボールクラス
+Paw3204 pawTrackball = Paw3204();
 
 // コンストラクタ
 AzKeyboard::AzKeyboard() {
@@ -52,11 +57,22 @@ void AzKeyboard::start_keyboard() {
     // バッテリーレベル
     // bleKeyboard.setBatteryLevel(100);
 
+    // 各ユニット初期化
+    start_unit();    
+
     press_key_all_clear = -1;
 
     // 拡張関数 開始処理
     my_function.begin();
   
+}
+
+// 各ユニットの初期化
+void AzKeyboard::start_unit() {
+    if (option_type_int == 2) {
+        // トラックボール
+        pawTrackball.begin(27, 12);
+    }
 }
 
 // 前回のキーのステータスと比較して変更があった物だけ処理を実行する
@@ -421,6 +437,17 @@ void AzKeyboard::press_data_clear() {
     
 }
 
+// ユニットごとの定期処理
+void AzKeyboard::unit_loop_exec(void) {
+    if (option_type_int == 2) {
+        // トラックボール
+        paw3204_xy p = pawTrackball.getxy();
+        if (p.x > 4 || p.x < -4 || p.y > 4 || p.y < -4) {
+            bleKeyboard.mouse_move(((p.y * -1) / 2), (p.x / 2), 0, 0);
+        }
+    }
+}
+
 // 定期実行の処理
 void AzKeyboard::loop_exec(void) {
 
@@ -438,6 +465,9 @@ void AzKeyboard::loop_exec(void) {
 
     // キー入力クリア処理
     press_data_clear();
+
+    // 各ユニットの定期処理
+    unit_loop_exec();
 
     // 拡張関数 ループ処理
     my_function.loop();

@@ -394,12 +394,18 @@ void AzCommon::get_keyboard_type_int() {
     }
 }
 
-// オプションのタイプ番号を取得する
+// ユニットのタイプ番号を取得する
 void AzCommon::get_option_type_int() {
-    String t = setting_obj["option_set"]["type"].as<String>();
     option_type_int = 0;
+    if (!setting_obj.containsKey("option_set")) return;
+    if (!setting_obj["option_set"].containsKey("type")) return;
+    String t = setting_obj["option_set"]["type"].as<String>();
     if (t.equals("foot_m")) {
+        // 踏みキー
         option_type_int = 1;
+    } else if (t.equals("trackball_m")) {
+        // トラックボール
+        option_type_int = 2;
     }
 }
 

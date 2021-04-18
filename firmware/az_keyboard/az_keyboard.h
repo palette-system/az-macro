@@ -10,7 +10,9 @@ class AzKeyboard
     public:
         AzKeyboard();   // コンストラクタ
         void start_keyboard(); // キーボードとして処理開始
+        void start_unit(); // 各ユニットの初期化
         void loop_exec();         // キーボード定期処理
+        void unit_loop_exec(); // 各ユニットごとの定期処理
         void key_action_exec(); // ステータスが変更されたキーのアクションを実行する
         void key_repeat_exec(); // キー連打処理
         void send_webhook(const JsonObject &key_set); // WEBフックを送信する
