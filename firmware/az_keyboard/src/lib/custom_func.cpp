@@ -1,4 +1,4 @@
-#include "az_common.h"
+#include "../../az_common.h"
 #include "custom_func.h"
 
 // 初期処理

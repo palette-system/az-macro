@@ -8,9 +8,9 @@
 #include "az_common.h"
 #include "az_setting.h"
 
-#include "index_bin.h"
-#include "config_js_bin.h"
-#include "index_js_bin.h"
+#include "src/html/index_bin.h"
+#include "src/html/config_js_bin.h"
+#include "src/html/index_js_bin.h"
 
 
 

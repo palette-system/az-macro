@@ -1,14 +1,7 @@
 #ifndef AzCommon_h
 #define AzCommon_h
 
-#if defined(CONFIG_ARDUHAL_ESP_LOG)
-  #include "esp32-hal-log.h"
-  #define LOG_TAG ""
-#else
-  #include "esp_log.h"
-  static const char* LOG_TAG = "AZM";
-#endif
-
+#include "Arduino.h"
 #include "FS.h"
 #include "SPIFFS.h"
 
@@ -17,22 +10,23 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <HTTPClient.h>
+#include <Adafruit_NeoPixel.h>
+
+#include "src/lib/neopixel.h"
 
 
-// キーボードの商品コード
-#define KEYBOARD_CODE    "AZ-Macro-001"
+// キーボード
+#include "src/keyboard/az_macro.h"
+// #include "src/keyboard/az_60jis.h"
 
-// メモリに保持するキーの数(メモリを確保するサイズ)
-#define KEY_INPUT_MAX  16
 
-// レイヤー切り替え同時押し許容数
-#define PRESS_KEY_MAX 16
-
-// マウス移動ボタン同時押し許容数
-#define PRESS_MOUSE_MAX 4
-
-// WIFIアクセスポイントの名前
-#define WIFI_AP_SSI_NAME    "AZ-Macro"
+#if defined(CONFIG_ARDUHAL_ESP_LOG)
+  #include "esp32-hal-log.h"
+  #define LOG_TAG ""
+#else
+  #include "esp_log.h"
+  static const char* LOG_TAG = "AZM";
+#endif
 
 // ファームウェアのバージョン文字
 #define FIRMWARE_VERSION   "000014"
@@ -43,12 +37,6 @@
 // JSON のファイルパス
 #define SETTING_JSON_PATH "/setting.json"
 
-// EEPROM 読み込み時のサイズ
-#define EEPROM_BUF_SIZE   256
-
-// WEBフック用のバッファサイズ
-// #define WEBFOOK_BUF_SIZE 5120
-#define WEBFOOK_BUF_SIZE 512
 
 // 今押されているボタンの情報
 struct press_key_data {
@@ -71,7 +59,6 @@ struct press_mouse_data {
     short move_index; // 移動index
 };
 
-
 // EEPROMに保存するデータ
 struct mrom_data_set {
     char check[10];
@@ -79,8 +66,6 @@ struct mrom_data_set {
     char ap_ssid[32];
     int boot_mode; // 起動モード 0=キーボード / 1=設定モード
 };
-
-
 
 // クラスの定義
 class AzCommon
@@ -129,6 +114,9 @@ extern int status_led_bit;
 
 // ステータスLED表示モード
 extern int status_led_mode;
+
+// rgb_led制御用クラス
+extern Neopixel rgb_led_cls;
 
 //timer オブジェクト
 extern hw_timer_t *timer;

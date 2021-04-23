@@ -19,15 +19,39 @@ AzKeyboard azkb = AzKeyboard();
 AzSetting azstg = AzSetting();
 
 void setup() {
+    int i, j, s;
     // 共通処理の初期化
     common_cls.common_start();
     // CPU情報の表示
     common_cls.debug_cpu_info();
     // 設定jsonの読み込み
     common_cls.load_setting_json();
-    // ステータス表示用のLED
-    pinMode(status_pin, OUTPUT);
-    digitalWrite(status_pin, 0);
+    // ステータス表示用のLED初期化
+    if (status_pin >= 0) {
+        pinMode(status_pin, OUTPUT);
+        digitalWrite(status_pin, 0);
+        status_led_mode = 0;
+        common_cls.set_status_led_timer();
+    }
+    // RGB_LEDクラス初期化
+    if (setting_obj.containsKey("rgb_pin") &&
+            setting_obj.containsKey("matrix_row") &&
+            setting_obj.containsKey("matrix_col")) {
+        rgb_led_cls.begin(
+            setting_obj["rgb_pin"].as<signed int>(),
+            setting_obj["matrix_row"].as<signed int>(),
+            setting_obj["matrix_col"].as<signed int>()
+        );
+        s = setting_obj["led_num"].size();
+        for (i=0; i<s; i++) {
+            rgb_led_cls.set_led_num(i, setting_obj["led_num"][i].as<signed int>());
+        }
+        s = setting_obj["key_matrix"].size();
+        for (i=0; i<s; i++) {
+            rgb_led_cls.set_key_matrix(i, setting_obj["key_matrix"][i].as<signed int>());
+        }
+        
+    }
     // キーの入力ピンの初期化
     common_cls.pin_setup();
     // eepromからデータ読み込み
@@ -36,7 +60,7 @@ void setup() {
     boot_type = eep_data.boot_mode;
     // 0番目のキーが押されていたら設定モードにする
     common_cls.key_read(); // キーの状態を取得
-    if (common_cls.input_key[0]) boot_type = 1;
+    if (common_cls.input_key[SETTING_MODE_KEY]) boot_type = 1;
     // 4～5番目のキーが押されていたらデフォルトレイヤーを切り替える
     common_cls.set_default_layer_no();
     if (boot_type == 1) {

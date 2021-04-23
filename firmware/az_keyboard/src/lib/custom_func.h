@@ -1,7 +1,7 @@
 #ifndef CustomFunc_h
 #define CustomFunc_h
 
-#include "az_common.h"
+#include "../../az_common.h"
 
 
 // クラスの定義

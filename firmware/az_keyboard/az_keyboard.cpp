@@ -1,14 +1,13 @@
 #include "Arduino.h"
 #include "az_keyboard.h"
 #include "az_common.h"
-#include "ble_keyboard_jis.h"
-#include "custom_func.h"
-#include "paw3204.h"
-
+#include "src/lib/ble_keyboard_jis.h"
+#include "src/lib/custom_func.h"
+#include "src/lib/paw3204.h"
 
 
 // BLEキーボードクラス
-BleKeyboardJIS bleKeyboard("az-macro");
+BleKeyboardJIS bleKeyboard(BLUETOOTH_SEARCH_NAME);
 
 // 拡張関数クラス
 CustomFunc my_function = CustomFunc();
@@ -83,6 +82,7 @@ void AzKeyboard::key_action_exec() {
             if (common_cls.input_key[i]) {
                 // キーが押された
                 key_down_action(i);
+                rgb_led_cls.set_led_buf(i, 1);
             } else {
                 // キーは離された
                 key_up_action(i);
@@ -448,6 +448,8 @@ void AzKeyboard::unit_loop_exec(void) {
     }
 }
 
+// 押された所を1にする
+
 // 定期実行の処理
 void AzKeyboard::loop_exec(void) {
 
@@ -468,6 +470,9 @@ void AzKeyboard::loop_exec(void) {
 
     // 各ユニットの定期処理
     unit_loop_exec();
+
+    // RGB_LEDを制御する定期処理
+    rgb_led_cls.rgb_led_loop_exec();
 
     // 拡張関数 ループ処理
     my_function.loop();

@@ -1,21 +1,20 @@
-#include "Arduino.h"
-
 #include "az_common.h"
-#include "setting_default.h"
-
 
 // セッティングJSONを保持する領域
-DynamicJsonDocument setting_doc(10240);
+DynamicJsonDocument setting_doc(SETTING_JSON_BUF_SIZE);
 JsonObject setting_obj;
 
 // ステータス表示用ピン番号
-int status_pin;
+int status_pin = -1;
 
 // ステータスLED今0-9
 int status_led_bit = 0;
 
 // ステータスLED表示モード
 int status_led_mode;
+
+// rgb_led制御用クラス
+Neopixel rgb_led_cls = Neopixel();
 
 //timer オブジェクト
 hw_timer_t *timer = NULL;
@@ -53,6 +52,8 @@ press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
 // オールクリア送信フラグ
 int press_key_all_clear;
 
+
+
 // ステータス用LED点滅
 void IRAM_ATTR status_led_write() {
     int set_bit;
@@ -88,7 +89,7 @@ void IRAM_ATTR status_led_write() {
             set_bit = 0;
         }
     }
-    digitalWrite(status_pin, set_bit);
+    if (status_pin >= 0) digitalWrite(status_pin, set_bit);
 }
 
 // ランダムな文字生成(1文字)
@@ -138,9 +139,6 @@ void AzCommon::common_start() {
         ESP_LOGD(LOG_TAG, "SPIFFS begin error\n");
         return;
     }
-    // ステータスLED初期化
-    status_led_mode = 0;
-    set_status_led_timer();
     // WIFI 接続フラグ
     wifi_conn_flag = 0;
     // 押している最中のキーデータ初期化
@@ -358,7 +356,9 @@ void AzCommon::load_setting_json() {
     setting_obj = setting_doc.as<JsonObject>();
     ESP_LOGD(LOG_TAG, "status_pin: %D\r\n", setting_obj["status_pin"].as<signed int>());
     // ステータス表示用ピン番号取得
-    status_pin = setting_obj["status_pin"].as<signed int>();
+    if (setting_obj.containsKey("status_pin")) {
+        status_pin = setting_obj["status_pin"].as<signed int>();
+    }
     // デフォルトのレイヤー番号設定
     default_layer_no = setting_obj["default_layer"].as<signed int>();
     // 今選択してるレイヤーをデフォルトに
@@ -639,9 +639,10 @@ void AzCommon::key_read(void) {
             if (i == j) { s = 0; } else { s = 1; }
             digitalWrite(setting_obj["keyboard_pin"]["col"][j].as<signed int>(), s);
         }
+        delayMicroseconds(50);
         // row の分キー入力チェック
         for (j=0; j<row_len; j++) {
-            input_key[n] = digitalRead(setting_obj["keyboard_pin"]["row"][j].as<signed int>());
+            input_key[n] = !digitalRead(setting_obj["keyboard_pin"]["row"][j].as<signed int>());
             n++;
         }
     }

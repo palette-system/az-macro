@@ -210,7 +210,13 @@ mst.get_setting_json = function() {
 
 // 設定JSON保存
 mst.save_setting_json = function() {
-    mst.setting_data.keyboard_pin = mst.key_pattern_list[ mst.setting_data.keyboard_type ].pin;
+    var key_pattern = mst.key_pattern_list[ mst.setting_data.keyboard_type ]
+    mst.setting_data.keyboard_pin = key_pattern.pin;
+    mst.setting_data.status_pin = key_pattern.status_pin;
+    mst.setting_data.rgb_pin = key_pattern.rgb_pin;
+    mst.setting_data.rgb_len = key_pattern.rgb_len;
+    mst.setting_data.led_num = key_pattern.led_num;
+    mst.setting_data.key_matrix = key_pattern.key_matrix;
     // ユニットが設定されていればユニットのpinを入れる
     if (mst.setting_data.option_set.type && mst.option_list[mst.setting_data.option_set.type] && mst.option_list[mst.setting_data.option_set.type].pin) {
         mst.setting_data.keyboard_pin = mst.option_list[mst.setting_data.option_set.type].pin;
@@ -339,14 +345,14 @@ mst.delete_layer = function() {
 
 // キータッチ用のオブジェクト作成
 mst.create_key_btn = function() {
-    var c, f, i, j, k, h, l, p, m, s;
+    var c, f, i, j, k, h, l, p, m, s, sc;
     // 画像の位置取得
     h = "";
     for (i in mst.key_pattern["keys"]) {
         k = mst.key_pattern.keys[i];
         p = mst.get_key_setting_num(k.id); // キーの設定
         s = "position: absolute;";
-        s += "margin: -2px; border: 3px solid black; border-radius: 12px;";
+        s += "margin: -2px; border: 3px solid black; border-radius: 12px;overflow: hidden;";
         if (mst.switch_check_mode) {
             // キー動作確認中はグレー
             s += "background-color: rgba(80,80, 80, 0.8);";
@@ -360,13 +366,14 @@ mst.create_key_btn = function() {
         s += "top: " + k["y"] + "px; left: " + k["x"] + "px;";
         s += "width: " + k["width"] + "px; height: " + k["height"] + "px;";
         h += "<div id='key_" + i + "' style='" + s + "' onClick='javascript: mst.key_click("+i+");'>";
-        h += "<table style='width: " + k["width"] + "px; height: " + k["height"] + "px;'><tr><td align='center'>";
+        sc = (k["width"] < 100)? 0.7: 1;
+        h += "<table style='width: " + (k["width"]+20) + "px; height: " + (k["height"]+20) + "px;scale:"+sc+";margin: -10px;'><tr><td align='center'>";
         if (mst.switch_check_mode) {
             // キー動作確認中は番号を表示
-            h += "<div id='key_top_"+i+"' style='color: white; font-size: 50px;'>"+i+"</div>";
+            h += "<div id='key_top_"+i+"' style='color: white; font-size: 50px;'>"+k.id+"</div>";
         } else if (p.press.action_type == 0) {
             // 処理なし
-            h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>None</div>";
+            h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;line-height: 27px;'>None</div>";
         } else if (p.press.action_type == 1) {
             // 通常入力
             if (p.press.key.length <= 1) {
@@ -374,7 +381,7 @@ mst.create_key_btn = function() {
                 f = (c.length > 3)? "30px": "43px";
                 h += "<div id='key_top_"+i+"' style='color: black; font-size: "+f+";'>" + c + "</div>";
             } else {
-                h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>";
+                h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;line-height: 27px;'>";
                 l = [];
                 for (j in p.press.key) {
                     l.push(mst.get_key_char(p.press.key[j]));
