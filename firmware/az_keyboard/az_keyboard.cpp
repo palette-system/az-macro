@@ -452,6 +452,7 @@ void AzKeyboard::unit_loop_exec(void) {
 
 // 定期実行の処理
 void AzKeyboard::loop_exec(void) {
+  while (true) {
 
     // 現在のキーの状態を取得
     common_cls.key_read();
@@ -474,6 +475,11 @@ void AzKeyboard::loop_exec(void) {
     // RGB_LEDを制御する定期処理
     rgb_led_cls.rgb_led_loop_exec();
 
+    // ディスプレイ表示処理
+    if (TFT_FLG) {
+        disp->loop_exec();
+    }
+
     // 拡張関数 ループ処理
     my_function.loop();
 
@@ -481,5 +487,5 @@ void AzKeyboard::loop_exec(void) {
     common_cls.key_old_copy();
 
     delay(10);
-  
+  }
 }

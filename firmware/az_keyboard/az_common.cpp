@@ -13,6 +13,12 @@ int status_led_bit = 0;
 // ステータスLED表示モード
 int status_led_mode;
 
+// 液晶オブジェクト
+Arduino_ST7789 *tft;
+
+// 液晶表示用オブジェクト
+Display *disp;
+
 // rgb_led制御用クラス
 Neopixel rgb_led_cls = Neopixel();
 
@@ -152,22 +158,6 @@ void AzCommon::common_start() {
     }
 }
 
-// デバッグ用にCPUの情報をシリアル通信に流す
-void AzCommon::debug_cpu_info() {
-    ESP_LOGD(LOG_TAG, "Chip Revision %d\r\n", ESP.getChipRevision());
-    esp_chip_info_t chip_info;
-    esp_chip_info(&chip_info);
-    ESP_LOGD(LOG_TAG, "Number of Core: %d\r\n", chip_info.cores);
-    ESP_LOGD(LOG_TAG, "CPU Frequency: %d MHz\r\n", ESP.getCpuFreqMHz());  
-    ESP_LOGD(LOG_TAG, "Flash Chip Size = %d byte\r\n", ESP.getFlashChipSize());
-    ESP_LOGD(LOG_TAG, "Flash Frequency = %d Hz\r\n", ESP.getFlashChipSpeed());
-    ESP_LOGD(LOG_TAG, "ESP-IDF version = %s\r\n", esp_get_idf_version());
-    ESP_LOGD(LOG_TAG, "Free Heap Size = %d\r\n", esp_get_free_heap_size());
-    ESP_LOGD(LOG_TAG, "System Free Heap Size = %d\r\n", system_get_free_heap_size());
-    ESP_LOGD(LOG_TAG, "Minimum Free Heap Size = %d\r\n", esp_get_minimum_free_heap_size());
-  ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
-   
-}
 
 // ステータスLEDチカ用タイマー登録
 void AzCommon::set_status_led_timer() {
@@ -573,6 +563,8 @@ void AzCommon::load_data() {
         char b[16];
         getRandomNumbers(4, b);
         sprintf(eep_data.ap_ssid, "%S-%S", WIFI_AP_SSI_NAME, b);
+        // ユニークID
+        getRandomNumbers(10, eep_data.uid);
         // 受け渡し用テキスト
         strcpy(eep_data.text, "");
         // 設定JSONも作り直す

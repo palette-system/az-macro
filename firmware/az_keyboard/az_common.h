@@ -13,6 +13,8 @@
 #include <Adafruit_NeoPixel.h>
 
 #include "src/lib/neopixel.h"
+#include "src/lib/Arduino_ST7789_my.h"
+#include "src/lib/display.h"
 
 
 // キーボード
@@ -32,7 +34,7 @@
 #define FIRMWARE_VERSION   "000014"
 
 // EEPROMに保存しているデータのバージョン文字列
-#define EEP_DATA_VERSION    "AZM001"
+#define EEP_DATA_VERSION    "AZM002"
 
 // JSON のファイルパス
 #define SETTING_JSON_PATH "/setting.json"
@@ -65,6 +67,7 @@ struct mrom_data_set {
     char text[128];
     char ap_ssid[32];
     int boot_mode; // 起動モード 0=キーボード / 1=設定モード
+    char uid[12];
 };
 
 // クラスの定義
@@ -95,7 +98,6 @@ class AzCommon
         void save_data(); // EEPROMに保存する
         void set_boot_mode(int set_mode); // 起動モードを切り替えてEEPROMに保存
         void change_mode(int set_mode); // モードを切り替えて再起動
-        void debug_cpu_info(); // cpuの動作情報をシリアル通信に流す
         void key_read(); // 現在のキーの状態を取得
         void key_read_sub_process(void); // キー状態取得後のキーボード別の処理
         void key_old_copy(); // 現在のキーの状態を過去用配列にコピー
@@ -114,6 +116,12 @@ extern int status_led_bit;
 
 // ステータスLED表示モード
 extern int status_led_mode;
+
+// 液晶オブジェクト
+extern Arduino_ST7789 *tft;
+
+// 液晶表示用オブジェクト
+extern Display *disp;
 
 // rgb_led制御用クラス
 extern Neopixel rgb_led_cls;

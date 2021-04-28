@@ -31,4 +31,11 @@
 // 設定モードに入るためのキー番号
 #define SETTING_MODE_KEY 0
 
+// ディスプレイ用
+#define TFT_FLG   1 // ディスプレイが接続されているか(0=ディスプレイ表示無し / 1=ディスプレイ表示あり)
+#define TFT_DC   26 // DC
+#define TFT_RST  25 // TFTのリセット
+#define TFT_CS   -1 // 1つなので使わない
+#define TFT_MOSI 21 // SDA
+#define TFT_SCLK 22 // SCL
 

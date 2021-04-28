@@ -22,8 +22,6 @@ void setup() {
     int i, j, s;
     // 共通処理の初期化
     common_cls.common_start();
-    // CPU情報の表示
-    common_cls.debug_cpu_info();
     // 設定jsonの読み込み
     common_cls.load_setting_json();
     // ステータス表示用のLED初期化
@@ -32,6 +30,14 @@ void setup() {
         digitalWrite(status_pin, 0);
         status_led_mode = 0;
         common_cls.set_status_led_timer();
+    }
+    // ディスプレイ初期化
+    if (TFT_FLG) {
+        tft = new Arduino_ST7789(TFT_DC, TFT_RST, TFT_MOSI, TFT_SCLK, TFT_CS);
+        tft->init(240, 135);
+        tft->fillScreen(BLACK);
+        disp = new Display();
+        disp->begin(tft);
     }
     // RGB_LEDクラス初期化
     if (setting_obj.containsKey("rgb_pin") &&
