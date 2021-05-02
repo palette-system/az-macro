@@ -25,7 +25,7 @@ void AzKeyboard::start_keyboard() {
     status_led_mode = 4;
 
     // メモリ空けるためファイルシステム終了
-    SPIFFS.end();
+    // SPIFFS.end();
 
     // EEPROMも終了
     EEPROM.end();
@@ -452,6 +452,8 @@ void AzKeyboard::unit_loop_exec(void) {
 
 // 定期実行の処理
 void AzKeyboard::loop_exec(void) {
+  unsigned long n;
+  n = millis();
   while (true) {
 
     // 現在のキーの状態を取得
@@ -476,7 +478,7 @@ void AzKeyboard::loop_exec(void) {
     rgb_led_cls.rgb_led_loop_exec();
 
     // ディスプレイ表示処理
-    if (TFT_FLG) {
+    if (common_cls.on_tft_unit()) {
         disp->loop_exec();
     }
 
@@ -486,6 +488,6 @@ void AzKeyboard::loop_exec(void) {
     // 現在のキーの状態を前回部分にコピー
     common_cls.key_old_copy();
 
-    delay(10);
+    // delay(10);
   }
 }

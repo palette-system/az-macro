@@ -11,6 +11,7 @@
 #define _ADAFRUIT_ST7789H_
 
 #include "Arduino.h"
+#include "SPIFFS.h"
 #include "Print.h"
 #include <Adafruit_GFX.h>
 
@@ -84,6 +85,9 @@ class Arduino_ST7789 : public Adafruit_GFX {
            setRotation(uint8_t r),
            invertDisplay(boolean i),
            viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t * bmp_data, uint8_t opa),
+	       viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path),
+	       viewBMPspi_head(int16_t x, int16_t y, int16_t w, int16_t h), // データを流し込んで画像を表示する(ヘッダ)
+	       viewBMPspi_data(uint8_t *wbuf, int wsize), // データを流し込んで画像を表示する(データ)
        init(uint16_t width, uint16_t height);
   uint16_t Color565(uint8_t r, uint8_t g, uint8_t b);
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b) { return Color565(r, g, b); } 

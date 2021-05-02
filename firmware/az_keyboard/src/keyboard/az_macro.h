@@ -2,6 +2,10 @@
 
 // 初期起動時のデフォルト設定
 #include "setting_azmacro_default.h"
+#include "../image/az_macro_img.h"
+
+// キーボードの定義
+#define KEYBOARD_AZMACRO
 
 // メモリに保持するキーの数(メモリを確保するサイズ)
 #define KEY_INPUT_MAX  16
@@ -29,12 +33,4 @@
 
 // 設定モードに入るためのキー番号
 #define SETTING_MODE_KEY 0
-
-// ディスプレイ用
-#define TFT_FLG   0 // ディスプレイが接続されているか(0=ディスプレイ表示無し / 1=ディスプレイ表示あり)
-#define TFT_DC   26 // DC
-#define TFT_RST  25 // TFTのリセット
-#define TFT_CS   -1 // 1つなので使わない
-#define TFT_MOSI 21 // SDA
-#define TFT_SCLK 22 // SCL
 

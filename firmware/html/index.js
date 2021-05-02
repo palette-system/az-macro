@@ -6,9 +6,13 @@ function $(id) {
     return document.getElementById(id);
 }
 // 要素表示
-function show(id) {
+function show(id, display_type) {
     if (!$(id)) return;
-    $(id).style.display = "block";
+    if (display_type) {
+        $(id).style.display = display_type;
+    } else {
+        $(id).style.display = "block";
+    }
 }
 // 要素非表示
 function hide(id) {
@@ -28,16 +32,17 @@ function obj_eq(obj_a, obj_b) {
     return (JSON.stringify(obj_a) == JSON.stringify(obj_b));
 }
 // GETメソッド送信
-function ajax(path, cb_func) {
+function ajax(path, res_type, cb_func) {
     var req = new XMLHttpRequest();
     req.open("GET", path, true); // 第3パラメータ true で非同期
+    req.responseType = res_type;
     req.setRequestHeader('Pragma', 'no-cache');
     req.setRequestHeader('Cache-Control', 'no-cache');
     req.setRequestHeader('If-Modified-Since', 'Thu, 01 Jun 1970 00:00:00 GMT');
     req.onreadystatechange = function() {
         if (req.readyState < 4) return;
         if(req.status == 200 ) {
-            cb_func(true, req.responseText, req);
+            cb_func(true, req.response);
         } else {
             cb_func(false, req);
         }
@@ -96,7 +101,7 @@ mst.setting_data = {
             }
         }
     },
-    "option_set": {"type": ""}
+    "option_set": {"type": "display_m"}
 };
 
 // ファームウェアのバージョン
@@ -142,7 +147,7 @@ mst.init = function() {
     set_html("info_box", "読み込み中..");
     mst.view_box(["info_box"]);
     // ファームウェアのバージョン取得
-    ajax("/firmware_version", function(stat, res) {
+    ajax("/firmware_version", "text", function(stat, res) {
         if (stat && res) {
             mst.firmware_version = res;
         }
@@ -171,7 +176,7 @@ mst.browser_btn_control = function() {
 // 設定JSON取得
 mst.get_setting_json = function() {
     // 設定JSON取得
-    ajax("/get_setting_json", function(stat, res) {
+    ajax("/get_setting_json", "text", function(stat, res) {
         if (!stat) {
             set_html("info_box", "キー設定 読み込み 失敗: /get_setting_json");
             mst.key_pattern = mst.key_pattern_list[ mst.key_pattern_default ];
@@ -231,6 +236,42 @@ mst.save_setting_json = function() {
         }
         set_html("info_box", "終了中..");
     });
+};
+
+
+// blobデータをキーボードに保存する
+mst.file_send = function(url_path, file_name, blob_data, cb_func) {
+    // フォームの情報を送信
+    var fd = new FormData();
+    fd.append("file", blob_data, file_name);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url_path, true);
+    xhr.upload.addEventListener('progress', function(evt) {
+        if (!evt.lengthComputable) return;
+        console.log("progress: " + evt.loaded + " / " + evt.total);
+    });
+    var err_func = function() {
+        cb_func(false, null);
+    };
+    xhr.addEventListener("error", err_func);
+    xhr.upload.addEventListener("abort", err_func);
+    xhr.upload.addEventListener("error", err_func);
+    xhr.upload.addEventListener("timeout", err_func);
+    xhr.onreadystatechange = function(e) {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                cb_func(true, this);
+            } else {
+                cb_func(false, null);
+            }
+        }
+    };
+    xhr.send(fd);
+};
+
+// 指定したファイルを削除する
+mst.file_delete = function(file_name, cb_func) {
+    ajax("delete_file_" + file_name, "text", cb_func);
 };
 
 
@@ -888,7 +929,7 @@ mst.end_setting = function(end_type) {
     } else {
         // 保存せずに終了
         set_html("info_box", "終了中.. ");
-        ajax("/end_setting", function(stat, res) {
+        ajax("/end_setting", "text", function(stat, res) {
             set_html("info_box", "ページを閉じて下さい");
             mst.view_box(["info_box"]);
         });
@@ -975,7 +1016,7 @@ mst.view_wifi_setting_one = function(wifi_data) {
 mst.wifi_search = function() {
     mst.view_box(["info_box"]);
     set_html("info_box", "アクセスポイント 検索中 ...");
-    ajax("/get_ap_list", function(stat, res) {
+    ajax("/get_ap_list", "text", function(stat, res) {
         if (!stat) {
             mst.view_wifi_setting_one(mst.wifi_edit_data);
             set_html("info_box", "アクセスポイント検索 失敗");
@@ -1143,7 +1184,7 @@ mst.view_option_setting = function(option_set) {
     } else {
         s += "<b>ユニット ：</b>　　<b style='font-size: 32px;'>なし</b>";
     }
-    s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' class='update_button' onClick='javascript:mst.option_type_select(); return false;'>変更</a></div>";
+    s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' id='unich_btn' class='update_button' onClick='javascript:mst.option_type_select(); return false;'>変更</a></div>";
     s += "<br>";
     s += "<table style='min-width: 520px;'>";
     if (mst.option_edit_data.type == "foot_m") {
@@ -1152,7 +1193,27 @@ mst.view_option_setting = function(option_set) {
         if (mst.option_edit_data.inversion == "1") invstr = "する";
         s += "<tr><td colspan='2' style='padding: 12px 0;'><hr style='"+hrst+"'></td></tr>";
         s += "<tr><td><b>入力反転：</b>　　<b style='font-size: 27px;'>"+invstr+"</b></td><td align='right'>";
-        s += "<a href='#' class='update_button' onClick='javascript:mst.foot_inv_edit_btn();return false;'>変更</a>";
+        s += "<a href='#' id='rvch_btn' class='update_button' onClick='javascript:mst.foot_inv_edit_btn();return false;'>変更</a>";
+        s += "</td></tr>";
+    } else if (mst.option_edit_data.type == "display_m") {
+        // AZ-Macro用液晶
+        var op_movie = "再生しない";
+        if (mst.option_edit_data.op_movie == "1") op_movie = "再生する";
+        s += "<tr><td colspan='2' style='padding: 12px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td><b>起動ムービー：</b>　　<b style='font-size: 27px;'>"+op_movie+"</b></td><td align='right'>";
+        s += "<a href='#' id='stmv_btn' class='update_button' onClick='javascript:mst.op_movie_edit_btn();return false;'>変更</a>";
+        s += "</td></tr>";
+        // 待ち受け画像
+        s += "<tr><td colspan='2' style='padding: 12px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td colspan='2'><b>待ち受け画像：</b><br>";
+        s += "<input id='stimg_file' type='file' accept='image/*' onChange='javascript:mst.stimg_change(this);'><br>";
+        s += "<canvas id='stimg_canvas' width='0' height='0'></canvas>";
+        s += "</td></tr>";
+        s += "<tr><td colspan='2' align='right'>";
+        if (mst.option_edit_data.type == mst.setting_data.option_set.type) {
+            s += "<a href='#' id='stimg_ch' class='update_button' onClick='javascript:mst.stimg_check();return false;'>確認</a>　";
+        }
+        s += "<a href='#' id='stimg_del' class='update_button' onClick='javascript:mst.stimg_delete();return false;'>削除</a>";
         s += "</td></tr>";
         
     }
@@ -1163,13 +1224,52 @@ mst.view_option_setting = function(option_set) {
         s += "<div style='margin: 0 40px;'>※ ユニットが変更されたので「決定」を押すと設定を保存して再起動します。</div>";
         s += "<br><br><br>";
     }
+    s += "<div id='option_setting_info'></div>";
     s += "<center><div id='wifi_setting_btn_box'>";
-    s += "<a href='#' class='button' onClick='javascript:mst.option_setting_btn_click(1);return false;'>決定</a>　　";
-    s += "<a href='#' class='button' onClick='javascript:mst.option_setting_btn_click(0);return false;'>キャンセル</a>";
+    s += "<a href='#' id='uni_ok' class='button' onClick='javascript:mst.option_setting_btn_click(1);return false;'>決定</a>　　";
+    s += "<a href='#' id='uni_can' class='button' onClick='javascript:mst.option_setting_btn_click(0);return false;'>キャンセル</a>";
     s += "</div></center>";
     set_html("setting_box", s);
     set_html("info_box", "");
     mst.view_box(["info_box", "setting_box"]);
+    if (mst.option_edit_data.type == "display_m") {
+        mst.view_imgdata("stimg_canvas", "stimg.dat");
+    }
+};
+
+// 画像データを取得してきてキャンバスに表示
+mst.view_imgdata = function(canvas_id, file_name) {
+    ajax("read_file_" + file_name, "arraybuffer", function(stat, res) {
+        if (!stat) {
+            // ファイル無しなら何もしない
+            return;
+        }
+        console.log(res);
+        var img_data = new Uint8Array(res);
+        console.log(img_data);
+        var i = 0;
+        var cl, ch, cr, cg, cb;
+        var x = 0, y = 0;
+        var max_width = 135, max_height = 240;
+        // キャンバス準備
+        var cvobj = $("stimg_canvas");
+        cvobj.width = max_width;
+        cvobj.height = max_height;
+        var ctx = cvobj.getContext("2d");
+        // データ分ループ
+        while (i < img_data.length) {
+            cl = img_data[i + 1];
+            ch = img_data[i];
+            cr = ch & 0xF8;
+            cg = ((ch & 0x07) << 3 | (cl >> 5)) << 2;
+            cb = (cl & 0x1F) << 3;
+            ctx.fillStyle = "rgb("+cr+","+cg+","+cb+")" ;
+            ctx.fillRect(x, y, 1, 1) ;
+            x++;
+            if (x >= max_width) { x = 0; y++; }
+            i += 2;
+        }
+    });
 };
 
 // ユニットタイプ選択
@@ -1192,6 +1292,12 @@ mst.option_type_select = function() {
                 mst.option_edit_data.inversion = "0";
             }
         }
+        // 液晶で起動ムービー再生が無ければ追加
+        if (select_key == "display_m") {
+            if (!("op_movie" in mst.option_edit_data)) {
+                mst.option_edit_data.op_movie = "1";
+            }
+        }
         mst.view_option_setting(1);
     });
     
@@ -1209,6 +1315,138 @@ mst.foot_inv_edit_btn = function() {
     });
 };
 
+// 液晶の起動ムービー再生するかどうか
+mst.op_movie_edit_btn = function() {
+    var l = [
+        {"key": "0", "value": "再生しない"},
+        {"key": "1", "value": "再生する"}
+    ];
+    mst.select_exec(l, mst.option_edit_data.op_movie, function(select_key) {
+        mst.option_edit_data.op_movie = select_key;
+        mst.view_option_setting(1);
+    });
+};
+
+// 待ち受け画像ファイル変更
+mst.stimg_change = function(obj) {
+    var set_file = obj.files[0];
+    
+    // 選択されたファイルが画像かどうか判定する
+    // ここでは、jpeg形式とpng形式のみを画像をみなす
+    if (set_file.type != "image/jpeg" && set_file.type != "image/png" && set_file.type != "image/bmp") {
+      // 画像でない場合は何もせず終了する
+      return;
+    }
+    // 画像をリサイズする
+    var imgobj = new Image();
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      imgobj.onload = function() {
+
+        var max_width = 135;
+        var max_height = 240;
+        // 縮小後のサイズを計算する
+        var width, height;
+        var view_x, view_y;
+        if((imgobj.width / imgobj.height) > (max_width / max_height)){
+          // ヨコ長の画像は横サイズを定数にあわせる
+          var ratio = imgobj.height/imgobj.width;
+          width = max_width;
+          height = max_width * ratio;
+          view_x = 0;
+          view_y = (max_height - height) / 2;
+        } else {
+          // タテ長の画像は縦のサイズを定数にあわせる
+          var ratio = imgobj.width/imgobj.height;
+          width = max_height * ratio;
+          height = max_height;
+          view_x = (max_width - width) / 2;
+          view_y = 0;
+        }
+
+        // 縮小画像を描画するcanvasのサイズを上で算出した値に変更する
+        var cvobj = $("stimg_canvas");
+        cvobj.width = max_width;
+        cvobj.height = max_height;
+        
+        
+        var ctx = cvobj.getContext("2d");
+
+        // canvasに既に描画されている画像があればそれを消す
+        ctx.rect( 0, 0, max_width, max_height ) ;
+        ctx.fillStyle = "#000000" ;
+        ctx.fill() ;
+
+        // canvasに縮小画像を描画する
+        ctx.drawImage(imgobj,
+          0, 0, imgobj.width, imgobj.height,
+          view_x, view_y, width, height
+        );
+        
+        // canvasからrgb565のデータを取得
+        imgdata = ctx.getImageData(0, 0, max_width, max_height);
+        console.log(imgdata.data.length);
+        console.log(imgdata.data);
+        var i = 0;
+        var cr, cg, cb, ch, cl;
+        var img_data = [];
+        while (i < imgdata.data.length) {
+            cr = imgdata.data[i] >> 3;
+            cg = imgdata.data[i + 1] >> 2;
+            cb = imgdata.data[i + 2] >> 3;
+            ch = cr << 3 | cg >> 3;
+            cl = (cg & 0x07) << 5 | cb;
+            img_data.push(ch);
+            img_data.push(cl);
+            i += 4;
+        }
+        mst.option_edit_data.stimg_data = img_data;
+        mst.option_edit_data.stimg_change = 1;
+        
+        // RGB565のデータでキャンバスに画像を描く(色が多少変わるため)
+        i = 0;
+        var x = 0, y = 0;
+        while (i < img_data.length) {
+            cl = img_data[i + 1];
+            ch = img_data[i];
+            cr = ch & 0xF8;
+            cg = ((ch & 0x07) << 3 | (cl >> 5)) << 2;
+            cb = (cl & 0x1F) << 3;
+            ctx.fillStyle = "rgb("+cr+","+cg+","+cb+")" ;
+            ctx.fillRect(x, y, 1, 1) ;
+            x++;
+            if (x >= max_width) { x = 0; y++; }
+            i += 2;
+        }
+
+      }
+      imgobj.src = e.target.result;
+    }
+    reader.readAsDataURL(set_file);
+};
+
+// 待ち受け画像確認(キーボードにデータを送って液晶に表示)
+mst.stimg_check = function() {
+    var uint8obj = new Uint8Array(mst.option_edit_data.stimg_data);
+    var blobobj = new Blob([uint8obj]);
+    set_html("option_setting_info", "画像を送信中です…");
+    mst.file_send("/view_tft", "stimg.dat", blobobj, function(stat, res) {
+        if (!stat) {
+            set_html("option_setting_info", "画像の送信に失敗しました。");
+        }
+        set_html("option_setting_info", "");
+    });
+};
+
+// 待ち受け画像削除
+mst.stimg_delete = function() {
+    var cvobj = $("stimg_canvas");
+    cvobj.width = 0;
+    cvobj.height = 0;
+    mst.option_edit_data.stimg_data = [];
+    mst.option_edit_data.stimg_change = 2;
+};
+
 // ユニット設定決定
 mst.option_setting_btn_click = function(save_flag) {
     // キャンセルなら何もしない
@@ -1216,6 +1454,43 @@ mst.option_setting_btn_click = function(save_flag) {
         mst.view_detail_setting();
         return;
     }
+    var i, btn_list = ["unich_btn","rvch_btn","stmv_btn","stimg_file","uni_ok","uni_can","stimg_ch","stimg_del"];
+    // 待ち受け画像が変更されていれば保存
+    if ("stimg_change" in mst.option_edit_data) {
+        for (i in btn_list) { hide(btn_list[i]); } // ボタン非表示
+        if (mst.option_edit_data.stimg_change == 1) {
+            // 画像が変更された
+            var uint8obj = new Uint8Array(mst.option_edit_data.stimg_data);
+            var blobobj = new Blob([uint8obj]);
+            set_html("option_setting_info", "画像を保存中です…");
+            mst.file_send("/file_save", "stimg.dat", blobobj, function(stat, res) {
+                if (!stat) {
+                    for (i in btn_list) { show(btn_list[i], "inline-block"); } // ボタン表示
+                    set_html("option_setting_info", "画像を保存できませんでした");
+                    return;
+                }
+                delete mst.option_edit_data.stimg_data;
+                delete mst.option_edit_data.stimg_change;
+                mst.option_setting_btn_click(1);
+            });
+            return;
+        } else if (mst.option_edit_data.stimg_change == 2) {
+            // 画像が削除された
+            set_html("option_setting_info", "画像を削除中です…");
+            mst.file_delete("stimg.dat", function(stat, res) {
+                if (!stat) {
+                    for (i in btn_list) { show(btn_list[i], "inline-block"); } // ボタン表示
+                    set_html("option_setting_info", "画像を削除できませんでした");
+                    return;
+                }
+                delete mst.option_edit_data.stimg_data;
+                delete mst.option_edit_data.stimg_change;
+                mst.option_setting_btn_click(1);
+            });
+            return;
+        }
+    }
+    
     // タイプの変更が無ければ配列に反映するだけ
     if (mst.option_edit_data.type == mst.setting_data.option_set.type) {
         mst.setting_data.option_set = mst.option_edit_data;
@@ -1223,6 +1498,8 @@ mst.option_setting_btn_click = function(save_flag) {
         return;
     }
     // ユニットタイプが変更されたら設定を保存して再起動
+    for (i in btn_list) { hide(btn_list[i]); } // ボタン非表示
+    set_html("option_setting_info", "本体を再起動中です…");
     mst.setting_data.option_set = mst.option_edit_data;
     mst.end_setting(2);
 }
@@ -1269,7 +1546,7 @@ mst.view_switch_check = function() {
 
 // ボタン情報取得ループ
 mst.switch_check_loop = function() {
-    ajax("/get_key_status", function(stat, res) {
+    ajax("/get_key_status", "text", function(stat, res) {
         var i, k, s;
         if (stat && res.length) {
             for (i in mst.key_pattern["keys"]) {
@@ -1395,6 +1672,7 @@ mst.firmware_update = function() {
     xhr.send(fd);
 };
 
+
 // ファームウェア更新エラー時の処理
 mst.firmware_update_error = function(err) {
     set_html("info_box", "<b>エラー</b><br>ページを閉じて下さい。");
@@ -1430,7 +1708,7 @@ mst.view_init_setting = function() {
 mst.init_setting = function() {
     hide("init_setting_menu");
     set_html("init_setting_info", "初期化中...");
-    ajax("/init_setting_json", function(stat, res) {
+    ajax("/init_setting_json", "text", function(stat, res) {
         // 失敗したら初期化画面のまま
         if (!stat) {
             set_html("init_setting_info", "エラー 初期化できませんでした");

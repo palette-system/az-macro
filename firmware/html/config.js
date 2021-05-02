@@ -12,7 +12,7 @@ mst.key_language_list = [
 ];
 
 // キーボードのタイプデフォルト
-mst.key_pattern_default = "az_60jis";
+mst.key_pattern_default = "az_macro";
 
 // 各キーボード別の設定
 if (!mst.key_pattern_list) mst.key_pattern_list = {};
@@ -57,8 +57,8 @@ mst.key_pattern_list["az_macro"] = {
 };
 
 
-// AZ 60jis
-mst.key_pattern_list["az_60jis"] = {
+// AZ 66JP
+mst.key_pattern_list["az_66jp"] = {
 	"name": "AZ 60JIS",
 	"pin": {
 		"row": [35, 34, 39, 36, 23],
@@ -282,6 +282,18 @@ mst.option_list["trackball_m"] = {
 			"path": [[120,360], [480,360], [480,510], [120,510]]
 		},
 	]
+};
+
+// AZ-Macro液晶モジュール
+mst.option_list["display_m"] = {
+	"keyboard_type": ["az_macro"], // 対応しているキーボードタイプ
+	"name": "液晶"
+};
+
+// AZ-66JP液晶モジュール
+mst.option_list["display_66jp"] = {
+	"keyboard_type": ["az_66jp"], // 対応しているキーボードタイプ
+	"name": "液晶"
 };
 
 // キーのボタンリスト

@@ -2,7 +2,10 @@
 
 
 // 初期起動時のデフォルト設定
-#include "setting_az60jis_default.h"
+#include "setting_az66jp_default.h"
+
+// キーボードの定義
+#define  KEYBOARD_AZ66JP
 
 // メモリに保持するキーの数(メモリを確保するサイズ)
 #define KEY_INPUT_MAX  80
@@ -14,10 +17,10 @@
 #define PRESS_MOUSE_MAX 4
 
 // WIFIアクセスポイントの名前
-#define WIFI_AP_SSI_NAME    "AZ-60JIS"
+#define WIFI_AP_SSI_NAME    "AZ-66JP"
 
 // Bluetooth で検索した時表示される名前
-#define BLUETOOTH_SEARCH_NAME    "az-60jis"
+#define BLUETOOTH_SEARCH_NAME    "az-66jp"
 
 // EEPROM 読み込み時のサイズ
 #define EEPROM_BUF_SIZE   256
@@ -31,11 +34,4 @@
 // 設定モードに入るためのキー番号
 #define SETTING_MODE_KEY 0
 
-// ディスプレイ用
-#define TFT_FLG   1 // ディスプレイが接続されているか(0=ディスプレイ表示無し / 1=ディスプレイ表示あり)
-#define TFT_DC   26 // DC
-#define TFT_RST  25 // TFTのリセット
-#define TFT_CS   -1 // 1つなので使わない
-#define TFT_MOSI 21 // SDA
-#define TFT_SCLK 22 // SCL
 

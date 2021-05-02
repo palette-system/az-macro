@@ -19,7 +19,7 @@
 
 // キーボード
 #include "src/keyboard/az_macro.h"
-// #include "src/keyboard/az_60jis.h"
+// #include "src/keyboard/az_66jp.h"
 
 
 #if defined(CONFIG_ARDUHAL_ESP_LOG)
@@ -103,6 +103,7 @@ class AzCommon
         void key_old_copy(); // 現在のキーの状態を過去用配列にコピー
         char input_key[KEY_INPUT_MAX]; // 今入力中のキー
         char input_key_last[KEY_INPUT_MAX]; // 最後にチェックした入力中のキー
+        bool on_tft_unit(void); // 液晶ディスプレイが付いているか
     
     private:
 

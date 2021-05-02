@@ -123,7 +123,7 @@ void Neopixel::rgb_led_loop_exec(void) {
     for (i=0; i<this->_led_length; i++) {
         if (this->led_buf[i] && this->key_matrix[i] >= 0) {
             m = 30;
-            if (led_buf[i] >= 6 && led_buf[i] <= 9) m = 10;
+            if (led_buf[i] >= 6 && led_buf[i] <= 10) m = 5;
             this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], this->rgb_led->Color(0, 0, m));
         }
     }

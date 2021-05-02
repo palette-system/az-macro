@@ -168,7 +168,7 @@ void Arduino_ST7789::commonInit(const uint8_t *cmdList) {
 void Arduino_ST7789::setRotation(uint8_t m) {
 
   writecommand(ST7789_MADCTL);
-  rotation = m % 4; // can't be higher than 3
+  uint8_t rotation = m % 4; // can't be higher than 3
   switch (rotation) {
    case 0:
      writedata(ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB);
@@ -375,7 +375,32 @@ void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t
   }
 }
 
+void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path) {
+    uint8_t wbuf[5120];
+    int i;
+    setAddrWindow(x, y, x + w - 1, y + h - 1);
+    digitalWrite(_dc, HIGH);
+    if(SPIFFS.exists(file_path)){
+        File fp = SPIFFS.open(file_path, "r");
+        i = 0;
+        while(fp.available()){
+            i = fp.read(wbuf, 5120);
+        	SPI.writeBytes(wbuf, i);
+        }
+        fp.close();
+    }
+}
 
+// データを流し込んで画像を表示する(ヘッダ)
+void Arduino_ST7789::viewBMPspi_head(int16_t x, int16_t y, int16_t w, int16_t h) {
+    setAddrWindow(x, y, x + w - 1, y + h - 1);
+    digitalWrite(_dc, HIGH);
+}
+
+// データを流し込んで画像を表示する(データ)
+void Arduino_ST7789::viewBMPspi_data(uint8_t *wbuf, int wsize) {
+    SPI.writeBytes(wbuf, wsize);
+}
 
 
 /******** low level bit twiddling **********/
@@ -392,5 +417,5 @@ void Arduino_ST7789::init(uint16_t width, uint16_t height) {
 
   displayInit(cmd_240x240);
 
-  setRotation(1);
+  // setRotation(1);
 }

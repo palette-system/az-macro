@@ -25,19 +25,16 @@ void setup() {
     // 設定jsonの読み込み
     common_cls.load_setting_json();
     // ステータス表示用のLED初期化
-    if (status_pin >= 0) {
+    if (status_pin >= 0 && option_type_int != 3) {
         pinMode(status_pin, OUTPUT);
         digitalWrite(status_pin, 0);
         status_led_mode = 0;
         common_cls.set_status_led_timer();
     }
     // ディスプレイ初期化
-    if (TFT_FLG) {
-        tft = new Arduino_ST7789(TFT_DC, TFT_RST, TFT_MOSI, TFT_SCLK, TFT_CS);
-        tft->init(240, 135);
-        tft->fillScreen(BLACK);
+    if (common_cls.on_tft_unit()) {
         disp = new Display();
-        disp->begin(tft);
+        disp->begin(tft, option_type_int);
     }
     // RGB_LEDクラス初期化
     if (setting_obj.containsKey("rgb_pin") &&
@@ -78,6 +75,9 @@ void setup() {
 
     } else {
         ESP_LOGD(LOG_TAG, "キーボードモード起動\n");
+        if (common_cls.on_tft_unit()) {
+            disp->open_movie();
+        }
         // キーボードとして起動
         azkb.start_keyboard();
     }

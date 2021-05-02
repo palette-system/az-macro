@@ -19,6 +19,15 @@ const byte DNS_PORT = 53;
 DNSServer dnsServer;
 WebServer server(80);
 
+// ファイルアップロードの戻り値用
+char upload_buf[64];
+
+// ファイルアップロードのステータス
+int upload_stat;
+
+// ファイルアップ用のファイルポインタ
+File upfp;
+
 // キーが押されたか
 int last_key_down = -1;
 
@@ -137,47 +146,26 @@ bool handleUrl(String path) {
         // 指定したファイルを読み込み ( /read_file_{ファイル名} でアクセス)
         // パスの後ろがファイル名
         String file_path = "/" + path.substring(11);
-        file_path.toCharArray(scmd, 64);
-        ESP_LOGD(LOG_TAG, "file path: %S", scmd);
         // 読み込んで返す
-        if(SPIFFS.exists(scmd)){
-            File fp = SPIFFS.open(scmd, "r");
-            server.streamFile(fp, "text/plan");
+        if(SPIFFS.exists(file_path)){
+            File fp = SPIFFS.open(file_path, "r");
+            server.streamFile(fp, "application/octet-stream");
             fp.close();
         } else {
             server.send(500,"text/plan", "file none");
         }
         return true;
         
-    } else if (path.indexOf("/upload_file_") == 0) {
-        // 受け取ったファイルを保存 ( /upload_file_{ファイル名} でアクセス)
-        // POST じゃ無ければNG
-        if (server.method() != HTTP_POST) {
-            server.send(500,"text/plan", "not post request");
-            return true;
-        }
-        // パスの後ろがファイル名
-        String file_path = "/" + path.substring(13);
-        file_path.toCharArray(scmd, 64);
-        // テキストを受け取ってファイルに保存
-        String post_data = server.arg("plain");
-        r = common_cls.write_file(scmd, post_data);
-        if (r == 0) {
-            server.send(500,"text/plan", "file write error");
-            return true;
-        }
-        server.send(200,"text/plan", "OK");
-        return true;
-
     } else if (path.indexOf("/delete_file_") == 0) {
         // 指定されたファイルを削除( /delete_file?{ファイル名} でアクセス)
         // パスの後ろがファイル名
-        String file_path = path.substring(13);
-        file_path.toCharArray(scmd, 64);
+        String file_path = "/" + path.substring(13);
         // 削除処理
-        if (!common_cls.remove_file(scmd)) {
-            server.send(500,"text/plan", "file delete error");
-            return true;
+        if(SPIFFS.exists(file_path)){
+            if (!SPIFFS.remove(file_path)) {
+                server.send(500,"text/plan", "file delete error");
+                return true;
+            }
         }
         server.send(200,"text/plan", "OK");
         return true;
@@ -290,6 +278,7 @@ bool handleUrl(String path) {
 AzSetting::AzSetting() {
 }
 
+
 // wifi 初期処理
 void start_wifi() {
     int i, j;
@@ -337,6 +326,52 @@ void start_wifi() {
             }
             // ステータスLED消灯
             status_led_mode = 0;
+        }
+    });
+    // ファイルアップロード
+    server.on("/file_save", HTTP_POST, []() {
+        server.sendHeader("Connection", "close");
+        server.send(200, "application/json", upload_buf);
+    }, []() {
+        // ファイルを受け取ってSPIFFSに保存
+        HTTPUpload& upload = server.upload();
+        if (upload.status == UPLOAD_FILE_START) {
+            String fpath = "/";
+            upload_stat = 0;
+            fpath += upload.filename;
+            upfp = SPIFFS.open(fpath, FILE_WRITE);
+            if(!upfp){
+                upload_stat = 1;
+                sprintf(upload_buf, "{\"stat\": 1, \"err\": \"open error\"}");
+            }
+        } else if (upload.status == UPLOAD_FILE_WRITE) {
+            if (upload_stat == 0) {
+                if(!upfp.write(upload.buf, upload.currentSize)){
+                    upload_stat = 2;
+                    upfp.close();
+                    sprintf(upload_buf, "{\"stat\": 2, \"err\": \"write error\"}");
+                }
+            }
+        } else if (upload.status == UPLOAD_FILE_END) {
+            // end
+            if (upload_stat == 0) {
+                sprintf(upload_buf, "{\"stat\": 0}");
+                upfp.close();
+            }
+        }
+    });
+    // 受け取ったデータを液晶に流し込む
+    server.on("/view_tft", HTTP_POST, []() {
+        server.sendHeader("Connection", "close");
+        server.send(200, "application/json", "OK");
+    }, []() {
+        // ファイルを受け取って液晶に送る
+        if (option_type_int != 3 && option_type_int != 4) return;
+        HTTPUpload& upload = server.upload();
+        if (upload.status == UPLOAD_FILE_START) {
+            disp->viewBMPspi_head();
+        } else if (upload.status == UPLOAD_FILE_WRITE) {
+            disp->viewBMPspi_data(upload.buf, upload.currentSize);
         }
     });
     // httpサーバーそれ以外のページ

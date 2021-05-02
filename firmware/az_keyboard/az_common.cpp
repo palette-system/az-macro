@@ -396,6 +396,12 @@ void AzCommon::get_option_type_int() {
     } else if (t.equals("trackball_m")) {
         // トラックボール
         option_type_int = 2;
+    } else if (t.equals("display_m")) {
+        // AZ-Macro用 液晶モジュール
+        option_type_int = 3;
+    } else if (t.equals("display_66jp")) {
+        // AZ-66JP用 液晶モジュール
+        option_type_int = 4;
     }
 }
 
@@ -660,4 +666,12 @@ void AzCommon::key_old_copy(void) {
     for (i=0; i<key_input_length; i++) {
         input_key_last[i] = input_key[i];
     }
+}
+
+// 液晶ユニットが付いているか
+bool AzCommon::on_tft_unit(void) {
+    if (option_type_int == 3 || option_type_int == 4) {
+        return true;
+    }
+    return false;
 }
