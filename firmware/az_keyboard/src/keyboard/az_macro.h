@@ -2,6 +2,7 @@
 
 // 初期起動時のデフォルト設定
 #include "setting_azmacro_default.h"
+#include "../image/common.h"
 #include "../image/az_macro_img.h"
 
 // キーボードの定義

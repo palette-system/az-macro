@@ -311,6 +311,8 @@ void start_wifi() {
             if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
                 Update.printError(Serial);
             }
+            // 液晶に保存中画面を表示する
+            if (common_cls.on_tft_unit()) disp->view_save();
         } else if (upload.status == UPLOAD_FILE_WRITE) {
             /* flashing firmware to ESP*/
             ESP_LOGD(LOG_TAG, "Update: write %D\n", upload.currentSize);
@@ -326,6 +328,8 @@ void start_wifi() {
             }
             // ステータスLED消灯
             status_led_mode = 0;
+            // 液晶を黒い画面に
+            if (common_cls.on_tft_unit()) disp->view_black();
         }
     });
     // ファイルアップロード
@@ -344,6 +348,8 @@ void start_wifi() {
                 upload_stat = 1;
                 sprintf(upload_buf, "{\"stat\": 1, \"err\": \"open error\"}");
             }
+            // 液晶に保存中画面を表示する
+            if (common_cls.on_tft_unit()) disp->view_save();
         } else if (upload.status == UPLOAD_FILE_WRITE) {
             if (upload_stat == 0) {
                 if(!upfp.write(upload.buf, upload.currentSize)){
@@ -358,6 +364,8 @@ void start_wifi() {
                 sprintf(upload_buf, "{\"stat\": 0}");
                 upfp.close();
             }
+            // 液晶に設定モードを表示
+            if (common_cls.on_tft_unit()) disp->view_setting_mode();
         }
     });
     // 受け取ったデータを液晶に流し込む
@@ -398,6 +406,11 @@ void AzSetting::start_setting() {
 
     // ステータスLED設定
     status_led_mode = 2;
+
+    // 液晶に設定モード画面を表示する
+    if (common_cls.on_tft_unit()) {
+        disp->view_setting_mode();
+    }
 }
 
 // キーが押された時の処理

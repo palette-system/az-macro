@@ -31,9 +31,13 @@ void AzKeyboard::start_keyboard() {
     EEPROM.end();
 
     // Wifi 接続
+    // 液晶にWiFi接続中画面を表示する
+    if (common_cls.on_tft_unit()) disp->view_wifi_conn();
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     common_cls.wifi_connect();
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
+    // 液晶に待ち受け画面を表示する
+    if (common_cls.on_tft_unit()) disp->view_standby_image();
     
     // bluetoothキーボード開始
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
@@ -233,6 +237,8 @@ void AzKeyboard::send_webhook(const JsonObject &key_set) {
         send_string("wifi not connected.");
         return;
     }
+    // 液晶にwebhook中を表示する
+    if (common_cls.on_tft_unit()) disp->view_webhook();
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     char res_char[1024];
     // httpリクエスト送信
@@ -240,6 +246,8 @@ void AzKeyboard::send_webhook(const JsonObject &key_set) {
     r.toCharArray(res_char, 1024);
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     ESP_LOGD(LOG_TAG, "http res: %S\n", res_char);
+    // 液晶に待ち受け画像を表示する
+    if (common_cls.on_tft_unit()) disp->view_standby_image();
     send_string(res_char);
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
 }

@@ -75,7 +75,7 @@ void setup() {
 
     } else {
         ESP_LOGD(LOG_TAG, "キーボードモード起動\n");
-        if (common_cls.on_tft_unit()) {
+        if (common_cls.on_tft_unit() && setting_obj["option_set"]["op_movie"].as<signed int>()) {
             disp->open_movie();
         }
         // キーボードとして起動

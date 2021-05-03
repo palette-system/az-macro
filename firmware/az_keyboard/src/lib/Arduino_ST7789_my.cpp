@@ -311,7 +311,7 @@ void Arduino_ST7789::invertDisplay(boolean i) {
 }
 
 void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t * bmp_data, uint8_t opa) {
-  uint8_t wbuf[7120];
+  uint8_t wbuf[512];
   uint16_t c;
   int i,j,p;
   int vx, vy, vw, vh;
@@ -363,7 +363,7 @@ void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t
       p++;
       wbuf[p] = c & 0xFF;
       p++;
-      if (p > 7110) {
+      if (p > 500) {
         SPI.writeBytes(wbuf, p);
         p = 0;
       }
@@ -376,7 +376,7 @@ void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t
 }
 
 void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path) {
-    uint8_t wbuf[5120];
+    uint8_t wbuf[512];
     int i;
     setAddrWindow(x, y, x + w - 1, y + h - 1);
     digitalWrite(_dc, HIGH);
@@ -384,7 +384,7 @@ void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, Str
         File fp = SPIFFS.open(file_path, "r");
         i = 0;
         while(fp.available()){
-            i = fp.read(wbuf, 5120);
+            i = fp.read(wbuf, 512);
         	SPI.writeBytes(wbuf, i);
         }
         fp.close();

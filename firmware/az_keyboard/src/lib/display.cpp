@@ -48,6 +48,11 @@ void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
     last_n = millis();
 }
 
+// 画面いっぱい黒い画面
+void Display::view_black() {
+    this->_tft->fillScreen(BLACK);
+}
+
 // 画面いっぱいに画像を表示する
 void Display::view_full_image(uint8_t *image_data) {
 	this->_tft->viewBMP(0, 0, this->_width, this->_height, image_data, 10);
@@ -55,7 +60,7 @@ void Display::view_full_image(uint8_t *image_data) {
 
 // 待ち受け画像表示
 void Display::view_standby_image() {
-
+    this->_tft->viewBMPFile(0,0,this->_width, this->_height, "/stimg.dat");
 }
 
 // データを流し込んで画像を表示する(ヘッダ)
@@ -72,7 +77,7 @@ void Display::viewBMPspi_data(uint8_t *wbuf, int wsize) {
 #ifdef KEYBOARD_AZMACRO
 void Display::open_movie() {
 	int i;
-      // 楽しいを形に…
+      // 楽しいをカタチに…
       this->_tft->fillScreen(WHITE);
       delay(1000);
       for (i=0; i<=10; i++) {
@@ -100,8 +105,32 @@ void Display::open_movie() {
         delay(100);
     }
     delay(1000);
-	this->_tft->viewBMPFile(0,0,this->_width, this->_height, "/stimg.dat");
 }
+// 設定モード画面表示
+void Display::view_setting_mode() {
+    this->_tft->fillScreen(WHITE);
+    this->_tft->viewBMP(26, 50, 84, 88, (uint8_t *)setting_icon_img, 10);
+    this->_tft->viewBMP(18, 160, 98, 25, (uint8_t *)setting_title_img, 10);
+}
+// 保存中画面表示
+void Display::view_save() {
+    this->_tft->fillScreen(WHITE);
+    this->_tft->viewBMP(26, 50, 84, 88, (uint8_t *)setting_icon_img, 10);
+    this->_tft->viewBMP(29, 160, 76, 25, (uint8_t *)save_img, 10);
+}
+// wifi 接続中
+void Display::view_wifi_conn() {
+    this->_tft->fillScreen(WHITE);
+    this->_tft->viewBMP(19, 46, 97, 82, (uint8_t *)wifi_icon_img, 10);
+    this->_tft->viewBMP(13, 160, 109, 25, (uint8_t *)wifi_conn_img, 10);
+}
+// Webhook中
+void Display::view_webhook() {
+    this->_tft->fillRect(0, 210,  135, 240, WHITE);
+    this->_tft->viewBMP(10, 212, 116, 25, (uint8_t *)webhook_img, 10);
+}
+
+
 #endif
 
 
