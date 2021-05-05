@@ -31,13 +31,9 @@ void AzKeyboard::start_keyboard() {
     EEPROM.end();
 
     // Wifi 接続
-    // 液晶にWiFi接続中画面を表示する
-    if (common_cls.on_tft_unit()) disp->view_wifi_conn();
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     common_cls.wifi_connect();
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
-    // 液晶に待ち受け画面を表示する
-    if (common_cls.on_tft_unit()) disp->view_standby_image();
     
     // bluetoothキーボード開始
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
@@ -68,6 +64,8 @@ void AzKeyboard::start_keyboard() {
     // 拡張関数 開始処理
     my_function.begin();
   
+    // 液晶に待ち受け画面を表示する
+    if (common_cls.on_tft_unit()) disp->view_standby_image();
 }
 
 // 各ユニットの初期化
@@ -87,6 +85,9 @@ void AzKeyboard::key_action_exec() {
                 // キーが押された
                 key_down_action(i);
                 rgb_led_cls.set_led_buf(i, 1);
+                // 打鍵数カウントアップ
+                common_cls.key_count[i]++;
+                common_cls.key_count_total++;
             } else {
                 // キーは離された
                 key_up_action(i);

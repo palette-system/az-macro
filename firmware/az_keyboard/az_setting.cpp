@@ -94,7 +94,8 @@ bool handleUrl(String path) {
 
     } else if (path.indexOf("/firmware_version") == 0) {
         // ファームウェアのバージョン教えて
-        server.send(200,"text/html", FIRMWARE_VERSION);
+        sprintf(scmd, "{\"v\": \"%S\", \"t\": %D}", FIRMWARE_VERSION, AZESP32_TYPE);
+        server.send(200,"text/html", scmd);
         return true;
 
     } else if (path.indexOf("/last_key_down") == 0) {

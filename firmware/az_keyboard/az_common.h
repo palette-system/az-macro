@@ -103,6 +103,8 @@ class AzCommon
         void key_old_copy(); // 現在のキーの状態を過去用配列にコピー
         char input_key[KEY_INPUT_MAX]; // 今入力中のキー
         char input_key_last[KEY_INPUT_MAX]; // 最後にチェックした入力中のキー
+        uint16_t key_count[KEY_INPUT_MAX]; // キー別の打鍵した数
+        uint16_t key_count_total;
         bool on_tft_unit(void); // 液晶ディスプレイが付いているか
     
     private:

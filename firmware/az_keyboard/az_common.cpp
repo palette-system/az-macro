@@ -179,16 +179,16 @@ void AzCommon::wifi_connect() {
         wifi_conn_flag = 0;
         return;
     }
-    // WiFi.mode(WIFI_STA);
+    // 液晶にWiFi接続中画面を表示する
+    if (common_cls.on_tft_unit()) disp->view_wifi_conn();
+    // WiFiに接続(一番電波が強いAPへ接続)
     for (i=0; i<wifi_len; i++) {
         ssid = setting_obj["wifi"][i]["ssid"].as<String>();
         pass = setting_obj["wifi"][i]["pass"].as<String>();
         ssid.toCharArray(ssid_char, 64);
         pass.toCharArray(pass_char, 64);
         wifiMulti.addAP(ssid_char, pass_char);
-        // WiFi.begin(ssid_char, pass_char);
         ESP_LOGD(LOG_TAG, "wifi : [%S] [%S]\r\n", ssid_char, pass_char);
-        // break;
     }
     ESP_LOGD(LOG_TAG, "wifi : connect start\r\n");
     i = 0;
@@ -508,6 +508,11 @@ void AzCommon::pin_setup() {
     ESP_LOGD(LOG_TAG, "key length : %D\r\n", key_input_length);
     // キー入力ピン初期化のキーボード別の処理
     pin_setup_sub_process();
+    // 打鍵数リセット
+    for (i=0; i<KEY_INPUT_MAX; i++) {
+        this->key_count[i] = 0;
+    }
+    this->key_count_total = 0;
 }
 
 

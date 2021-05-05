@@ -4,6 +4,10 @@
 
 // コンストラクタ
 Neopixel::Neopixel() {
+	this->_data_pin = -1;
+	this->_led_length = -1;
+	this->_row_size = -1;
+	this->_col_size = -1;
 }
 
 
@@ -23,6 +27,10 @@ void Neopixel::begin(short data_pin, short row_size, short col_size) {
     // RGB_LEDピン用の初期化
     if (this->_data_pin >= 0 && this->_led_length > 0) {
         this->rgb_led = new Adafruit_NeoPixel(this->_led_length, this->_data_pin, NEO_GRB + NEO_KHZ400);
+        for (i=0; i<this->_led_length; i++) {
+            this->rgb_led->setPixelColor(i, this->rgb_led->Color(0, 0, 0));
+        }
+    	this->rgb_led->show();
     }
 }
 
@@ -35,6 +43,7 @@ void Neopixel::set_key_matrix(int8_t key, int8_t val) {
 }
 
 void Neopixel::set_led_buf(int8_t key_id, int8_t set_num) {
+    if (this->_data_pin < 0 || this->_led_length <= 0) return;
     int i;
     for (i=0; i<this->_led_length; i++) {
         if (this->key_matrix[i] == key_id) {
@@ -127,7 +136,7 @@ void Neopixel::rgb_led_loop_exec(void) {
             this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], this->rgb_led->Color(0, 0, m));
         }
     }
-    rgb_led->show();
+    this->rgb_led->show();
 }
 
 

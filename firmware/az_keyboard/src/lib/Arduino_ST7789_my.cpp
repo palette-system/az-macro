@@ -377,15 +377,18 @@ void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t
 
 void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path) {
     uint8_t wbuf[512];
-    int i;
+    int i, b;
+    int s = w * h * 2;
     setAddrWindow(x, y, x + w - 1, y + h - 1);
     digitalWrite(_dc, HIGH);
     if(SPIFFS.exists(file_path)){
         File fp = SPIFFS.open(file_path, "r");
         i = 0;
-        while(fp.available()){
-            i = fp.read(wbuf, 512);
+        while(fp.available() && s > 0){
+        	b = (s < 512)? s: 512;
+            i = fp.read(wbuf, b);
         	SPI.writeBytes(wbuf, i);
+        	s -= i;
         }
         fp.close();
     }

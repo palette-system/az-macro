@@ -149,7 +149,9 @@ mst.init = function() {
     // ファームウェアのバージョン取得
     ajax("/firmware_version", "text", function(stat, res) {
         if (stat && res) {
-            mst.firmware_version = res;
+            var r = JSON.parse(res);
+            mst.firmware_version = r.v;
+            mst.esp_type = parseInt(r.t);
         }
         // 設定JSON取得
         mst.get_setting_json();
@@ -583,6 +585,7 @@ mst.get_layer_name = function(layer_no) {
 mst.select_input_type = function() {
     var i, l = [];
     for (i in mst.input_type_list) {
+        if (i == 6 && mst.esp_type == 0) continue; // 通常のESP32の場合暗記ボタンはスキップ
         l.push({"key": i, "value": mst.input_type_list[i]});
     }
     mst.select_exec(l, mst.key_edit_data.press.action_type+"", function(select_key) {
@@ -605,6 +608,8 @@ mst.select_input_type = function() {
         } else if (mst.key_edit_data.press.action_type == 5) {
             // マウス移動
             if (!("move" in mst.key_edit_data.press)) mst.key_edit_data.press.move = {"x": 0, "y": 0, "speed": 100};
+        } else if (mst.key_edit_data.press.action_type == 6) {
+            // 暗記ボタン
         }
         mst.view_key_setting(mst.key_edit_kid);
     });
@@ -1195,7 +1200,7 @@ mst.view_option_setting = function(option_set) {
         s += "<tr><td><b>入力反転：</b>　　<b style='font-size: 27px;'>"+invstr+"</b></td><td align='right'>";
         s += "<a href='#' id='rvch_btn' class='update_button' onClick='javascript:mst.foot_inv_edit_btn();return false;'>変更</a>";
         s += "</td></tr>";
-    } else if (mst.option_edit_data.type == "display_m") {
+    } else if (mst.option_edit_data.type == "display_m" || mst.option_edit_data.type == "display_66jp") {
         // AZ-Macro用液晶
         var op_movie = "再生しない";
         if (mst.option_edit_data.op_movie == "1") op_movie = "再生する";
@@ -1250,7 +1255,9 @@ mst.view_imgdata = function(canvas_id, file_name) {
         var i = 0;
         var cl, ch, cr, cg, cb;
         var x = 0, y = 0;
-        var max_width = 135, max_height = 240;
+        var max_size = mst.get_tft_size();
+        var max_width = max_size.width;
+        var max_height = max_size.height;
         // キャンバス準備
         var cvobj = $("stimg_canvas");
         cvobj.width = max_width;
@@ -1327,6 +1334,17 @@ mst.op_movie_edit_btn = function() {
     });
 };
 
+// 液晶のサイズを取得
+mst.get_tft_size = function() {
+    if (mst.setting_data.option_set.type == "display_m") {
+        return {"width": 135, "height": 240};
+    }
+    if (mst.setting_data.option_set.type == "display_66jp") {
+        return {"width": 240, "height": 135};
+    }
+};
+
+
 // 待ち受け画像ファイル変更
 mst.stimg_change = function(obj) {
     var set_file = obj.files[0];
@@ -1343,8 +1361,9 @@ mst.stimg_change = function(obj) {
     reader.onload = function(e) {
       imgobj.onload = function() {
 
-        var max_width = 135;
-        var max_height = 240;
+        var max_size = mst.get_tft_size();
+        var max_width = max_size.width;
+        var max_height = max_size.height;
         // 縮小後のサイズを計算する
         var width, height;
         var view_x, view_y;

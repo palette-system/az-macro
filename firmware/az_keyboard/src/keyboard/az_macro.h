@@ -8,6 +8,9 @@
 // キーボードの定義
 #define KEYBOARD_AZMACRO
 
+// ESP32の種類 (0 = ESP32 / 1 = ESP32-WROVER)
+#define  AZESP32_TYPE  0
+
 // メモリに保持するキーの数(メモリを確保するサイズ)
 #define KEY_INPUT_MAX  16
 

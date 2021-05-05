@@ -39,13 +39,14 @@ void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
 		this->_tft = new Arduino_ST7789(26, 25, 21, 22, -1);
 		this->_width = 240;
 		this->_height = 135;
-		this->_tft->init(135, 240);
-		this->_tft->setRotation(2);
+		this->_tft->init(240, 135);
+		this->_tft->setRotation(1);
 	}
     this->_tft->fillScreen(WHITE);
     this->_tft->setTextSize(1);
     this->_tft->setTextColor(WHITE);
     last_n = millis();
+	this->dakagi_last_view = -1;
 }
 
 // 画面いっぱい黒い画面
@@ -58,10 +59,31 @@ void Display::view_full_image(uint8_t *image_data) {
 	this->_tft->viewBMP(0, 0, this->_width, this->_height, image_data, 10);
 }
 
-// 待ち受け画像表示
-void Display::view_standby_image() {
-    this->_tft->viewBMPFile(0,0,this->_width, this->_height, "/stimg.dat");
+// 数字を表示
+void Display::view_int(uint16_t x, uint16_t y, int v) {
+	char s[12];
+	uint8_t *set_img;
+	int i;
+	sprintf(s, "%D", v);
+	i = 0;
+	while (i < 12 && s[i] && x < this->_width) {
+		if (s[i] == 0x30) set_img = (uint8_t *)int_0_img;
+		if (s[i] == 0x31) set_img = (uint8_t *)int_1_img;
+		if (s[i] == 0x32) set_img = (uint8_t *)int_2_img;
+		if (s[i] == 0x33) set_img = (uint8_t *)int_3_img;
+		if (s[i] == 0x34) set_img = (uint8_t *)int_4_img;
+		if (s[i] == 0x35) set_img = (uint8_t *)int_5_img;
+		if (s[i] == 0x36) set_img = (uint8_t *)int_6_img;
+		if (s[i] == 0x37) set_img = (uint8_t *)int_7_img;
+		if (s[i] == 0x38) set_img = (uint8_t *)int_8_img;
+		if (s[i] == 0x39) set_img = (uint8_t *)int_9_img;
+		this->_tft->viewBMP(x, y, 16, 22, set_img, 10);
+		x += 16;
+		i++;
+	}
+	
 }
+
 
 // データを流し込んで画像を表示する(ヘッダ)
 void Display::viewBMPspi_head() {
@@ -129,6 +151,20 @@ void Display::view_webhook() {
     this->_tft->fillRect(0, 210,  135, 240, WHITE);
     this->_tft->viewBMP(10, 212, 116, 25, (uint8_t *)webhook_img, 10);
 }
+// 打鍵数を表示
+void Display::view_dakagi(int vint) {
+	if (this->dakagi_last_view == common_cls.key_count_total) return;
+	// this->_tft->fillRect(0, 210,  135, 30, WHITE);
+	this->_tft->viewBMP(5, 215, 57, 25, (uint8_t *)dakagi_img, 10);
+	this->view_int(65, 217, common_cls.key_count_total);
+	this->dakagi_last_view = common_cls.key_count_total;
+}
+
+// 待ち受け画像表示
+void Display::view_standby_image() {
+    this->_tft->viewBMPFile(0,0, 135, 210, "/stimg.dat");
+	this->_tft->fillRect(0, 210,  135, 30, WHITE);
+}
 
 
 #endif
@@ -162,9 +198,45 @@ void Display::open_movie() {
         delay(100);
     }
     delay(1000);
-	this->_tft->viewBMPFile(0,0,this->_width, this->_height, "/stimg.dat");
-    delay(10000);
 }
+// 設定モード画面表示
+void Display::view_setting_mode() {
+    this->_tft->fillScreen(WHITE);
+    this->_tft->viewBMP(6, 6, 84, 88, (uint8_t *)setting_icon_img, 10);
+    this->_tft->viewBMP(100, 50, 98, 25, (uint8_t *)setting_title_img, 10);
+}
+// 保存中画面表示
+void Display::view_save() {
+    this->_tft->fillScreen(WHITE);
+    this->_tft->viewBMP(6, 6, 84, 88, (uint8_t *)setting_icon_img, 10);
+    this->_tft->viewBMP(100, 50, 76, 25, (uint8_t *)save_img, 10);
+}
+// wifi 接続中
+void Display::view_wifi_conn() {
+    this->_tft->fillScreen(WHITE);
+    this->_tft->viewBMP(6, 6, 97, 82, (uint8_t *)wifi_icon_img, 10);
+    this->_tft->viewBMP(100, 50, 109, 25, (uint8_t *)wifi_conn_img, 10);
+}
+// Webhook中
+void Display::view_webhook() {
+    this->_tft->fillRect(0, 105,  240, 135, WHITE);
+    this->_tft->viewBMP(10, 107, 116, 25, (uint8_t *)webhook_img, 10);
+}
+// 打鍵数を表示
+void Display::view_dakagi(int vint) {
+	if (this->dakagi_last_view == common_cls.key_count_total) return;
+	// this->_tft->fillRect(0, 210,  135, 30, WHITE);
+	this->_tft->viewBMP(5, 105, 57, 25, (uint8_t *)dakagi_img, 10);
+	this->view_int(70, 107, common_cls.key_count_total);
+	this->dakagi_last_view = common_cls.key_count_total;
+}
+
+// 待ち受け画像表示
+void Display::view_standby_image() {
+    this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+}
+
 #endif
 
 
@@ -172,11 +244,14 @@ void Display::open_movie() {
 void Display::loop_exec() {
     unsigned long n;
     n = millis();
-	this->_tft->fillRect(4, 4,  80, 20, BLACK);
+	// this->_tft->fillRect(4, 4,  80, 40, BLACK);
 	// this->_tft->fillRect(0, 0,  240, 135, BLACK);
     this->_tft->setCursor(4, 4);
-    this->_tft->printf("[%D]", (n - last_n));
+	this->_tft->setTextSize(3);
+    // this->_tft->printf("[%D]", (n - last_n));
+	this->view_dakagi(loop_index);
 	loop_index++;
+	if (loop_index > 9999) loop_index = 0;
 	last_n = n;
     /*
     delay(200);

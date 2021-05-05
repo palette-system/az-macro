@@ -8,6 +8,9 @@
 // キーボードの定義
 #define  KEYBOARD_AZ66JP
 
+// ESP32の種類 (0 = ESP32 / 1 = ESP32-WROVER)
+#define  AZESP32_TYPE  1
+
 // メモリに保持するキーの数(メモリを確保するサイズ)
 #define KEY_INPUT_MAX  80
 
@@ -30,7 +33,7 @@
 #define WEBFOOK_BUF_SIZE 512
 
 // 設定JSONのバッファサイズ
-#define SETTING_JSON_BUF_SIZE 20480
+#define SETTING_JSON_BUF_SIZE 30720
 
 // 設定モードに入るためのキー番号
 #define SETTING_MODE_KEY 0
