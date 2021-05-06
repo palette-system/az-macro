@@ -133,11 +133,12 @@ void AzKeyboard::key_repeat_exec() {
 }
 
 // キーを押しましたリストに追加
+// 
 void AzKeyboard::press_key_list_push(int action_type, int key_num, int key_id, int layer_id, int repeat_interval) {
     int i, k = -1;
     // 既にリストに自分がいないかチェック(離してスグ押した時とかに自分がいる可能性がある)
     for (i=0; i<PRESS_KEY_MAX; i++) {
-        if (press_key_list[i].key_num == key_num) {
+        if (press_key_list[i].key_num == key_num && press_key_list[i].key_id == key_id) {
             k = i;
             break;
         }
@@ -345,6 +346,15 @@ void AzKeyboard::key_down_action(int key_num) {
             key_set["press"]["move"]["speed"].as<signed int>());
         // キー押したよリストに追加
         press_key_list_push(action_type, key_num, -1, -1, -1);
+
+    } else if (action_type == 6) {
+        // 暗記ボタン
+        if (ankey_flag < 0) { // 他の暗記ボタンが作動中ではない
+            ankey_flag = 0;
+            ankey_id = key_num;
+            ankey_file_path = key_set["press"]["ankey_file"].as<String>();
+            
+        }
     }
 
     // 拡張メソッド実行
@@ -497,6 +507,6 @@ void AzKeyboard::loop_exec(void) {
     // 現在のキーの状態を前回部分にコピー
     common_cls.key_old_copy();
 
-    // delay(10);
+    delay(10);
   }
 }

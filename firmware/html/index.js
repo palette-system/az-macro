@@ -610,6 +610,9 @@ mst.select_input_type = function() {
             if (!("move" in mst.key_edit_data.press)) mst.key_edit_data.press.move = {"x": 0, "y": 0, "speed": 100};
         } else if (mst.key_edit_data.press.action_type == 6) {
             // 暗記ボタン
+            if (!("ankey_file" in mst.key_edit_data.press)) {
+                mst.key_edit_data.press.ankey_file = "A" + Math.random().toString(36).slice(-8);
+            }
         }
         mst.view_key_setting(mst.key_edit_kid);
     });
@@ -908,6 +911,8 @@ mst.key_setting_btn_click = function(type_id) {
             s.webhook =  mst.key_edit_data.press.webhook;
         } else if (s.action_type == 5) { // マウス移動
             s.move = {"x": $("move_x").value, "y": $("move_y").value, "speed": $("move_speed").value};
+        } else if (s.action_type == 6) { // 暗記ボタン
+            s.ankey_file = mst.key_edit_data.press.ankey_file;
         }
         mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + mst.key_edit_kid].press = s;
     }
