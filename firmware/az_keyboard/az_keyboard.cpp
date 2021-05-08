@@ -3,8 +3,8 @@
 #include "az_common.h"
 #include "src/lib/ble_keyboard_jis.h"
 #include "src/lib/custom_func.h"
+#include "src/lib/ankey.h"
 #include "src/lib/paw3204.h"
-
 
 // BLEキーボードクラス
 BleKeyboardJIS bleKeyboard(BLUETOOTH_SEARCH_NAME);
@@ -14,6 +14,10 @@ CustomFunc my_function = CustomFunc();
 
 // トラックボールクラス
 Paw3204 pawTrackball = Paw3204();
+
+// 暗記ボタンクラス
+Ankey ankeycls = Ankey();
+
 
 // コンストラクタ
 AzKeyboard::AzKeyboard() {
@@ -56,8 +60,11 @@ void AzKeyboard::start_keyboard() {
     // バッテリーレベル
     // bleKeyboard.setBatteryLevel(100);
 
+    // 暗記ボタン
+    ankeycls.begin(this);
+
     // 各ユニット初期化
-    start_unit();    
+    start_unit();
 
     press_key_all_clear = -1;
 
@@ -78,12 +85,16 @@ void AzKeyboard::start_unit() {
 
 // 前回のキーのステータスと比較して変更があった物だけ処理を実行する
 void AzKeyboard::key_action_exec() {
+    // 暗記データのキー入力中は何もしない
+    if (ankeycls.ankey_flag == 2) return;
+    // キー入力チェック
     int i;
     for (i=0; i<key_input_length; i++) {
         if (common_cls.input_key_last[i] != common_cls.input_key[i]) {
             if (common_cls.input_key[i]) {
                 // キーが押された
                 key_down_action(i);
+                ankeycls.key_down(i);
                 rgb_led_cls.set_led_buf(i, 1);
                 // 打鍵数カウントアップ
                 common_cls.key_count[i]++;
@@ -91,6 +102,7 @@ void AzKeyboard::key_action_exec() {
             } else {
                 // キーは離された
                 key_up_action(i);
+                ankeycls.key_up(i);
             }
         }
     }
@@ -349,12 +361,9 @@ void AzKeyboard::key_down_action(int key_num) {
 
     } else if (action_type == 6) {
         // 暗記ボタン
-        if (ankey_flag < 0) { // 他の暗記ボタンが作動中ではない
-            ankey_flag = 0;
-            ankey_id = key_num;
-            ankey_file_path = key_set["press"]["ankey_file"].as<String>();
-            
-        }
+        ankeycls.ankey_down(key_num);
+        // キー押したよリストに追加
+        press_key_list_push(action_type, key_num, -1, -1, -1);
     }
 
     // 拡張メソッド実行
@@ -392,6 +401,9 @@ void AzKeyboard::key_up_action(int key_num) {
         } else if (action_type == 5) {
             // マウス移動ボタン
             press_mouse_list_remove(key_num); // 移動中リストから削除
+        } else if (action_type == 6) {
+            // 暗記ボタン
+            ankeycls.ankey_up(key_num);
         }
         // スグクリアしない。離したよカウンターカウント開始
         press_key_list[i].unpress_time = 1;
@@ -480,6 +492,9 @@ void AzKeyboard::loop_exec(void) {
 
     // キー入力のアクション実行
     key_action_exec();
+
+    // 暗記ボタン定期処理
+    ankeycls.loop_exec();
 
     // キー連打処理
     key_repeat_exec();

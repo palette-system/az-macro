@@ -159,6 +159,18 @@ void Display::view_dakagi(int vint) {
 	this->view_int(65, 217, common_cls.key_count_total);
 	this->dakagi_last_view = common_cls.key_count_total;
 }
+// 暗記中
+void Display::view_ankey_now() {
+    this->_tft->fillRect(0, 0,  135, 240, WHITE);
+    this->_tft->viewBMP(20, 20, 95, 86, (uint8_t *)ankey_icon_img, 10);
+    this->_tft->viewBMP(30, 135, 75, 25, (uint8_t *)ankinow_img, 10);
+}
+// 暗記入力
+void Display::view_ankey_input() {
+    this->_tft->fillRect(0, 0,  135, 240, WHITE);
+    this->_tft->viewBMP(20, 20, 95, 86, (uint8_t *)ankey_icon_img, 10);
+    this->_tft->viewBMP(30, 55, 75, 25, (uint8_t *)nyuryokunow_img, 10);
+}
 
 // 待ち受け画像表示
 void Display::view_standby_image() {
@@ -202,26 +214,40 @@ void Display::open_movie() {
 // 設定モード画面表示
 void Display::view_setting_mode() {
     this->_tft->fillScreen(WHITE);
-    this->_tft->viewBMP(6, 6, 84, 88, (uint8_t *)setting_icon_img, 10);
-    this->_tft->viewBMP(100, 50, 98, 25, (uint8_t *)setting_title_img, 10);
+    this->_tft->viewBMP(20, 24, 84, 88, (uint8_t *)setting_icon_img, 10);
+    this->_tft->viewBMP(124, 55, 98, 25, (uint8_t *)setting_title_img, 10);
 }
 // 保存中画面表示
 void Display::view_save() {
     this->_tft->fillScreen(WHITE);
-    this->_tft->viewBMP(6, 6, 84, 88, (uint8_t *)setting_icon_img, 10);
-    this->_tft->viewBMP(100, 50, 76, 25, (uint8_t *)save_img, 10);
+    this->_tft->viewBMP(20, 24, 84, 88, (uint8_t *)setting_icon_img, 10);
+    this->_tft->viewBMP(124, 55, 76, 25, (uint8_t *)save_img, 10);
 }
 // wifi 接続中
 void Display::view_wifi_conn() {
     this->_tft->fillScreen(WHITE);
-    this->_tft->viewBMP(6, 6, 97, 82, (uint8_t *)wifi_icon_img, 10);
-    this->_tft->viewBMP(100, 50, 109, 25, (uint8_t *)wifi_conn_img, 10);
+    this->_tft->viewBMP(10, 27, 97, 82, (uint8_t *)wifi_icon_img, 10);
+    this->_tft->viewBMP(120, 55, 109, 25, (uint8_t *)wifi_conn_img, 10);
 }
 // Webhook中
 void Display::view_webhook() {
     this->_tft->fillRect(0, 105,  240, 135, WHITE);
-    this->_tft->viewBMP(10, 107, 116, 25, (uint8_t *)webhook_img, 10);
+    this->_tft->viewBMP(10, 27, 97, 82, (uint8_t *)wifi_icon_img, 10);
+    this->_tft->viewBMP(116, 107, 116, 25, (uint8_t *)webhook_img, 10);
 }
+// 暗記中
+void Display::view_ankey_now() {
+    this->_tft->fillRect(0, 0,  240, 135, WHITE);
+    this->_tft->viewBMP(20, 25, 95, 86, (uint8_t *)ankey_icon_img, 10);
+    this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)ankinow_img, 10);
+}
+// 暗記入力
+void Display::view_ankey_input() {
+    this->_tft->fillRect(0, 0,  240, 135, WHITE);
+    this->_tft->viewBMP(20, 25, 95, 86, (uint8_t *)ankey_icon_img, 10);
+    this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)nyuryokunow_img, 10);
+}
+
 // 打鍵数を表示
 void Display::view_dakagi(int vint) {
 	if (this->dakagi_last_view == common_cls.key_count_total) return;

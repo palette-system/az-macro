@@ -38,4 +38,6 @@
 // 設定モードに入るためのキー番号
 #define SETTING_MODE_KEY 0
 
+// 暗記ボタンで暗記できる数
+#define ANKEY_DATA_MAX_LENGTH  512
 

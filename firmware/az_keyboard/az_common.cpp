@@ -59,14 +59,7 @@ press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
 int press_key_all_clear;
 
 
-// 暗記ボタン作動中かどうか
-int ankey_flag;
 
-// どのキーの暗記ボタンか
-int ankey_id;
-
-// 暗記保存するファイルパス
-String ankey_file_path;
 
 
 // ステータス用LED点滅
@@ -165,10 +158,6 @@ void AzCommon::common_start() {
         press_key_list[i].layer_id = -1;
         press_key_list[i].unpress_time = -1;
     }
-    // 暗記ボタン用初期化
-    ankey_flag = -1;
-    ankey_id = -1;
-    ankey_file_path[0] = 0x00;
 }
 
 

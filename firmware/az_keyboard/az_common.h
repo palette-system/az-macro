@@ -34,7 +34,7 @@
 #define FIRMWARE_VERSION   "000015"
 
 // EEPROMに保存しているデータのバージョン文字列
-#define EEP_DATA_VERSION    "AZM003"
+#define EEP_DATA_VERSION    "AZM005"
 
 // JSON のファイルパス
 #define SETTING_JSON_PATH "/setting.json"
@@ -175,14 +175,6 @@ extern AzCommon common_cls;
 // 設定JSONオブジェクト
 extern JsonObject setting_obj;
 
-// 暗記ボタン作動中かどうか
-extern int ankey_flag;
-
-// どのキーの暗記ボタンか
-extern int ankey_id;
-
-// 暗記保存するファイルパス
-extern String ankey_file_path;
 
 
 

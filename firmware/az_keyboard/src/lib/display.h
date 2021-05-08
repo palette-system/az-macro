@@ -28,6 +28,8 @@ class Display
         void view_save(); // 保存中表示
         void view_wifi_conn(); // WiFi接続中画面表示
         void view_webhook(); // Webhook中表示
+	void view_ankey_now(); // 暗記中表示
+	void view_ankey_input(); // 暗記入力中表示
         void open_movie(); // 起動ムービー
         void loop_exec(); // 定期処理
 };

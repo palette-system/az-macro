@@ -1141,7 +1141,7 @@ mst.view_keytype_setting = function(select_type) {
     s += "<b style='font-size: 30px;'>キーボードの種類設定</b><br><br><br><br>";
     if (!select_type) select_type = mst.setting_data.keyboard_type;
     s += "　　<b style='font-size: 32px;'>" + mst.key_pattern_list[select_type].name + "</b>";
-    s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' class='update_button' onClick='javascript:mst.keytype_select(\""+select_type+"\"); return false;'>変更</a></div>";
+    // s += "<div style='text-align: right;padding: 10px 50px;'><a href='#' class='update_button' onClick='javascript:mst.keytype_select(\""+select_type+"\"); return false;'>変更</a></div>";
     s += "<br><br><br><br><br><br>";
     // タイプが変更されていたら再起動されるメッセージを出す
     if (mst.setting_data.keyboard_type != select_type) {
