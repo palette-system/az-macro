@@ -291,7 +291,7 @@ void AzKeyboard::key_down_action(int key_num) {
     int i, m, k, r, lid;
     // キーの設定取得
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
-    JsonObject key_set = common_cls.get_key_setting(key_num);
+    JsonObject key_set = common_cls.get_key_setting(select_layer_no, key_num);
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     // キーの押された時の設定があるか確認
     if (key_set.isNull() || !key_set.containsKey("press") || !key_set["press"].containsKey("action_type")) {
@@ -320,7 +320,7 @@ void AzKeyboard::key_down_action(int key_num) {
                 }
             }
             // キー押したよリストに追加
-            press_key_list_push(action_type, key_num, k, -1, r);
+            press_key_list_push(action_type, key_num, k, select_layer_no, r);
             ESP_LOGD(LOG_TAG, "key press : %D %D\r\n", key_num, k);
         }
 
@@ -332,18 +332,19 @@ void AzKeyboard::key_down_action(int key_num) {
         text_str.toCharArray(text_char, 512);
         send_string(text_char); // 特定の文章を送る
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, -1, -1);
+        press_key_list_push(action_type, key_num, -1, select_layer_no, -1);
 
     } else if (action_type == 3) {
         // マウス移動リストクリア
         press_mouse_list_clean();
         // レイヤーの切り替え
         lid = key_set["press"]["layer"].as<signed int>();
+        m = select_layer_no;
         select_layer_no = lid;
         // 最後に押されたレイヤーボタン設定
         last_select_layer_key = key_num;
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, lid, -1);
+        press_key_list_push(action_type, key_num, -1, m, -1);
         ESP_LOGD(LOG_TAG, "key press layer : %D %D\r\n", key_num, lid);
 
     } else if (action_type == 4) {
@@ -357,13 +358,13 @@ void AzKeyboard::key_down_action(int key_num) {
             key_set["press"]["move"]["y"].as<signed int>(),
             key_set["press"]["move"]["speed"].as<signed int>());
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, -1, -1);
+        press_key_list_push(action_type, key_num, -1, select_layer_no, -1);
 
     } else if (action_type == 6) {
         // 暗記ボタン
-        ankeycls.ankey_down(key_num);
+        ankeycls.ankey_down(select_layer_no, key_num);
         // キー押したよリストに追加
-        press_key_list_push(action_type, key_num, -1, -1, -1);
+        press_key_list_push(action_type, key_num, -1, select_layer_no, -1);
     }
 
     // 拡張メソッド実行

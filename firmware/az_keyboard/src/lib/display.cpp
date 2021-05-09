@@ -176,6 +176,7 @@ void Display::view_ankey_input() {
 void Display::view_standby_image() {
     this->_tft->viewBMPFile(0,0, 135, 210, "/stimg.dat");
 	this->_tft->fillRect(0, 210,  135, 30, WHITE);
+	this->dakagi_last_view = -1;
 }
 
 
@@ -231,9 +232,9 @@ void Display::view_wifi_conn() {
 }
 // Webhook中
 void Display::view_webhook() {
-    this->_tft->fillRect(0, 105,  240, 135, WHITE);
+    this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(10, 27, 97, 82, (uint8_t *)wifi_icon_img, 10);
-    this->_tft->viewBMP(116, 107, 116, 25, (uint8_t *)webhook_img, 10);
+    this->_tft->viewBMP(116, 55, 116, 25, (uint8_t *)webhook_img, 10);
 }
 // 暗記中
 void Display::view_ankey_now() {
@@ -261,6 +262,7 @@ void Display::view_dakagi(int vint) {
 void Display::view_standby_image() {
     this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
 	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+	this->dakagi_last_view = -1;
 }
 
 #endif

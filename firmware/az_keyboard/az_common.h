@@ -43,9 +43,9 @@
 // 今押されているボタンの情報
 struct press_key_data {
     short action_type; // キーの動作タイプ 0=設定なし / 1=通常入力 / 2=テキスト入力 / 3=レイヤー変更 / 4=WEBフック
+    short layer_id; // キーを押した時のレイヤーID
     short key_num; // キー番号
     short key_id; // 送信した文字
-    short layer_id; // レイヤー切り替えボタンだった場合レイヤーIDが入る(デフォルト：-1)
     short unpress_time; // キーを離してからどれくらい経ったか
     short repeat_interval; // 連打の間隔
     short repeat_index; // 現在の連打カウント
@@ -93,7 +93,7 @@ class AzCommon
         void pin_setup(); // キーの入力ピンの初期化
         void pin_setup_sub_process(); // 入力ピン初期化のキーボード別の処理
         bool layers_exists(int layer_no); // レイヤーが存在するか確認
-        JsonObject get_key_setting(int key_num); // 指定したキーの入力設定を取得する
+        JsonObject get_key_setting(int layer_id, int key_num); // 指定したキーの入力設定を取得する
         void load_data(); // EEPROMからデータをロードする
         void save_data(); // EEPROMに保存する
         void set_boot_mode(int set_mode); // 起動モードを切り替えてEEPROMに保存

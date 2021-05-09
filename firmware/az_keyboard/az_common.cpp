@@ -539,11 +539,11 @@ bool AzCommon::layers_exists(int layer_no) {
 }
 
 // 指定したキーの入力設定オブジェクトを取得する
-JsonObject AzCommon::get_key_setting(int key_num) {
+JsonObject AzCommon::get_key_setting(int layer_id, int key_num) {
     char lkey[16];
     char kkey[16];
     // 今選択中のレイヤーのキー名取得
-    sprintf(lkey, "layer_%D", select_layer_no);
+    sprintf(lkey, "layer_%D", layer_id);
     // キーのキー名取得
     sprintf(kkey, "key_%D", key_num);
     // キーの設定があるか確認
