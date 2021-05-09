@@ -100,7 +100,6 @@ void Ankey::input_end() {
 
 // 暗記したデータのキー入力開始
 void Ankey::output_start() {
-	int i;
 	// 記憶データをファイルから読み込む
 	JsonObject key_set = common_cls.get_key_setting(this->ankey_layer_id, this->ankey_key_num); // 暗記キーの設定情報取得
 	String fpath = "/" + key_set["press"]["ankey_file"].as<String>();
@@ -109,13 +108,11 @@ void Ankey::output_start() {
 		// ファイル読み込み失敗
 		return;
 	}
-	i = 0;
-	while(fp.available()){
-		this->_andata[i].type = fp.read();
-		this->_andata[i].key_num = fp.read();
-		i++;
+	int i = 0;
+	if (fp.available()) {
+		i = fp.read((uint8_t *)&this->_andata, ANKEY_DATA_MAX_LENGTH * sizeof(ankey_data));
 	}
-	this->_andata[i].type = 0;
+	this->_andata[i / 2].type = 0;
 	fp.close();
 	// 暗記データが無ければ何もしない
 	if (this->_andata[0].type == 0) {
