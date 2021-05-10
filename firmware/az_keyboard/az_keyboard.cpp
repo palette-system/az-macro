@@ -414,6 +414,25 @@ void AzKeyboard::key_up_action(int key_num) {
     }
 }
 
+// 押されているキーの情報を全てリセットする
+void AzKeyboard::press_data_reset() {
+    int i;
+    select_layer_no = default_layer_no;
+    last_select_layer_key = -1;
+    for (i=0; i<PRESS_KEY_MAX; i++) {
+        press_key_list[i].action_type = -1;
+        press_key_list[i].key_num = -1;
+        press_key_list[i].key_id = -1;
+        press_key_list[i].layer_id = -1;
+        press_key_list[i].unpress_time = -1;
+        press_key_list[i].repeat_interval = -1;
+        press_key_list[i].repeat_index = -1;
+    }
+    bleKeyboard.releaseAll();
+    press_key_all_clear = -1;
+    this->press_mouse_list_clean();
+}
+
 // 押されたキーの情報クリア
 void AzKeyboard::press_data_clear() {
     int i;

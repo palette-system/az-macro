@@ -59,7 +59,15 @@ press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
 int press_key_all_clear;
 
 
-
+// 入力用ピン情報
+short col_len;
+short row_len;
+short direct_len;
+short touch_len;
+short *col_list;
+short *row_list;
+short *direct_list;
+short *touch_list;
 
 
 // ステータス用LED点滅
@@ -359,6 +367,29 @@ void AzCommon::load_setting_json() {
     get_keyboard_type_int();
     // オプションタイプの番号を取得
     get_option_type_int();
+    // col,len情報取得
+    int i;
+    col_len = setting_obj["keyboard_pin"]["col"].size();
+    row_len = setting_obj["keyboard_pin"]["row"].size();
+    direct_len = setting_obj["keyboard_pin"]["direct"].size();
+    touch_len = setting_obj["keyboard_pin"]["touch"].size();
+    col_list = new short[col_len];
+    for (i=0; i<col_len; i++) {
+        col_list[i] = setting_obj["keyboard_pin"]["col"][i].as<signed int>();
+    }
+    row_list = new short[row_len];
+    for (i=0; i<row_len; i++) {
+        row_list[i] = setting_obj["keyboard_pin"]["row"][i].as<signed int>();
+    }
+    direct_list = new short[direct_len];
+    for (i=0; i<direct_len; i++) {
+        direct_list[i] = setting_obj["keyboard_pin"]["direct"][i].as<signed int>();
+    }
+    touch_list = new short[touch_len];
+    for (i=0; i<touch_len; i++) {
+        touch_list[i] = setting_obj["keyboard_pin"]["touch"][i].as<signed int>();
+    }
+    
 }
 
 // デフォルトレイヤー番号設定
@@ -482,28 +513,17 @@ bool AzCommon::create_setting_json() {
 void AzCommon::pin_setup() {
     // output ピン設定 (colで定義されているピンを全てoutputにする)
     int i;
-    int col_len = setting_obj["keyboard_pin"]["col"].size();
-    ESP_LOGD(LOG_TAG, "col len : %D\r\n", col_len);
     for (i=0; i<col_len; i++) {
-        pinMode(setting_obj["keyboard_pin"]["col"][i].as<signed int>(), OUTPUT_OPEN_DRAIN);
-        ESP_LOGD(LOG_TAG, "output : %D\r\n", setting_obj["keyboard_pin"]["col"][i].as<signed int>());
+        pinMode(col_list[i], OUTPUT_OPEN_DRAIN);
     }
     // row で定義されているピンを全てinputにする
-    int row_len = setting_obj["keyboard_pin"]["row"].size();
-    ESP_LOGD(LOG_TAG, "row len : %D\r\n", row_len);
     for (i=0; i<row_len; i++) {
-        pinMode(setting_obj["keyboard_pin"]["row"][i].as<signed int>(), INPUT_PULLUP);
-        ESP_LOGD(LOG_TAG, "input : %D\r\n", setting_obj["keyboard_pin"]["row"][i].as<signed int>());
+        pinMode(row_list[i], INPUT_PULLUP);
     }
     // direct(スイッチ直接続)で定義されているピンを全てinputにする
-    int direct_len = setting_obj["keyboard_pin"]["direct"].size();
-    ESP_LOGD(LOG_TAG, "direct len : %D\r\n", direct_len);
     for (i=0; i<direct_len; i++) {
-        pinMode(setting_obj["keyboard_pin"]["direct"][i].as<signed int>(), INPUT_PULLUP);
-        ESP_LOGD(LOG_TAG, "input : %D\r\n", setting_obj["keyboard_pin"]["direct"][i].as<signed int>());
+        pinMode(direct_list[i], INPUT_PULLUP);
     }
-    // タッチピンの数を取得
-    int touch_len = setting_obj["keyboard_pin"]["touch"].size();
     // キー数の計算
     key_input_length = (col_len * row_len) + direct_len + touch_len;
     if (key_input_length > KEY_INPUT_MAX) key_input_length = KEY_INPUT_MAX;
@@ -614,23 +634,19 @@ void AzCommon::change_mode(int set_mode) {
     ESP.restart(); // ESP32再起動
 }
 
+
 // 現在のキーの入力状態を取得
 void AzCommon::key_read(void) {
     int i, j, n, s;
-    int col_len = setting_obj["keyboard_pin"]["col"].size();
-    int row_len = setting_obj["keyboard_pin"]["row"].size();
-    int direct_len = setting_obj["keyboard_pin"]["direct"].size();
-    int touch_len = setting_obj["keyboard_pin"]["touch"].size();
     n = 0;
     // ダイレクト入力の取得
     for (i=0; i<direct_len; i++) {
-        input_key[n] = !digitalRead(setting_obj["keyboard_pin"]["direct"][i].as<signed int>());
+        input_key[n] = !digitalRead(direct_list[i]);
         n++;
     }
     // タッチ入力の取得
     for (i=0; i<touch_len; i++) {
-        // ESP_LOGD(LOG_TAG, "[%D][%D] %D = %D\r\n", n, i, setting_obj["keyboard_pin"]["touch"][i].as<signed int>(), touchRead(setting_obj["keyboard_pin"]["touch"][i].as<signed int>()));
-        if (touchRead(setting_obj["keyboard_pin"]["touch"][i].as<signed int>()) < 25) {
+        if (touchRead(touch_list[i]) < 25) {
             input_key[n] = 1;
         } else {
             input_key[n] = 0;
@@ -642,12 +658,12 @@ void AzCommon::key_read(void) {
         // 対象のcolピンのみ lowにする
         for (j=0; j<col_len; j++) {
             if (i == j) { s = 0; } else { s = 1; }
-            digitalWrite(setting_obj["keyboard_pin"]["col"][j].as<signed int>(), s);
+            digitalWrite(col_list[j], s);
         }
         delayMicroseconds(50);
         // row の分キー入力チェック
         for (j=0; j<row_len; j++) {
-            input_key[n] = !digitalRead(setting_obj["keyboard_pin"]["row"][j].as<signed int>());
+            input_key[n] = !digitalRead(row_list[j]);
             n++;
         }
     }

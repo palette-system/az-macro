@@ -273,10 +273,10 @@ void Display::loop_exec() {
     unsigned long n;
     n = millis();
 	// this->_tft->fillRect(4, 4,  80, 40, BLACK);
-	// this->_tft->fillRect(0, 0,  240, 135, BLACK);
-    this->_tft->setCursor(4, 4);
-	this->_tft->setTextSize(3);
-    // this->_tft->printf("[%D]", (n - last_n));
+	// this->_tft->fillRect(170, 0,  240, 30, BLACK);
+    // this->_tft->setCursor(180, 4);
+	// this->_tft->setTextSize(2);
+    // this->_tft->printf("%D", (n - last_n));
 	this->view_dakagi(loop_index);
 	loop_index++;
 	if (loop_index > 9999) loop_index = 0;

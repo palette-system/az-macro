@@ -30,6 +30,7 @@
   static const char* LOG_TAG = "AZM";
 #endif
 
+
 // ファームウェアのバージョン文字
 #define FIRMWARE_VERSION   "000015"
 
@@ -119,6 +120,16 @@ extern int status_led_bit;
 
 // ステータスLED表示モード
 extern int status_led_mode;
+
+// 入力用ピン情報
+extern short col_len;
+extern short row_len;
+extern short direct_len;
+extern short touch_len;
+extern short *col_list;
+extern short *row_list;
+extern short *direct_list;
+extern short *touch_list;
 
 // 液晶オブジェクト
 extern Arduino_ST7789 *tft;

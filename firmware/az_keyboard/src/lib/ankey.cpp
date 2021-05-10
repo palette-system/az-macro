@@ -27,7 +27,7 @@ void Ankey::key_down(int key_num) {
 	// 暗記中で無ければ何もしない
 	if (this->ankey_flag != 1) return;
 	// 暗記ボタンであれば記憶しない
-	if (this->ankey_key_num == key_num) return;
+	if (this->ankey_layer_id == select_layer_no && this->ankey_key_num == key_num) return;
 	// 入力データを保持
 	int i = this->_data_index;
 	this->_andata[i].type = 1; // key_down
@@ -43,6 +43,8 @@ void Ankey::key_down(int key_num) {
 void Ankey::key_up(int key_num) {
 	// 暗記中で無ければ何もしない
 	if (this->ankey_flag != 1) return;
+	// 暗記ボタンであれば記憶しない
+	if (this->ankey_layer_id == select_layer_no && this->ankey_key_num == key_num) return;
 	// 入力データを保持
 	int i = this->_data_index;
 	this->_andata[i].type = 2; // key_up
@@ -65,9 +67,8 @@ void Ankey::input_start() {
 		this->_andata[i].type = 0;
 		this->_andata[i].key_num = 0;
 	}
-	// 開始時のレイヤーはデフォルト固定にする
-	select_layer_no = default_layer_no;
-	last_select_layer_key = -1;
+	// 開始時入力状態をリセット
+	this->_azkb->press_data_reset();
 	// 暗記中画面表示
     if (common_cls.on_tft_unit()) {
         disp->view_ankey_now();
@@ -81,6 +82,8 @@ void Ankey::input_end() {
 	// 暗記終了
 	this->ankey_flag = 0; // 処理なし
 	this->_data_index = 0;
+	// 入力状態をリセット
+	this->_azkb->press_data_reset();
 	// 記憶データをファイルに出力
 	JsonObject key_set = common_cls.get_key_setting(this->ankey_layer_id, this->ankey_key_num); // 暗記キーの設定情報取得
 	String fpath = "/" + key_set["press"]["ankey_file"].as<String>();
@@ -121,9 +124,8 @@ void Ankey::output_start() {
 	// 入力処理開始
 	this->ankey_flag = 2; // キー入力中
 	this->_data_index = 0;
-	// 開始時のレイヤーはデフォルト固定にする
-	select_layer_no = default_layer_no;
-	last_select_layer_key = -1;
+	// 入力状態をリセット
+	this->_azkb->press_data_reset();
 	// 入力中画面表示
     if (common_cls.on_tft_unit()) {
         disp->view_ankey_input();
@@ -136,6 +138,8 @@ void Ankey::output_end() {
 	this->ankey_flag = 0; // 動作無し
 	this->_data_index = 0;
 	this->_loop_index = 0;
+	// 入力状態をリセット
+	this->_azkb->press_data_reset();
     if (common_cls.on_tft_unit()) {
         disp->view_standby_image();
     }
