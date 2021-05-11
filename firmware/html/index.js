@@ -158,21 +158,25 @@ mst.init = function() {
     });
 };
 
+mst.popstate_func = function(e) {
+    history.pushState(null, null,  location.href);
+};
+mst.popstate_func_ov = function(e) {
+    updateBreadCrumbObservable();
+};
+
+mst.beforeunload_func = function(e) {
+    e.preventDefault();
+    return "別のページへ移動しますか？";
+};
+
 // ブラウザのボタン設定
 mst.browser_btn_control = function() {
     // 戻るボタン無効化
     history.pushState(null, null,  location.href);
-    window.addEventListener('popstate', function(e) {
-        history.pushState(null, null,  location.href);
-    });
-    window.onpopstate = function(e) {
-        if (mst.end_flag) return;
-        updateBreadCrumbObservable();
-    };
-    window.onbeforeunload = function(e) {
-        if (mst.end_flag) return false;
-        return "別のページへ移動しますか？";
-    };
+    window.addEventListener("popstate", mst.popstate_func, false);
+    window.addEventListener("popstate", mst.popstate_func_ov, false);
+    window.addEventListener("beforeunload", mst.beforeunload_func, false);
 };
 
 // 設定JSON取得
@@ -446,6 +450,9 @@ mst.create_key_btn = function() {
         } else if (p.press.action_type == 5) {
             // マウス移動
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>MUS</div>";
+        } else if (p.press.action_type == 6) {
+            // 暗記ボタン
+            h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>暗</div>";
         }
         h += "</td></tr></table>";
         h += "</div>";
@@ -931,6 +938,10 @@ mst.end_setting = function(end_type) {
     // 終了フラグを立てる
     mst.end_flag = true;
     mst.end_type = end_type;
+    // ページ移動警告解除
+    window.removeEventListener("popstate", mst.popstate_func, false);
+    window.removeEventListener("popstate", mst.popstate_func_ov, false);
+    window.removeEventListener("beforeunload", mst.beforeunload_func, false);
     if (mst.end_type == 1 || mst.end_type == 2) {
         // 保存して終了
         set_html("info_box", "保存中.. ");
@@ -1205,7 +1216,7 @@ mst.view_option_setting = function(option_set) {
         s += "<tr><td><b>入力反転：</b>　　<b style='font-size: 27px;'>"+invstr+"</b></td><td align='right'>";
         s += "<a href='#' id='rvch_btn' class='update_button' onClick='javascript:mst.foot_inv_edit_btn();return false;'>変更</a>";
         s += "</td></tr>";
-    } else if (mst.option_edit_data.type == "display_m" || mst.option_edit_data.type == "display_66jp") {
+    } else if (mst.is_tft(mst.option_edit_data.type)) {
         // AZ-Macro用液晶
         var op_movie = "再生しない";
         if (mst.option_edit_data.op_movie == "1") op_movie = "再生する";
@@ -1242,7 +1253,7 @@ mst.view_option_setting = function(option_set) {
     set_html("setting_box", s);
     set_html("info_box", "");
     mst.view_box(["info_box", "setting_box"]);
-    if (mst.option_edit_data.type == "display_m") {
+    if (mst.is_tft(mst.option_edit_data.type)) {
         mst.view_imgdata("stimg_canvas", "stimg.dat");
     }
 };
@@ -1305,7 +1316,7 @@ mst.option_type_select = function() {
             }
         }
         // 液晶で起動ムービー再生が無ければ追加
-        if (select_key == "display_m") {
+        if (mst.is_tft(select_key)) {
             if (!("op_movie" in mst.option_edit_data)) {
                 mst.option_edit_data.op_movie = "1";
             }
@@ -1339,6 +1350,12 @@ mst.op_movie_edit_btn = function() {
     });
 };
 
+// 液晶のオプションかどうか
+mst.is_tft = function(type_str) {
+    if (type_str == "display_m" || type_str == "display_66jp") return true;
+    return false;
+};
+
 // 液晶のサイズを取得
 mst.get_tft_size = function() {
     if (mst.setting_data.option_set.type == "display_m") {
@@ -1347,6 +1364,7 @@ mst.get_tft_size = function() {
     if (mst.setting_data.option_set.type == "display_66jp") {
         return {"width": 240, "height": 135};
     }
+    return {"width": 0, "height": 0};
 };
 
 

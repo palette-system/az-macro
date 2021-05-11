@@ -428,6 +428,10 @@ void AzKeyboard::press_data_reset() {
         press_key_list[i].repeat_interval = -1;
         press_key_list[i].repeat_index = -1;
     }
+    for (i=0; i<key_input_length; i++) {
+        common_cls.input_key_last[i] = 0;
+        common_cls.input_key[i] = 0;
+    }
     bleKeyboard.releaseAll();
     press_key_all_clear = -1;
     this->press_mouse_list_clean();
@@ -542,6 +546,6 @@ void AzKeyboard::loop_exec(void) {
     // 現在のキーの状態を前回部分にコピー
     common_cls.key_old_copy();
 
-    delay(10);
+    delay(5);
   }
 }

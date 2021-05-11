@@ -109,7 +109,7 @@ mst.key_pattern_list["az_66jp"] = {
 		{"id": 16, "x": 324, "y": 96, "width": 66, "height": 66 },
 		{"id": 21, "x": 416, "y": 96, "width": 66, "height": 66 },
 		{"id": 26, "x": 506, "y": 96, "width": 66, "height": 66 },
-		{"id": 30, "x": 596, "y": 96, "width": 66, "height": 66 },
+		{"id": 31, "x": 596, "y": 96, "width": 66, "height": 66 },
 		{"id": 36, "x": 688, "y": 96, "width": 66, "height": 66 },
 		{"id": 41, "x": 778, "y": 96, "width": 66, "height": 66 },
 		{"id": 46, "x": 869, "y": 96, "width": 66, "height": 66 },
