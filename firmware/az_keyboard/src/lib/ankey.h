@@ -25,7 +25,6 @@ class Ankey
 	    uint8_t ankey_key_num; // 暗記開始したキーの番号
 	    uint8_t  ankey_flag; // 0=何もなし / 1=暗記中 / 2=暗記した入力実行中
 	    uint8_t  ankey_count; // 0=暗記ボタン押されていない / 1=暗記ボタン押されている
-	    uint8_t  ankey_end_flag; // 暗記終了フラグ
 	    ankey_data _andata[ANKEY_DATA_MAX_LENGTH];
         Ankey();   // コンストラクタ
         void begin(AzKeyboard  *azkb); // 初期化

@@ -253,8 +253,8 @@ void Display::view_ankey_input() {
 void Display::view_dakagi(int vint) {
 	if (this->dakagi_last_view == common_cls.key_count_total) return;
 	// this->_tft->fillRect(0, 210,  135, 30, WHITE);
-	this->_tft->viewBMP(5, 105, 57, 25, (uint8_t *)dakagi_img, 10);
-	this->view_int(70, 107, common_cls.key_count_total);
+	this->_tft->viewBMP(5, 109, 57, 25, (uint8_t *)dakagi_img, 10);
+	this->view_int(70, 111, common_cls.key_count_total);
 	this->dakagi_last_view = common_cls.key_count_total;
 }
 

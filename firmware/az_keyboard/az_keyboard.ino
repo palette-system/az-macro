@@ -43,7 +43,8 @@ void setup() {
         rgb_led_cls.begin(
             setting_obj["rgb_pin"].as<signed int>(),
             setting_obj["matrix_row"].as<signed int>(),
-            setting_obj["matrix_col"].as<signed int>()
+            setting_obj["matrix_col"].as<signed int>(),
+            &select_layer_no
         );
         s = setting_obj["led_num"].size();
         for (i=0; i<s; i++) {
