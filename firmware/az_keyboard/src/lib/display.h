@@ -16,6 +16,8 @@ class Display
 	    short _height; // 液晶のサイズ高さ
 	short _wait_index;
 	int dakagi_last_view;
+	uint8_t  *_stimg_data;
+	uint8_t  _stimg_load_flag;
         Display();   // コンストラクタ
         void begin(Arduino_ST7789 *tft_obj, int option_type); // 初期化
         void view_full_image(uint8_t *image_data); // 画面いっぱいに画像を表示する

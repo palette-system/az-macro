@@ -48,6 +48,7 @@ void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
     last_n = millis();
 	this->dakagi_last_view = -1;
 	this->_wait_index = 0;
+	this->_stimg_load_flag = 0;
 }
 
 // 画面いっぱい黒い画面
@@ -313,7 +314,25 @@ void Display::view_dakagi(int vint) {
 
 // 待ち受け画像表示
 void Display::view_standby_image() {
-    this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
+	if (this->_stimg_load_flag) {
+		// SPRAMにデータロード済みならSPRAMに入ってる待ち受け画像を表示
+		this->_tft->viewBMPspi_head(0, 0, 240, 135);
+		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+	} else if (ESP.getFreePsram() > 64800) {
+		// SPRAMに空き容量があれば待ち受け画像をSPRAMにロード
+		this->_stimg_data = (uint8_t *)ps_malloc(64800);
+		if(SPIFFS.exists("/stimg.dat")){
+			File fp = SPIFFS.open("/stimg.dat", "r");
+			int s = fp.read(this->_stimg_data, 64800);
+			fp.close();
+		}
+		this->_tft->viewBMPspi_head(0, 0, 240, 135);
+		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+		// this->_tft->viewBMP(0, 0, 240, 135, this->_stimg_data, 10);
+	} else {
+		// SPRAMに空きが無ければファイルから直接表示
+	    this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
+	}
 	// this->_tft->fillRect(0, 105,  240, 30, WHITE);
 	this->dakagi_last_view = -1;
 }
@@ -366,11 +385,12 @@ void Display::view_led_shine() {
 void Display::loop_exec() {
     unsigned long n;
     n = millis();
-	// this->_tft->fillRect(4, 4,  80, 40, BLACK);
-	// this->_tft->fillRect(170, 0,  240, 30, BLACK);
-    // this->_tft->setCursor(180, 4);
-	// this->_tft->setTextSize(2);
-    // this->_tft->printf("%D", (n - last_n));
+    // this->_tft->fillRect(0, 0,  240, 50, BLACK);
+    // this->_tft->setCursor(4, 4);
+    // this->_tft->setTextSize(2);
+    // this->_tft->printf("%D / %D\n", ESP.getHeapSize(), ESP.getFreeHeap());
+    // this->_tft->printf("%D / %D\n", ESP.getPsramSize(), ESP.getFreePsram());
+    // this->_tft->printf("%D / %D\n", ESP.getFlashChipSize(), ESP.getFlashChipSpeed());
 	// 待ちIndexがあれば待ち時間終わるまで画面の変更なし
 	if (this->_wait_index && rgb_led_cls.setting_change == 0) {
 		this->_wait_index--;
