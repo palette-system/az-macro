@@ -333,14 +333,6 @@
 					"long_press": {},
 					"long_press_time": 0
 				},
-				"key_39": {
-					"press": {
-						"action_type": 1,
-						"key": [4]
-					},
-					"long_press": {},
-					"long_press_time": 0
-				},
 				"key_40": {
 					"press": {
 						"action_type": 1,

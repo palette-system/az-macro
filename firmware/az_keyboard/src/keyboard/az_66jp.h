@@ -4,6 +4,8 @@
 // 初期起動時のデフォルト設定
 #include "setting_az66jp_default.h"
 #include "../image/common.h"
+#include "../image/led_setting.h"
+
 
 // キーボードの定義
 #define  KEYBOARD_AZ66JP

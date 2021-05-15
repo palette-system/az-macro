@@ -93,16 +93,17 @@ void AzKeyboard::key_action_exec() {
         if (common_cls.input_key_last[i] != common_cls.input_key[i]) {
             if (common_cls.input_key[i]) {
                 // キーが押された
-                key_down_action(i);
-                ankeycls.key_down(i);
-                rgb_led_cls.set_led_buf(i, 1);
+                key_down_action(i); // 押された時の動作
+                ankeycls.key_down(i); // 暗記クラスに押したよを送る(暗記用)
+                rgb_led_cls.set_led_buf(i, 1); // LED に押したよを送る
                 // 打鍵数カウントアップ
                 common_cls.key_count[i]++;
                 common_cls.key_count_total++;
             } else {
                 // キーは離された
-                key_up_action(i);
-                ankeycls.key_up(i);
+                key_up_action(i); // 離された時の動作
+                ankeycls.key_up(i); // 暗記クラスに離したよを送る(暗記用)
+                rgb_led_cls.set_led_buf(i, 0); // LED に離したよを送る
             }
         }
     }
@@ -365,6 +366,27 @@ void AzKeyboard::key_down_action(int key_num) {
         ankeycls.ankey_down(select_layer_no, key_num);
         // キー押したよリストに追加
         press_key_list_push(action_type, key_num, -1, select_layer_no, -1);
+
+    } else if (action_type == 7) {
+        // LED設定ボタン
+        m = key_set["press"]["led_setting_type"].as<signed int>();
+        if (m == 0) {
+            // ON / OFF
+            rgb_led_cls.setting_status();
+        } else if (m == 1) {
+            // 明るさアップ
+            rgb_led_cls.setting_bright_up();
+        } else if (m == 2) {
+            // 明るさダウン
+            rgb_led_cls.setting_bright_down();
+        } else if (m == 3) {
+            // 色変更
+            rgb_led_cls.setting_color_type();
+        } else if (m == 4) {
+            // 光らせ方変更
+            rgb_led_cls.setting_shine_type();
+        }
+        
     }
 
     // 拡張メソッド実行

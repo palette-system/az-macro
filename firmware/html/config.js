@@ -131,7 +131,7 @@ mst.key_pattern_list["az_66jp"] = {
 		{"id": 57, "x": 1073, "y": 187, "width": 66, "height": 66 },
 		{"id": 62, "x": 1164, "y": 187, "width": 66, "height": 66 },
 
-		{"id": 67, "x": 1262, "y": 100, "width": 66, "height": 150 },
+		{"id": 67, "x": 1257, "y": 100, "width": 76, "height": 150 },
 
 		{"id": 3, "x": 16, "y": 278, "width": 165, "height": 66 },
 		{"id": 8, "x": 212, "y": 278, "width": 66, "height": 66 },
@@ -149,11 +149,10 @@ mst.key_pattern_list["az_66jp"] = {
 
 		{"id": 4, "x": 8, "y": 369, "width": 83, "height": 66 },
 		{"id": 9, "x": 121, "y": 369, "width": 66, "height": 66 },
-		{"id": 24, "x": 461, "y": 369, "width": 66, "height": 66 },
-		{"id": 29, "x": 551, "y": 369, "width": 66, "height": 66 },
-		{"id": 34, "x": 642, "y": 369, "width": 66, "height": 66 },
-		{"id": 39, "x": 733, "y": 369, "width": 66, "height": 66 },
-		{"id": 44, "x": 824, "y": 369, "width": 66, "height": 66 },
+		{"id": 24, "x": 474, "y": 369, "width": 83, "height": 66 },
+		{"id": 29, "x": 582, "y": 369, "width": 83, "height": 66 },
+		{"id": 34, "x": 690, "y": 369, "width": 83, "height": 66 },
+		{"id": 44, "x": 800, "y": 369, "width": 83, "height": 66 },
 		{"id": 49, "x": 914, "y": 369, "width": 66, "height": 66 },
 		{"id": 54, "x": 1005, "y": 369, "width": 66, "height": 66 },
 		{"id": 59, "x": 1096, "y": 369, "width": 66, "height": 66 },
@@ -442,6 +441,7 @@ mst.input_type_list = {
 	"3": "レイヤー切り替え",
 	"4": "WEBフック",
 	"5": "マウス移動",
-	"6": "暗記ボタン"
+	"6": "暗記ボタン",
+	"7": "LED設定ボタン"
 };
 

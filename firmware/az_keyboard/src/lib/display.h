@@ -14,6 +14,7 @@ class Display
         int  _option_type; // オプションのタイプ
 	    short _width; // 液晶のサイズ幅
 	    short _height; // 液晶のサイズ高さ
+	short _wait_index;
 	int dakagi_last_view;
         Display();   // コンストラクタ
         void begin(Arduino_ST7789 *tft_obj, int option_type); // 初期化
@@ -24,6 +25,10 @@ class Display
 	    void viewBMPspi_data(uint8_t *wbuf, int wsize); // データを流し込んで画像を表示する(データ)
         void view_black(); // 画面全体黒い画面表示
         void view_standby_image(); // 待ち受け画面表示
+	void view_led_stat(); // LEDステータス表示
+	void view_led_bright(); // LED 明るさ設定表示
+	void view_led_color(); // LED 色設定表示
+	void view_led_shine(); // LED 光らせ方設定表示
         void view_setting_mode(); // 設定モード画面表示
         void view_save(); // 保存中表示
         void view_wifi_conn(); // WiFi接続中画面表示

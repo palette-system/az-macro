@@ -25,6 +25,13 @@ void Neopixel::begin(short data_pin, short row_size, short col_size, int *select
     for (i=0; i<this->_led_length; i++) { this->led_num[i] = -1; }
     this->key_matrix = new int8_t[this->_led_length];
     for (i=0; i<this->_led_length; i++) { this->key_matrix[i] = -1; }
+	// 消灯フラグ(最初は１回消灯させる)
+	this->_hide_flag = 1;
+	// 設定ファイル読み込み
+	this->setting_load();
+	// 設定変更フラグ
+	this->setting_change = 0;
+	// 常に光らせるキー
     this->select_key_cler();
     // RGB_LEDピン用の初期化
     if (this->_data_pin >= 0 && this->_led_length > 0) {
@@ -34,6 +41,29 @@ void Neopixel::begin(short data_pin, short row_size, short col_size, int *select
         }
     	this->rgb_led->show();
     }
+}
+
+// 設定ファイルの読み込み
+void Neopixel::setting_load() {
+	// デフォルト値
+	this->_setting.status = 0;
+	this->_setting.bright = 3;
+	this->_setting.color_type = 0;
+	this->_setting.shine_type = 0;
+	// 設定ファイルがあれば読み込む
+	if (SPIFFS.exists(NEO_SETTING_PATH)) {
+		File fp = SPIFFS.open(NEO_SETTING_PATH, "r");
+		int i = fp.read((uint8_t *)&this->_setting, sizeof(neo_setting));
+		fp.close();
+		
+	}
+}
+
+// 設定ファイルに保存
+void Neopixel::setting_save() {
+	File fp = SPIFFS.open(NEO_SETTING_PATH, "w");
+	int i = fp.write((uint8_t *)&this->_setting, sizeof(neo_setting));
+	fp.close();
 }
 
 // LED番号のリストのデータを受け取る
@@ -56,6 +86,58 @@ void Neopixel::set_led_buf(int8_t key_id, int8_t set_num) {
             return;
         }
     }
+}
+
+// LEDを光らせる、光らせないを切り替える
+void Neopixel::setting_status() {
+	if (this->_setting.status) {
+		this->_setting.status = 0;
+		this->_hide_flag = 1; // 消灯フラグ ON
+	} else {
+		this->_setting.status = 1;
+	}
+	this->setting_save(); // 設定を保存
+	this->setting_change = 1;
+}
+
+// LEDの明るさアップ
+void Neopixel::setting_bright_up() {
+	if (this->_setting.bright < NEO_BRIGHT_MAX) {
+		this->_setting.bright++;
+	}
+	this->setting_save(); // 設定を保存
+	this->setting_change = 2;
+}
+
+// LEDの明るさダウン
+void Neopixel::setting_bright_down() {
+	if (this->_setting.bright > 0) {
+		this->_setting.bright--;
+	}
+	this->setting_save(); // 設定を保存
+	this->setting_change = 2;
+}
+
+// LEDの色変更
+void Neopixel::setting_color_type() {
+	if (this->_setting.color_type < 5) {
+		this->_setting.color_type++;
+	} else {
+		this->_setting.color_type = 0;
+	}
+	this->setting_save(); // 設定を保存
+	this->setting_change = 3;
+}
+
+// LEDの光らせ方変更
+void Neopixel::setting_shine_type() {
+	if (this->_setting.shine_type < 5) {
+		this->_setting.shine_type++;
+	} else {
+		this->_setting.shine_type = 0;
+	}
+	this->setting_save(); // 設定を保存
+	this->setting_change = 4;
 }
 
 
@@ -90,6 +172,28 @@ void Neopixel::select_key_show() {
 }
 
 
+// 今設定されている色を取得
+uint32_t Neopixel::get_setting_color() {
+	int c, r, g, b;
+	c = this->_setting.color_type;
+	r = (neo_color_list[c][0] * this->_setting.bright) / NEO_BRIGHT_MAX;
+	g = (neo_color_list[c][1] * this->_setting.bright) / NEO_BRIGHT_MAX;
+	b = (neo_color_list[c][2] * this->_setting.bright) / NEO_BRIGHT_MAX;
+	return this->rgb_led->Color(r, g, b);
+};
+
+// 消灯
+void Neopixel::hide_all() {
+	int i;
+	uint32_t n = this->rgb_led->Color(0, 0, 0);
+    // LEDを点灯
+    for (i=0; i<this->_led_length; i++) {
+        this->rgb_led->setPixelColor(i, n);
+    }
+	// LEDにデータを送る
+    this->rgb_led->show();
+};
+
 
 //    2
 //  3 1 4
@@ -100,14 +204,66 @@ void Neopixel::select_key_show() {
 //    9
 
 // RGB_LEDを制御する定期処理
-void Neopixel::rgb_led_loop_exec(void) {
+void Neopixel::rgb_led_loop_exec() {
     // RGB_LED の設定が無ければ何もしない
     if (this->_data_pin < 0 || this->_led_length <= 0) return;
-    int i, j, k, l, m;
+	if (this->_hide_flag) {  // 消灯フラグが立っていれば消灯
+		this->hide_all();
+		this->_hide_flag = 0;
+	}
+	// LED のステータスOFFならば何もしない
+	if (this->_setting.status == 0) return;
+	if (this->_setting.shine_type == 0) {
+		this->rgb_led_loop_type_0();
+	} else if (this->_setting.shine_type == 1) {
+		this->rgb_led_loop_type_1();
+	} else if (this->_setting.shine_type == 2) {
+		this->rgb_led_loop_type_2();
+	} else if (this->_setting.shine_type == 3) {
+		this->rgb_led_loop_type_3();
+	} else if (this->_setting.shine_type == 4) {
+		this->rgb_led_loop_type_4();
+	}
+	// 選択キーを点灯
+	this->select_key_show();
+	// LEDにデータを送る
+    this->rgb_led->show();
+}
+
+// ずっと光ってる
+void Neopixel::rgb_led_loop_type_0() {
+	int i;
+	uint32_t c = this->get_setting_color();
+    // LEDを点灯
+    for (i=0; i<this->_led_length; i++) {
+        this->rgb_led->setPixelColor(i, c);
+    }
+}
+
+// 押すと光る
+void Neopixel::rgb_led_loop_type_1() {
+	int i;
+	uint32_t n = this->rgb_led->Color(0, 0, 0);
+	uint32_t c = this->get_setting_color();
+    for (i=0; i<this->_led_length; i++) {
+        if (this->key_matrix[i] < 0) continue;
+    	if (this->led_buf[i]) {
+            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], c);
+    	} else {
+            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], n);
+    	}
+    }
+}
+
+// ボタンを押した所から周りに広がっていく
+void Neopixel::rgb_led_loop_type_2() {
+    int i;
     int csize = this->_col_size;
     int rsize = this->_row_size;
     int rmax = this->_led_length - this->_col_size;
     int cmax = csize - 1;
+	uint32_t n = this->rgb_led->Color(0, 0, 0);
+	uint32_t c = this->get_setting_color();
     int8_t read_buf[this->_led_length];
     // led_bufの値をコピーしておいて作業はread_bufのデータをもとにled_bufを書き換える
     for (i=0; i<this->_led_length; i++) {
@@ -164,19 +320,31 @@ void Neopixel::rgb_led_loop_exec(void) {
     }
     // LEDを点灯
     for (i=0; i<this->_led_length; i++) {
-        this->rgb_led->setPixelColor(i, this->rgb_led->Color(0, 0, 0));
+        this->rgb_led->setPixelColor(i, n);
     }
-    for (i=0; i<this->_led_length; i++) {
-        if (this->led_buf[i] && this->key_matrix[i] >= 0) {
-            m = 30;
-            if (led_buf[i] >= 6 && led_buf[i] <= 10) m = 5;
-            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], this->rgb_led->Color(0, 0, m));
-        }
-    }
-	// 選択キーを点灯
-	this->select_key_show();
-	// LEDにデータを送る
-    this->rgb_led->show();
+	if (this->_setting.status) {
+		
+	    for (i=0; i<this->_led_length; i++) {
+	        if (this->led_buf[i] && this->key_matrix[i] >= 0) {
+	            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], c);
+	        }
+	    }
+	}
 }
 
-
+// 
+void Neopixel::rgb_led_loop_type_3() {
+	int i;
+    // LEDを点灯
+    for (i=0; i<this->_led_length; i++) {
+        this->rgb_led->setPixelColor(i, this->rgb_led->Color(0, 0, 0));
+    }
+}
+// 
+void Neopixel::rgb_led_loop_type_4() {
+	int i;
+    // LEDを点灯
+    for (i=0; i<this->_led_length; i++) {
+        this->rgb_led->setPixelColor(i, this->rgb_led->Color(0, 0, 0));
+    }
+}

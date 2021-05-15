@@ -47,6 +47,7 @@ void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
     this->_tft->setTextColor(WHITE);
     last_n = millis();
 	this->dakagi_last_view = -1;
+	this->_wait_index = 0;
 }
 
 // 画面いっぱい黒い画面
@@ -178,6 +179,18 @@ void Display::view_standby_image() {
 	this->_tft->fillRect(0, 210,  135, 30, WHITE);
 	this->dakagi_last_view = -1;
 }
+// LED ステータス表示
+void Display::view_led_stat() {
+}
+// LED 明るさ設定表示
+void Display::view_led_bright() {
+}
+// LED 色設定表示
+void Display::view_led_color() {
+}
+// LED 光らせ方設定表示
+void Display::view_led_shine() {
+}
 
 
 #endif
@@ -187,30 +200,68 @@ void Display::view_standby_image() {
 #ifdef KEYBOARD_AZ66JP
 void Display::open_movie() {
 	int i;
+	int skip_flag = 0;
+	int ent_flag = 0;
       // 楽しいを形に…
       this->_tft->fillScreen(WHITE);
       delay(1000);
       for (i=0; i<=10; i++) {
         this->_tft->viewBMP(40, 54, 161, 20, (uint8_t *)tanoshii, i);
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
         delay(100);
       }
-      delay(1500);
+	// 1.5秒待つ
+      for (i=0; i<=15; i++) {
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
+        delay(100);
+      }
       for (i=10; i>=0; i--) {
         this->_tft->viewBMP(40, 54, 161, 20, (uint8_t *)tanoshii, i);
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
         delay(100);
       }
-      delay(1000);
-      
+	// 1秒待つ
+      for (i=0; i<=10; i++) {
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
+        delay(100);
+      }
+      // ロゴ表示
+	skip_flag = 0;
     for (i=0; i<=10; i++) {
         this->_tft->viewBMP(0, 0, 240, 135, (uint8_t *)gimp_image, i);
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
         delay(100);
     }
-    delay(3000);
+	// 3秒待つ
+      for (i=0; i<=30; i++) {
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
+        delay(100);
+      }
     for (i=10; i>=0; i--) {
         this->_tft->viewBMP(0, 0, 240, 135, (uint8_t *)gimp_image, i);
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
         delay(100);
     }
-    delay(1000);
+      for (i=0; i<=10; i++) {
+        common_cls.key_read(); // キーの状態を取得
+      	if (ent_flag == 0 && common_cls.input_key[67]) { skip_flag = 1; ent_flag = 1; } else if (!common_cls.input_key[67]) { ent_flag = 0; }
+        if (skip_flag) break;
+        delay(100);
+      }
 }
 // 設定モード画面表示
 void Display::view_setting_mode() {
@@ -252,7 +303,9 @@ void Display::view_ankey_input() {
 // 打鍵数を表示
 void Display::view_dakagi(int vint) {
 	if (this->dakagi_last_view == common_cls.key_count_total) return;
-	// this->_tft->fillRect(0, 210,  135, 30, WHITE);
+	if (this->dakagi_last_view < 0) {
+	    this->_tft->fillRect(0, 105,  240, 30, WHITE);
+	}
 	this->_tft->viewBMP(5, 109, 57, 25, (uint8_t *)dakagi_img, 10);
 	this->view_int(70, 111, common_cls.key_count_total);
 	this->dakagi_last_view = common_cls.key_count_total;
@@ -261,9 +314,50 @@ void Display::view_dakagi(int vint) {
 // 待ち受け画像表示
 void Display::view_standby_image() {
     this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
-	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+	// this->_tft->fillRect(0, 105,  240, 30, WHITE);
 	this->dakagi_last_view = -1;
 }
+// LED ステータス表示
+void Display::view_led_stat() {
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+    this->_tft->viewBMP(5, 109, 56, 22, (uint8_t *)led_txt_img, 10);
+	if (rgb_led_cls._setting.status) {
+	    this->_tft->viewBMP(70, 109, 35, 22, (uint8_t *)on_txt_img, 10);
+	} else {
+	    this->_tft->viewBMP(70, 109, 43, 22, (uint8_t *)off_txt_img, 10);
+	}
+	this->dakagi_last_view = -1;
+	this->_wait_index = 150;
+    rgb_led_cls.setting_change = 0;
+}
+// LED 明るさ設定表示
+void Display::view_led_bright() {
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+    this->_tft->viewBMP(5, 109, 119, 26, (uint8_t *)led_bright_txt_img, 10);
+	this->view_int(135, 111, rgb_led_cls._setting.bright);
+	this->dakagi_last_view = -1;
+	this->_wait_index = 150;
+    rgb_led_cls.setting_change = 0;
+}
+// LED 色設定表示
+void Display::view_led_color() {
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+    this->_tft->viewBMP(5, 109, 82, 25, (uint8_t *)led_color_txt_img, 10);
+	this->view_int(98, 111, rgb_led_cls._setting.color_type);
+	this->dakagi_last_view = -1;
+	this->_wait_index = 150;
+    rgb_led_cls.setting_change = 0;
+}
+// LED 光らせ方設定表示
+void Display::view_led_shine() {
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+    this->_tft->viewBMP(5, 109, 119, 24, (uint8_t *)led_type_txt_img, 10);
+	this->view_int(135, 111, rgb_led_cls._setting.shine_type);
+	this->dakagi_last_view = -1;
+	this->_wait_index = 150;
+    rgb_led_cls.setting_change = 0;
+}
+
 
 #endif
 
@@ -277,7 +371,26 @@ void Display::loop_exec() {
     // this->_tft->setCursor(180, 4);
 	// this->_tft->setTextSize(2);
     // this->_tft->printf("%D", (n - last_n));
-	this->view_dakagi(loop_index);
+	// 待ちIndexがあれば待ち時間終わるまで画面の変更なし
+	if (this->_wait_index && rgb_led_cls.setting_change == 0) {
+		this->_wait_index--;
+		return;
+	}
+	if (rgb_led_cls.setting_change == 1) {
+		this->view_led_stat();  // LEDステータス設定変更があった
+
+	} else if (rgb_led_cls.setting_change == 2) {
+		this->view_led_bright();  // LED明るさ設定変更があった
+	
+	} else if (rgb_led_cls.setting_change == 3) {
+		this->view_led_color();  // LED色設定変更があった
+	
+	} else if (rgb_led_cls.setting_change == 4) {
+		this->view_led_shine();  // LED光らせ方設定変更があった
+
+	} else {
+        this->view_dakagi(loop_index);
+	}
 	loop_index++;
 	if (loop_index > 9999) loop_index = 0;
 	last_n = n;

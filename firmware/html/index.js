@@ -453,6 +453,14 @@ mst.create_key_btn = function() {
         } else if (p.press.action_type == 6) {
             // 暗記ボタン
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 27px;'>暗</div>";
+        } else if (p.press.action_type == 7) {
+            // LED設定ボタン
+            if (p.press.led_setting_type == 0) c = "ONOF";
+            if (p.press.led_setting_type == 1) c = "UP";
+            if (p.press.led_setting_type == 2) c = "DOWN";
+            if (p.press.led_setting_type == 3) c = "CRCH";
+            if (p.press.led_setting_type == 4) c = "TYCH";
+            h += "<div id='key_top_"+i+"' style='color: black; font-size: 23px;'>LED<br>"+c+"</div>";
         }
         h += "</td></tr></table>";
         h += "</div>";
@@ -593,6 +601,7 @@ mst.select_input_type = function() {
     var i, l = [];
     for (i in mst.input_type_list) {
         if (i == 6 && mst.esp_type == 0) continue; // 通常のESP32の場合暗記ボタンはスキップ
+        if (i == 7 && mst.setting_data.rgb_pin < 0) continue; // RGB LEDが付いてないキーボードはスキップ
         l.push({"key": i, "value": mst.input_type_list[i]});
     }
     mst.select_exec(l, mst.key_edit_data.press.action_type+"", function(select_key) {
@@ -619,6 +628,11 @@ mst.select_input_type = function() {
             // 暗記ボタン
             if (!("ankey_file" in mst.key_edit_data.press)) {
                 mst.key_edit_data.press.ankey_file = "A" + Math.random().toString(36).slice(-8);
+            }
+        } else if (mst.key_edit_data.press.action_type == 7) {
+            // LED設定ボタン
+            if (!("led_setting_type" in mst.key_edit_data.press)) {
+                mst.key_edit_data.press.led_setting_type = 0;
             }
         }
         mst.view_key_setting(mst.key_edit_kid);
@@ -794,6 +808,23 @@ mst.view_key_setting = function(key_id) {
         s += "<b>Ｙ：</b><font id='move_y_val'>"+pss.move.y+"</font><br><input type='range' id='move_y' name='move_y' min='-100' max='100' style='width: 400px;' value='"+pss.move.y+"' onChange='javascript:mst.view_move_input(\"y\");'><br><br>"
         s += "<b>スピード：</b><font id='move_speed_val'>"+pss.move.speed+"</font><br><input type='range' id='move_speed' name='move_speed' min='0' max='100' style='width: 400px;' value='"+pss.move.speed+"' onChange='javascript:mst.view_move_input(\"speed\");'><br><br>"
         s += "</td></tr>";
+
+    } else if (at == 6) {
+        // 暗記ボタン
+
+    } else if (at == 7) {
+        // LED設定ボタン
+        s += "<tr><td colspan='2'>";
+        s += "<b>設定の種類 ：</b><br>";
+        s += "<select id='led_setting_type' style='font-size: 30px; border: 3px solid black; width: 350px;'>";
+        s += "<option value='0'>ON / OFF</option>";
+        s += "<option value='1'>明るさUP</option>";
+        s += "<option value='2'>明るさDOWN</option>";
+        s += "<option value='3'>色変更</option>";
+        s += "<option value='4'>光らせ方変更</option>";
+        s += "</select>";
+        s += "</td></tr>";
+
     }
     s += "</table>";
     s += "<br><br>";
@@ -812,6 +843,8 @@ mst.view_key_setting = function(key_id) {
         $("url_text").value = pss.webhook.url;
         $("webhook_post_text").value = pss.webhook.post;
         $("webhook_keyoutput").value = pss.webhook.keyoutput + "";
+    } else if (at == 7) {
+        $("led_setting_type").value = pss.led_setting_type + "";
     }
     mst.view_box(["info_box", "setting_box", "layer_box"]);
 };
@@ -920,6 +953,8 @@ mst.key_setting_btn_click = function(type_id) {
             s.move = {"x": $("move_x").value, "y": $("move_y").value, "speed": $("move_speed").value};
         } else if (s.action_type == 6) { // 暗記ボタン
             s.ankey_file = mst.key_edit_data.press.ankey_file;
+        } else if (s.action_type == 7) { // LED設定ボタン
+            s.led_setting_type = parseInt($("led_setting_type").value);
         }
         mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + mst.key_edit_kid].press = s;
     }
