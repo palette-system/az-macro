@@ -179,6 +179,13 @@ mst.browser_btn_control = function() {
     window.addEventListener("beforeunload", mst.beforeunload_func, false);
 };
 
+// ページ移動警告解除
+mst.browser_btn_control_remove = function() {
+    window.removeEventListener("popstate", mst.popstate_func, false);
+    window.removeEventListener("popstate", mst.popstate_func_ov, false);
+    window.removeEventListener("beforeunload", mst.beforeunload_func, false);
+};
+
 // 設定JSON取得
 mst.get_setting_json = function() {
     // 設定JSON取得
@@ -974,9 +981,7 @@ mst.end_setting = function(end_type) {
     mst.end_flag = true;
     mst.end_type = end_type;
     // ページ移動警告解除
-    window.removeEventListener("popstate", mst.popstate_func, false);
-    window.removeEventListener("popstate", mst.popstate_func_ov, false);
-    window.removeEventListener("beforeunload", mst.beforeunload_func, false);
+    mst.browser_btn_control_remove();
     if (mst.end_type == 1 || mst.end_type == 2) {
         // 保存して終了
         set_html("info_box", "保存中.. ");
@@ -1753,12 +1758,16 @@ mst.firmware_update = function() {
 // ファームウェア更新エラー時の処理
 mst.firmware_update_error = function(err) {
     set_html("info_box", "<b>エラー</b><br>ページを閉じて下さい。");
+    // ページ移動警告解除
+    mst.browser_btn_control_remove();
     mst.view_box(["info_box"]);
 };
 
 // ファームウェア更新OK
 mst.firmware_update_ok = function(xhr) {
     set_html("info_box", "<b>アップデート成功</b><br>ページを閉じて下さい。");
+    // ページ移動警告解除
+    mst.browser_btn_control_remove();
     mst.view_box(["info_box"]);
 };
 
@@ -1794,6 +1803,8 @@ mst.init_setting = function() {
         }
         // 成功したらキーボードモードで再起動
         set_html("init_setting_info", "初期化完了しました");
+        // ページ移動警告解除
+        mst.browser_btn_control_remove();
         setTimeout(function() {
             mst.end_setting(0);
         }, 1000);
