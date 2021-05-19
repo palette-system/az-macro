@@ -70,9 +70,10 @@ void AzKeyboard::start_keyboard() {
 
     // 拡張関数 開始処理
     my_function.begin();
+
+    // 液晶は待ち受け画像
+    disp->view_type = DISP_TYPE_STANDBY;
   
-    // 液晶に待ち受け画面を表示する
-    if (common_cls.on_tft_unit()) disp->view_standby_image();
 }
 
 // 各ユニットの初期化
@@ -253,7 +254,7 @@ void AzKeyboard::send_webhook(const JsonObject &key_set) {
         return;
     }
     // 液晶にwebhook中を表示する
-    if (common_cls.on_tft_unit()) disp->view_webhook();
+    if (common_cls.on_tft_unit()) disp->view_type = DISP_TYPE_WEBFOOK;
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     char res_char[1024];
     // httpリクエスト送信
@@ -262,7 +263,7 @@ void AzKeyboard::send_webhook(const JsonObject &key_set) {
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     ESP_LOGD(LOG_TAG, "http res: %S\n", res_char);
     // 液晶に待ち受け画像を表示する
-    if (common_cls.on_tft_unit()) disp->view_standby_image();
+    if (common_cls.on_tft_unit()) disp->_back_view_type;
     send_string(res_char);
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
 }
@@ -367,8 +368,8 @@ void AzKeyboard::key_down_action(int key_num) {
         // キー押したよリストに追加
         press_key_list_push(action_type, key_num, -1, select_layer_no, -1);
 
-    } else if (action_type == 7) {
-        // LED設定ボタン
+    } else if (action_type == 7 && ankeycls.ankey_flag == 0) {
+        // LED設定ボタン(暗記処理中は動作無視)
         m = key_set["press"]["led_setting_type"].as<signed int>();
         if (m == 0) {
             // ON / OFF
@@ -386,7 +387,17 @@ void AzKeyboard::key_down_action(int key_num) {
             // 光らせ方変更
             rgb_led_cls.setting_shine_type();
         }
-        
+
+    } else if (action_type == 8 && ankeycls.ankey_flag == 0) {
+        // 打鍵設定ボタン(暗記処理中は動作無視)
+        m = key_set["press"]["dakagi_settype"].as<signed int>();
+        if (m == 0) {
+            // サーモグラフ表示
+            disp->view_dakagi_thermo_on();
+        } else if (m == 1) {
+            // QRコード表示
+            disp->view_dakagi_qr_on();
+        }
     }
 
     // 拡張メソッド実行

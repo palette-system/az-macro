@@ -468,6 +468,12 @@ mst.create_key_btn = function() {
             if (p.press.led_setting_type == 3) c = "CRCH";
             if (p.press.led_setting_type == 4) c = "TYCH";
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 23px;'>LED<br>"+c+"</div>";
+        } else if (p.press.action_type == 8) {
+            // 打鍵設定ボタン
+            if (p.press.dakagi_settype == 0) c = "THRM";
+            if (p.press.dakagi_settype == 1) c = "QR";
+            h += "<div id='key_top_"+i+"' style='color: black; font-size: 23px;'>鍵<br>"+c+"</div>";
+            
         }
         h += "</td></tr></table>";
         h += "</div>";
@@ -609,6 +615,8 @@ mst.select_input_type = function() {
     for (i in mst.input_type_list) {
         if (i == 6 && mst.esp_type == 0) continue; // 通常のESP32の場合暗記ボタンはスキップ
         if (i == 7 && mst.setting_data.rgb_pin < 0) continue; // RGB LEDが付いてないキーボードはスキップ
+        // if (i == 8 && !mst.is_tft(mst.setting_data.option_set.type)) continue; // 打鍵設定は液晶が付いてないキーボードはスキップ
+        if (i == 8 && mst.setting_data.option_set.type != "display_66jp") continue; // 66jpの液晶オプション以外はスキップ
         l.push({"key": i, "value": mst.input_type_list[i]});
     }
     mst.select_exec(l, mst.key_edit_data.press.action_type+"", function(select_key) {
@@ -640,6 +648,11 @@ mst.select_input_type = function() {
             // LED設定ボタン
             if (!("led_setting_type" in mst.key_edit_data.press)) {
                 mst.key_edit_data.press.led_setting_type = 0;
+            }
+        } else if (mst.key_edit_data.press.action_type == 8) {
+            // 打鍵設定ボタン
+            if (!("dakagi_settype" in mst.key_edit_data.press)) {
+                mst.key_edit_data.press.dakagi_settype = 0;
             }
         }
         mst.view_key_setting(mst.key_edit_kid);
@@ -832,6 +845,16 @@ mst.view_key_setting = function(key_id) {
         s += "</select>";
         s += "</td></tr>";
 
+    } else if (at == 8) {
+        // 打鍵設定ボタン
+        s += "<tr><td colspan='2'>";
+        s += "<b>設定の種類 ：</b><br>";
+        s += "<select id='dakagi_settype' style='font-size: 30px; border: 3px solid black; width: 350px;'>";
+        s += "<option value='0'>サーモ表示</option>";
+        s += "<option value='1'>QRコード</option>";
+        s += "</select>";
+        s += "</td></tr>";
+
     }
     s += "</table>";
     s += "<br><br>";
@@ -852,6 +875,8 @@ mst.view_key_setting = function(key_id) {
         $("webhook_keyoutput").value = pss.webhook.keyoutput + "";
     } else if (at == 7) {
         $("led_setting_type").value = pss.led_setting_type + "";
+    } else if (at == 8) {
+        $("dakagi_settype").value = pss.dakagi_settype + "";
     }
     mst.view_box(["info_box", "setting_box", "layer_box"]);
 };
@@ -962,6 +987,8 @@ mst.key_setting_btn_click = function(type_id) {
             s.ankey_file = mst.key_edit_data.press.ankey_file;
         } else if (s.action_type == 7) { // LED設定ボタン
             s.led_setting_type = parseInt($("led_setting_type").value);
+        } else if (s.action_type == 8) { // 打鍵設定ボタン
+            s.dakagi_settype = parseInt($("dakagi_settype").value);
         }
         mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + mst.key_edit_kid].press = s;
     }

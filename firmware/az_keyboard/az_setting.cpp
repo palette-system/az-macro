@@ -435,6 +435,7 @@ void AzSetting::key_action_exec() {
 
 // 設定モード中のループ処理
 void AzSetting::loop_exec() {
+  while (true) {
     // dnsサーバー定期処理
     dnsServer.processNextRequest();
     // httpサーバー定期処理
@@ -447,4 +448,5 @@ void AzSetting::loop_exec() {
     // 現在のキーの状態を前回部分にコピー
     common_cls.key_old_copy();
     delay(10);
+  }
 }

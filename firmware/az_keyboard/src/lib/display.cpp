@@ -8,11 +8,7 @@
 #include "../image/wificonn2.h"
 
 
-int view_index = 0;
-int loop_index = 0;
 
-
-unsigned long last_n;
 
 
 // コンストラクタ
@@ -22,8 +18,6 @@ Display::Display() {
 
 // LED制御初期化
 void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
-    view_index = 0;
-	loop_index = 0;
 	_option_type = option_type;
     this->_tft = tft_obj;
 	if (_option_type == 3) {
@@ -45,10 +39,13 @@ void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
     this->_tft->fillScreen(WHITE);
     this->_tft->setTextSize(1);
     this->_tft->setTextColor(WHITE);
-    last_n = millis();
 	this->dakagi_last_view = -1;
 	this->_wait_index = 0;
 	this->_stimg_load_flag = 0;
+	this->_thermo_flag = 0;
+	this->_qr_flag = 0;
+	this->_last_view_type = 255;
+	this->_last_view_info = 255;
 }
 
 // 画面いっぱい黒い画面
@@ -96,6 +93,34 @@ void Display::viewBMPspi_data(uint8_t *wbuf, int wsize) {
 	this->_tft->viewBMPspi_data(wbuf, wsize);
 }
 
+// サーモグラフモードをON/OFF切り替える
+void Display::view_dakagi_thermo_on() {
+	if (this->_thermo_flag) {
+		this->_thermo_flag = 0;
+		this->_qr_flag = 0;
+		this->view_type = DISP_TYPE_STANDBY;
+	} else {
+		this->_thermo_flag = 1;
+		this->_qr_flag = 0;
+		this->view_type = DISP_TYPE_DKTHERM;
+	}
+}
+
+// QRコードモードをON/OFF切り替える
+void Display::view_dakagi_qr_on() {
+	if (this->_qr_flag) {
+		this->_qr_flag = 0;
+		if (this->_thermo_flag) {
+			this->view_type = DISP_TYPE_DKTHERM;
+		} else {
+			this->view_type = DISP_TYPE_STANDBY;
+		}
+	} else {
+		this->_qr_flag = 1;
+		this->view_type = DISP_TYPE_DKQRCOD;
+	}
+}
+
 
 // 起動ムービー(AZ-Macro用)
 #ifdef KEYBOARD_AZMACRO
@@ -135,50 +160,78 @@ void Display::view_setting_mode() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(26, 50, 84, 88, (uint8_t *)setting_icon_img, 10);
     this->_tft->viewBMP(18, 160, 98, 25, (uint8_t *)setting_title_img, 10);
+	this->_last_view_type = DISP_TYPE_SETTING;
 }
 // 保存中画面表示
 void Display::view_save() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(26, 50, 84, 88, (uint8_t *)setting_icon_img, 10);
     this->_tft->viewBMP(29, 160, 76, 25, (uint8_t *)save_img, 10);
+	this->_last_view_type = DISP_TYPE_SAVENOW;
 }
 // wifi 接続中
 void Display::view_wifi_conn() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(19, 46, 97, 82, (uint8_t *)wifi_icon_img, 10);
     this->_tft->viewBMP(13, 160, 109, 25, (uint8_t *)wifi_conn_img, 10);
+	this->_last_view_type = DISP_TYPE_WIFICNN;
 }
 // Webhook中
 void Display::view_webhook() {
     this->_tft->fillRect(0, 210,  135, 240, WHITE);
     this->_tft->viewBMP(10, 212, 116, 25, (uint8_t *)webhook_img, 10);
-}
-// 打鍵数を表示
-void Display::view_dakagi(int vint) {
-	if (this->dakagi_last_view == common_cls.key_count_total) return;
-	// this->_tft->fillRect(0, 210,  135, 30, WHITE);
-	this->_tft->viewBMP(5, 215, 57, 25, (uint8_t *)dakagi_img, 10);
-	this->view_int(65, 217, common_cls.key_count_total);
-	this->dakagi_last_view = common_cls.key_count_total;
+	this->_last_view_type = DISP_TYPE_WEBFOOK;
 }
 // 暗記中
 void Display::view_ankey_now() {
-    this->_tft->fillRect(0, 0,  135, 240, WHITE);
-    this->_tft->viewBMP(20, 20, 95, 86, (uint8_t *)ankey_icon_img, 10);
-    this->_tft->viewBMP(30, 135, 75, 25, (uint8_t *)ankinow_img, 10);
 }
 // 暗記入力
 void Display::view_ankey_input() {
-    this->_tft->fillRect(0, 0,  135, 240, WHITE);
-    this->_tft->viewBMP(20, 20, 95, 86, (uint8_t *)ankey_icon_img, 10);
-    this->_tft->viewBMP(30, 55, 75, 25, (uint8_t *)nyuryokunow_img, 10);
+}
+// 打鍵数を表示
+void Display::view_dakagi() {
+	// 最後に表示したInfoが打鍵数で最後に表示した打鍵数が今の打鍵数と一緒なら何もしない
+	if (this->_last_view_info == 1 && this->dakagi_last_view == common_cls.key_count_total) return;
+	// 最後に表示したInfoが空か、打鍵でなければInfoを空にする
+	if (this->_last_view_info != 0 && this->_last_view_info != 1) {
+		this->_tft->fillRect(0, 210,  135, 30, WHITE);
+	}
+	// 打鍵数表示
+	this->_tft->viewBMP(5, 215, 57, 25, (uint8_t *)dakagi_img, 10);
+	this->view_int(65, 217, common_cls.key_count_total);
+	this->dakagi_last_view = common_cls.key_count_total;
+	this->_last_view_info = 1;
+}
+// 打鍵サーモグラフを表示
+void Display::view_dakagi_thermo() {
+}
+// 打鍵QRコードを表示
+void Display::view_dakagi_qr() {
 }
 
 // 待ち受け画像表示
 void Display::view_standby_image() {
-    this->_tft->viewBMPFile(0,0, 135, 210, "/stimg.dat");
-	this->_tft->fillRect(0, 210,  135, 30, WHITE);
-	this->dakagi_last_view = -1;
+	if (this->_last_view_type == DISP_TYPE_STANDBY) return; // 最後に表示したのが待ち受けなら何もしない
+	if (this->_stimg_load_flag) {
+		// SPRAMにデータロード済みならSPRAMに入ってる待ち受け画像を表示
+		this->_tft->viewBMPspi_head(0, 0, 135, 240);
+		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+	} else if (ESP.getFreePsram() > 64800) {
+		// SPRAMに空き容量があれば待ち受け画像をSPRAMにロード
+		this->_stimg_data = (uint8_t *)ps_malloc(64800);
+		if(SPIFFS.exists("/stimg.dat")){
+			File fp = SPIFFS.open("/stimg.dat", "r");
+			int s = fp.read(this->_stimg_data, 64800);
+			fp.close();
+		}
+		this->_tft->viewBMPspi_head(0, 0, 135, 240);
+		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+	} else {
+		// SPRAMに空きが無ければファイルから直接表示
+	    this->_tft->viewBMPFile(0,0, 135, 240, "/stimg.dat");
+	}
+	this->_last_view_type = DISP_TYPE_STANDBY;
+	this->_last_view_info = 255;
 }
 // LED ステータス表示
 void Display::view_led_stat() {
@@ -269,51 +322,127 @@ void Display::view_setting_mode() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(20, 24, 84, 88, (uint8_t *)setting_icon_img, 10);
     this->_tft->viewBMP(124, 55, 98, 25, (uint8_t *)setting_title_img, 10);
+	this->_last_view_type = DISP_TYPE_SETTING;
 }
 // 保存中画面表示
 void Display::view_save() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(20, 24, 84, 88, (uint8_t *)setting_icon_img, 10);
     this->_tft->viewBMP(124, 55, 76, 25, (uint8_t *)save_img, 10);
+	this->_last_view_type = DISP_TYPE_SAVENOW;
 }
 // wifi 接続中
 void Display::view_wifi_conn() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(10, 27, 97, 82, (uint8_t *)wifi_icon_img, 10);
     this->_tft->viewBMP(120, 55, 109, 25, (uint8_t *)wifi_conn_img, 10);
+	this->_last_view_type = DISP_TYPE_WIFICNN;
 }
 // Webhook中
 void Display::view_webhook() {
     this->_tft->fillScreen(WHITE);
     this->_tft->viewBMP(10, 27, 97, 82, (uint8_t *)wifi_icon_img, 10);
     this->_tft->viewBMP(116, 55, 116, 25, (uint8_t *)webhook_img, 10);
+	this->_last_view_type = DISP_TYPE_WEBFOOK;
 }
 // 暗記中
 void Display::view_ankey_now() {
     this->_tft->fillRect(0, 0,  240, 135, WHITE);
     this->_tft->viewBMP(20, 25, 95, 86, (uint8_t *)ankey_icon_img, 10);
     this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)ankinow_img, 10);
+	this->_last_view_type = 5;
 }
 // 暗記入力
 void Display::view_ankey_input() {
     this->_tft->fillRect(0, 0,  240, 135, WHITE);
     this->_tft->viewBMP(20, 25, 95, 86, (uint8_t *)ankey_icon_img, 10);
     this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)nyuryokunow_img, 10);
+	this->_last_view_type = 6;
 }
 
 // 打鍵数を表示
-void Display::view_dakagi(int vint) {
-	if (this->dakagi_last_view == common_cls.key_count_total) return;
-	if (this->dakagi_last_view < 0) {
+void Display::view_dakagi() {
+	// 最後に表示したInfoが打鍵数で最後に表示した打鍵数が今の打鍵数と一緒なら何もしない
+	if (this->_last_view_info == 1 && this->dakagi_last_view == common_cls.key_count_total) return;
+	// 最後に表示したInfoが空か、打鍵でなければInfoを空にする
+	if (this->_last_view_info != 0 && this->_last_view_info != 1) {
 	    this->_tft->fillRect(0, 105,  240, 30, WHITE);
 	}
+	// 打鍵数表示
 	this->_tft->viewBMP(5, 109, 57, 25, (uint8_t *)dakagi_img, 10);
 	this->view_int(70, 111, common_cls.key_count_total);
 	this->dakagi_last_view = common_cls.key_count_total;
+	this->_last_view_info = 1;
+}
+
+
+// 打鍵サーモグラフを表示
+void Display::view_dakagi_thermo() {
+	int c, i, k, t;
+	// 最後に表示したのが打鍵サーモじゃなければ一回全て表示
+	if (this->_last_view_type != DISP_TYPE_DKTHERM) {
+		this->_tft->fillRect(0, 0,  240, 10, WHITE);
+		this->_tft->fillRect(0, 92,  240, 43, WHITE);
+		this->_tft->viewBMP(0, 10, 240, 82, (uint8_t *)az_66jp_plate_img, 10);
+		for (i=0; i<KEY_INPUT_MAX; i++) {
+			if (common_cls.key_count[i] <= 0) continue;
+			if (common_cls.key_count[i] < 508) {
+				c = common_cls.key_count[i] >> 2;
+				this->_tft->fillRect(az66jp_key_position[i][0], az66jp_key_position[i][1] + 10,  11, 11, thermo_color[c]);
+			} else {
+				this->_tft->fillRect(az66jp_key_position[i][0], az66jp_key_position[i][1] + 10,  11, 11, thermo_color[127]);
+			}
+		}
+		this->_last_view_info = 0;
+	}
+	// 今押されているキーの色のみ更新
+	for (i=0; i<PRESS_KEY_MAX; i++) {
+		if (press_key_list[i].key_num < 0) continue;
+		k = press_key_list[i].key_num;
+		if (common_cls.key_count[k] <= 0) continue;
+		if (press_key_list[i].unpress_time <= 0) {
+			this->_tft->fillRect(az66jp_key_position[k][0], az66jp_key_position[k][1] + 10,  11, 11, GREEN);
+		} else if (common_cls.key_count[k] < 508) {
+			c = common_cls.key_count[k] >> 2;
+			this->_tft->fillRect(az66jp_key_position[k][0], az66jp_key_position[k][1] + 10,  11, 11, thermo_color[c]);
+		} else {
+			this->_tft->fillRect(az66jp_key_position[k][0], az66jp_key_position[k][1] + 10,  11, 11, thermo_color[127]);
+		}
+	}
+	this->_last_view_type = DISP_TYPE_DKTHERM;
+}
+
+// 打鍵QRコードを表示
+void Display::view_dakagi_qr() {
+	int i, j, x, y;
+	if (this->_last_view_type == DISP_TYPE_DKQRCOD) return;
+	char qrtxt[512];
+	// URL生成
+	sprintf(qrtxt, "https://azkey.jp/66jp/?t=%s", eep_data.uid);
+	i = 0;
+	while (qrtxt[i] > 0) { i++; }
+	// 打鍵データをURLに追加する
+	for (j=0; j<KEY_INPUT_MAX; j++) {
+		sprintf((char *)&qrtxt[i], "%04x", common_cls.key_count[j]);
+		i += 4;
+	}
+	QRCode qrcode;
+	uint8_t qrcodeData[qrcode_getBufferSize(11)];
+	qrcode_initText(&qrcode, qrcodeData, 11, ECC_LOW, qrtxt);
+    this->_tft->fillRect(0, 0,  240, 135, WHITE);
+	for (uint8_t y = 0; y < qrcode.size; y++) {
+		for (uint8_t x = 0; x < qrcode.size; x++) {
+			if (qrcode_getModule(&qrcode, x, y)) {
+				this->_tft->fillRect((x * 2) + 58, (y * 2) + 6,  2, 2, BLACK);
+			}
+		}
+	}
+	this->_last_view_type = DISP_TYPE_DKQRCOD;
 }
 
 // 待ち受け画像表示
 void Display::view_standby_image() {
+	if (this->_last_view_type == DISP_TYPE_STANDBY) return; // 最後に表示したのが待ち受けなら何もしない
 	if (this->_stimg_load_flag) {
 		// SPRAMにデータロード済みならSPRAMに入ってる待ち受け画像を表示
 		this->_tft->viewBMPspi_head(0, 0, 240, 135);
@@ -328,13 +457,12 @@ void Display::view_standby_image() {
 		}
 		this->_tft->viewBMPspi_head(0, 0, 240, 135);
 		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
-		// this->_tft->viewBMP(0, 0, 240, 135, this->_stimg_data, 10);
 	} else {
 		// SPRAMに空きが無ければファイルから直接表示
 	    this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
 	}
-	// this->_tft->fillRect(0, 105,  240, 30, WHITE);
-	this->dakagi_last_view = -1;
+	this->_last_view_type = DISP_TYPE_STANDBY;
+	this->_last_view_info = 255;
 }
 // LED ステータス表示
 void Display::view_led_stat() {
@@ -345,7 +473,7 @@ void Display::view_led_stat() {
 	} else {
 	    this->_tft->viewBMP(70, 109, 43, 22, (uint8_t *)off_txt_img, 10);
 	}
-	this->dakagi_last_view = -1;
+	this->_last_view_info = 2;
 	this->_wait_index = 150;
     rgb_led_cls.setting_change = 0;
 }
@@ -354,7 +482,7 @@ void Display::view_led_bright() {
 	this->_tft->fillRect(0, 105,  240, 30, WHITE);
     this->_tft->viewBMP(5, 109, 119, 26, (uint8_t *)led_bright_txt_img, 10);
 	this->view_int(135, 111, rgb_led_cls._setting.bright);
-	this->dakagi_last_view = -1;
+	this->_last_view_info = 3;
 	this->_wait_index = 150;
     rgb_led_cls.setting_change = 0;
 }
@@ -363,7 +491,7 @@ void Display::view_led_color() {
 	this->_tft->fillRect(0, 105,  240, 30, WHITE);
     this->_tft->viewBMP(5, 109, 82, 25, (uint8_t *)led_color_txt_img, 10);
 	this->view_int(98, 111, rgb_led_cls._setting.color_type);
-	this->dakagi_last_view = -1;
+	this->_last_view_info = 4;
 	this->_wait_index = 150;
     rgb_led_cls.setting_change = 0;
 }
@@ -372,7 +500,7 @@ void Display::view_led_shine() {
 	this->_tft->fillRect(0, 105,  240, 30, WHITE);
     this->_tft->viewBMP(5, 109, 119, 24, (uint8_t *)led_type_txt_img, 10);
 	this->view_int(135, 111, rgb_led_cls._setting.shine_type);
-	this->dakagi_last_view = -1;
+	this->_last_view_info = 5;
 	this->_wait_index = 150;
     rgb_led_cls.setting_change = 0;
 }
@@ -392,10 +520,17 @@ void Display::loop_exec() {
     // this->_tft->printf("%D / %D\n", ESP.getPsramSize(), ESP.getFreePsram());
     // this->_tft->printf("%D / %D\n", ESP.getFlashChipSize(), ESP.getFlashChipSpeed());
 	// 待ちIndexがあれば待ち時間終わるまで画面の変更なし
-	if (this->_wait_index && rgb_led_cls.setting_change == 0) {
-		this->_wait_index--;
-		return;
+	// if (this->_wait_index && rgb_led_cls.setting_change == 0) {
+	// 	this->_wait_index--;
+	// 	return;
+	// }
+	if (this->_wait_index) this->_wait_index--;
+	if (this->_info_index) this->_info_index--;
+	// 最後に表示したタイプとこれから表示しようとしている物が変わったら、最後に表示したタイプをbackに保持しておく
+	if (this->view_type != this->_last_view_type) {
+		this->_back_view_type = this->_last_view_type;
 	}
+	// 各表示処理
 	if (rgb_led_cls.setting_change == 1) {
 		this->view_led_stat();  // LEDステータス設定変更があった
 
@@ -408,61 +543,62 @@ void Display::loop_exec() {
 	} else if (rgb_led_cls.setting_change == 4) {
 		this->view_led_shine();  // LED光らせ方設定変更があった
 
-	} else {
-        this->view_dakagi(loop_index);
+	} else if (this->view_type == DISP_TYPE_DKQRCOD) {
+		// 打鍵QRコード
+		this->view_dakagi_qr();
+		// info表示を終わる時にQRコードを表示しなおしたいので表示している内容を何もなしにする
+		if (this->_wait_index == 1) this->_last_view_type = 255;
+
+	} else if (this->view_type == DISP_TYPE_DKTHERM) {
+		// 打鍵サーモ(最終表示がサーモでもまた実行する)
+		this->view_dakagi_thermo();
+		// 打鍵表示
+		if (this->_wait_index == 0) this->view_dakagi();
+
+	} else if (this->view_type == DISP_TYPE_STANDBY) {
+		// 打鍵表示があるから最終表示が待ち受けでもまた実行する
+		// 待ち受け画像
+		this->view_standby_image();
+		// 打鍵表示
+		if (this->_wait_index == 0) {
+			if (this->dakagi_last_view != common_cls.key_count_total) {
+				// 打鍵数が増えたら打鍵数表示
+				this->view_dakagi();
+				this->_info_index = 150;
+			} else if (this->_info_index == 1) {
+				// info表示を終わる時に待ち受け画像を表示しなおしたいので表示してる内容を何もなしにする
+				this->_last_view_type = 255;
+			}
+		}
+
+	} else if (this->view_type == this->_last_view_type) {
+		// 最後に表示した内容と一緒であれば何もしない
+
+	} else if (this->view_type == DISP_TYPE_SETTING) {
+		// 設定画面
+		this->view_setting_mode();
+
+	} else if (this->view_type == DISP_TYPE_SAVENOW) {
+		// 保存中画面
+		this->view_save();
+
+	} else if (this->view_type == DISP_TYPE_WIFICNN) {
+		// Wifi接続中
+		this->view_wifi_conn();
+
+	} else if (this->view_type == DISP_TYPE_WEBFOOK) {
+		// WEBフック中
+		this->view_webhook();
+
+	} else if (this->view_type == DISP_TYPE_ANKYNOW) {
+		// 暗記中画面
+		this->view_ankey_now();
+
+	} else if (this->view_type == DISP_TYPE_ANKINPT) {
+		// 暗記入力中
+		this->view_ankey_input();
+
+
 	}
-	loop_index++;
-	if (loop_index > 9999) loop_index = 0;
-	last_n = n;
-    /*
-    delay(200);
-    while (1) {
-      // 楽しいを形に…
-      tft->fillScreen(WHITE);
-      delay(1000);
-      for (i=0; i<=10; i++) {
-        tft->viewBMP(40, 54, 161, 20, (uint8_t *)tanoshii, i);
-        delay(100);
-      }
-      delay(1500);
-      for (i=10; i>=0; i--) {
-        tft->viewBMP(40, 54, 161, 20, (uint8_t *)tanoshii, i);
-        delay(100);
-      }
-      delay(1000);
-      
-    for (i=0; i<=10; i++) {
-        tft->viewBMP(0, 0, 240, 135, (uint8_t *)gimp_image, i);
-        delay(100);
-    }
-    delay(3000);
-    for (i=10; i>=0; i--) {
-        tft->viewBMP(0, 0, 240, 135, (uint8_t *)gimp_image, i);
-        delay(100);
-    }
-    delay(1000);
-    for (i=0; i<=20; i++) {
-        tft->viewBMP(0, 0, 240, 135, (uint8_t *)wifi_conn_1, 10);
-        delay(500);
-        tft->viewBMP(0, 0, 240, 135, (uint8_t *)wifi_conn_2, 10);
-        delay(500);
-    }
-    delay(3000);
-    tft->fillScreen(WHITE);
-    tft->setTextSize(2);
-    tft->setTextColor(BLACK);
-    tft->setCursor(4, 4);
-    tft->print("AZ-60JIS\n");
-    delay(1000);
-    tft->setCursor(4, 24);
-    tft->print("WiFi : on\n");
-    delay(1000);
-    tft->setCursor(4, 44);
-    tft->print("Layer : 1\n");
-    delay(1000);
-    delay(10000);
-    
-    }
-    */
 }
 

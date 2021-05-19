@@ -5,6 +5,8 @@
 #include "setting_az66jp_default.h"
 #include "../image/common.h"
 #include "../image/led_setting.h"
+#include "../image/az_66jp_img.h"
+
 
 
 // キーボードの定義
@@ -14,7 +16,7 @@
 #define  AZESP32_TYPE  1
 
 // メモリに保持するキーの数(メモリを確保するサイズ)
-#define KEY_INPUT_MAX  80
+#define KEY_INPUT_MAX  70
 
 // レイヤー切り替え同時押し許容数
 #define PRESS_KEY_MAX 16

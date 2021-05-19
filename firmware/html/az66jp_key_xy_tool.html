@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>keyboard Setting</title>
+</head>
+<body>
+<script language="JavaScript"><!--
+
+var key_list = [
+		{"id": 0, "x": 8, "y": 6, "width": 66, "height": 66 },
+		{"id": 5, "x": 98, "y": 6 , "width": 66, "height": 66 },
+		{"id": 10, "x": 189, "y": 6 , "width": 66, "height": 66 },
+		{"id": 15, "x": 279, "y": 6 , "width": 66, "height": 66 },
+		{"id": 20, "x": 370, "y": 6 , "width": 66, "height": 66 },
+		{"id": 25, "x": 460, "y": 6 , "width": 66, "height": 66 },
+		{"id": 30, "x": 551, "y": 6 , "width": 66, "height": 66 },
+		{"id": 35, "x": 642, "y": 6 , "width": 66, "height": 66 },
+		{"id": 40, "x": 733, "y": 6 , "width": 66, "height": 66 },
+		{"id": 45, "x": 824, "y": 6 , "width": 66, "height": 66 },
+		{"id": 50, "x": 914, "y": 6 , "width": 66, "height": 66 },
+		{"id": 55, "x": 1005, "y": 6 , "width": 66, "height": 66 },
+		{"id": 60, "x": 1096, "y": 6 , "width": 66, "height": 66 },
+		{"id": 65, "x": 1186, "y": 6 , "width": 66, "height": 66 },
+		{"id": 66, "x": 1277, "y": 6 , "width": 66, "height": 66 },
+
+		{"id": 1, "x": 16 , "y": 96, "width": 99, "height": 66 },
+		{"id": 6, "x": 143, "y": 96, "width": 66, "height": 66 },
+		{"id": 11, "x": 234, "y": 96, "width": 66, "height": 66 },
+		{"id": 16, "x": 324, "y": 96, "width": 66, "height": 66 },
+		{"id": 21, "x": 416, "y": 96, "width": 66, "height": 66 },
+		{"id": 26, "x": 506, "y": 96, "width": 66, "height": 66 },
+		{"id": 31, "x": 596, "y": 96, "width": 66, "height": 66 },
+		{"id": 36, "x": 688, "y": 96, "width": 66, "height": 66 },
+		{"id": 41, "x": 778, "y": 96, "width": 66, "height": 66 },
+		{"id": 46, "x": 869, "y": 96, "width": 66, "height": 66 },
+		{"id": 51, "x": 959, "y": 96, "width": 66, "height": 66 },
+		{"id": 56, "x": 1050, "y": 96, "width": 66, "height": 66 },
+		{"id": 61, "x": 1141, "y": 96, "width": 66, "height": 66 },
+
+		{"id": 2, "x": 16, "y": 187, "width": 115, "height": 66 },
+		{"id": 7, "x": 166, "y": 187, "width": 66, "height": 66 },
+		{"id": 12, "x": 256, "y": 187, "width": 66, "height": 66 },
+		{"id": 17, "x": 347, "y": 187, "width": 66, "height": 66 },
+		{"id": 22, "x": 438, "y": 187, "width": 66, "height": 66 },
+		{"id": 27, "x": 529, "y": 187, "width": 66, "height": 66 },
+		{"id": 32, "x": 619, "y": 187, "width": 66, "height": 66 },
+		{"id": 37, "x": 710, "y": 187, "width": 66, "height": 66 },
+		{"id": 42, "x": 801, "y": 187, "width": 66, "height": 66 },
+		{"id": 47, "x": 891, "y": 187, "width": 66, "height": 66 },
+		{"id": 52, "x": 982, "y": 187, "width": 66, "height": 66 },
+		{"id": 57, "x": 1073, "y": 187, "width": 66, "height": 66 },
+		{"id": 62, "x": 1164, "y": 187, "width": 66, "height": 66 },
+
+		{"id": 67, "x": 1257, "y": 100, "width": 76, "height": 150 },
+
+		{"id": 3, "x": 16, "y": 278, "width": 165, "height": 66 },
+		{"id": 8, "x": 212, "y": 278, "width": 66, "height": 66 },
+		{"id": 13, "x": 302, "y": 278, "width": 66, "height": 66 },
+		{"id": 18, "x": 393, "y": 278, "width": 66, "height": 66 },
+		{"id": 23, "x": 483, "y": 278, "width": 66, "height": 66 },
+		{"id": 28, "x": 575, "y": 278, "width": 66, "height": 66 },
+		{"id": 33, "x": 665, "y": 278, "width": 66, "height": 66 },
+		{"id": 38, "x": 756, "y": 278, "width": 66, "height": 66 },
+		{"id": 43, "x": 846, "y": 278, "width": 66, "height": 66 },
+		{"id": 48, "x": 937, "y": 278, "width": 66, "height": 66 },
+		{"id": 53, "x": 1027, "y": 278, "width": 66, "height": 66 },
+		{"id": 58, "x": 1118, "y": 278, "width": 66, "height": 66 },
+		{"id": 68, "x": 1215, "y": 278, "width": 115, "height": 66 },
+
+		{"id": 4, "x": 8, "y": 369, "width": 83, "height": 66 },
+		{"id": 9, "x": 121, "y": 369, "width": 66, "height": 66 },
+		{"id": 24, "x": 474, "y": 369, "width": 83, "height": 66 },
+		{"id": 29, "x": 582, "y": 369, "width": 83, "height": 66 },
+		{"id": 34, "x": 690, "y": 369, "width": 83, "height": 66 },
+		{"id": 44, "x": 800, "y": 369, "width": 83, "height": 66 },
+		{"id": 49, "x": 914, "y": 369, "width": 66, "height": 66 },
+		{"id": 54, "x": 1005, "y": 369, "width": 66, "height": 66 },
+		{"id": 59, "x": 1096, "y": 369, "width": 66, "height": 66 },
+		{"id": 64, "x": 1186, "y": 369, "width": 66, "height": 66 },
+		{"id": 69, "x": 1277, "y": 369, "width": 66, "height": 66 },
+];
+
+var s = "";
+var i, x;
+var new_list = [];
+for (i in key_list) {
+    new_list[parseInt(key_list[i].id)] = key_list[i];
+}
+
+s = "66jp キーの位置<br><br>";
+
+var c = 240 / 1370;
+i = 0;
+for (i=0; i<70; i++) {
+    d = new_list[i];
+    if (d) {
+        vx = parseInt((d.x * c) + (d.width / 2 * c) - (66 * c / 2)) + 3;
+        vy = parseInt((d.y * c) + (d.height / 2 * c) - (66 * c / 2)) + 3;
+        // vx = parseInt((d.x * c));
+        // vy = parseInt((d.y * c));
+        s += "{" + vx + ", " + vy + "}, ";
+    } else {
+        s += "{0, 0}, ";
+    }
+    if ((i % 10) == 9) s += "<br>";
+}
+
+document.write(s);
+
+document.write("<br><br><br>");
+
+
+function conv_565(ir, ig, ib) {
+    var cr, cg, cb;
+    cr = (ir & 0xFF) >> 3;
+    cg = (ig & 0xFF) >> 2;
+    cb = (ib & 0xFF) >> 3;
+    return (cr << 11) | (cg << 5) | cb;
+}
+function toHex8bit(v) {
+    return (('000000000' + v.toString(16).toUpperCase()).substr(-2));
+}
+function toHex16bit(v) {
+    return '0x' + (('000000000' + v.toString(16).toUpperCase()).substr(-4));
+}
+
+var r, g, b;
+
+r = 255;
+g = 255;
+b = 255;
+
+
+s = "サーモグラフ用rgb565カラーコード<br><br>";
+
+for (r=255; r>0; r-=8) {
+    s += toHex16bit(conv_565(r, g, b)) + ", ";
+}
+r = 0;
+s += "<br>";
+
+for (g=255; g>0; g-=8) {
+    s += toHex16bit(conv_565(r, g, b)) + ", ";
+}
+g = 0;
+s += "<br>";
+
+for (r=0; r<255; r+=8) {
+    s += toHex16bit(conv_565(r, g, b)) + ", ";
+}
+r = 255;
+s += "<br>";
+
+for (b=255; b>0; b-=8) {
+    s += toHex16bit(conv_565(r, g, b)) + ", ";
+}
+b = 0;
+s += "<br>";
+s += "<br>";
+
+document.write(s);
+
+
+//--></script>
+</body>
+</html>

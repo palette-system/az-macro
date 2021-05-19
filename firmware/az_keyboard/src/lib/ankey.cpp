@@ -75,7 +75,7 @@ void Ankey::input_start() {
 	rgb_led_cls.select_key_add(this->ankey_layer_id, this->ankey_key_num);
 	// 暗記中画面表示
     if (common_cls.on_tft_unit()) {
-        disp->view_ankey_now();
+        disp->view_type = DISP_TYPE_ANKYNOW;
     }
 }
 
@@ -102,7 +102,7 @@ void Ankey::input_end() {
 	rgb_led_cls.select_key_cler();
 	// 待ち受け画像表示
     if (common_cls.on_tft_unit()) {
-        disp->view_standby_image();
+        disp->view_type = disp->_back_view_type;
     }
 }
 
@@ -134,7 +134,7 @@ void Ankey::output_start() {
 	this->_azkb->press_data_reset();
 	// 入力中画面表示
     if (common_cls.on_tft_unit()) {
-        disp->view_ankey_input();
+        disp->view_type = DISP_TYPE_ANKINPT;
     }
 }
 
@@ -147,7 +147,7 @@ void Ankey::output_end() {
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
     if (common_cls.on_tft_unit()) {
-        disp->view_standby_image();
+        disp->view_type = disp->_back_view_type;
     }
 }
 
