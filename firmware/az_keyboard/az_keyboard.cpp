@@ -72,7 +72,7 @@ void AzKeyboard::start_keyboard() {
     my_function.begin();
 
     // 液晶は待ち受け画像
-    disp->view_type = DISP_TYPE_STANDBY;
+    if (common_cls.on_tft_unit()) disp->view_type = DISP_TYPE_STANDBY;
   
 }
 
@@ -254,7 +254,7 @@ void AzKeyboard::send_webhook(const JsonObject &key_set) {
         return;
     }
     // 液晶にwebhook中を表示する
-    if (common_cls.on_tft_unit()) disp->view_type = DISP_TYPE_WEBFOOK;
+    if (common_cls.on_tft_unit()) disp->view_webhook();
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     char res_char[1024];
     // httpリクエスト送信
@@ -263,13 +263,15 @@ void AzKeyboard::send_webhook(const JsonObject &key_set) {
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
     ESP_LOGD(LOG_TAG, "http res: %S\n", res_char);
     // 液晶に待ち受け画像を表示する
-    if (common_cls.on_tft_unit()) disp->_back_view_type;
+    if (common_cls.on_tft_unit()) disp->view_standby_image();
     send_string(res_char);
     ESP_LOGD(LOG_TAG, "mmm: %D %D\n", heap_caps_get_free_size(MALLOC_CAP_32BIT), heap_caps_get_free_size(MALLOC_CAP_8BIT) );
 }
 
 // テキスト入力
 void AzKeyboard::send_string(char *send_char) {
+    // Bluetooth接続してなければ何もしない
+    if (!bleKeyboard.isConnected()) return;
     int i = 0;
     // 全て離す
     bleKeyboard.releaseAll();
@@ -303,7 +305,7 @@ void AzKeyboard::key_down_action(int key_num) {
     // キーが押された時の動作タイプ取得
     int action_type = key_set["press"]["action_type"].as<signed int>();
     // キーボードの接続が無ければ何もしない(レイヤー切り替え、WEBフック以外)
-    if (action_type != 3 && action_type != 4 && !bleKeyboard.isConnected()) return;
+    if (action_type != 3 && action_type != 4 && action_type != 6 && action_type != 7 && action_type != 8 && !bleKeyboard.isConnected()) return;
     // 動作タイプ別の動作
     if (action_type == 1) {
         // 通常キー入力
@@ -413,7 +415,7 @@ void AzKeyboard::key_up_action(int key_num) {
         ESP_LOGD(LOG_TAG, "key release action_type: %D - %D - %D\r\n", key_num, i, press_key_list[i].action_type);
         action_type = press_key_list[i].action_type;
         // キーボードの接続が無ければ何もしない(レイヤー切り替え、WEBフック以外)
-        if (action_type != 3 && action_type != 4 && !bleKeyboard.isConnected()) continue;
+        if (action_type != 3 && action_type != 4 && action_type != 6 && action_type != 7 && action_type != 8 && !bleKeyboard.isConnected()) continue;
         if (action_type == 1) {
             // 通常入力
             if (press_key_list[i].key_id & MOUSE_CODE) {

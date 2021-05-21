@@ -39,6 +39,7 @@ AZ-Macroで使用しているファームウェアソースです。<br>
 ## こちらのライブラリを使用させて頂いています
 
 - [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino)
+- [qrcode](https://github.com/ricmoo/qrcode/)
 
-※ ZIPファイルでライブラリ追加
+※ NimBLEはZIPファイルでライブラリ追加
 

@@ -16,7 +16,7 @@ Display::Display() {
 }
 
 
-// LED制御初期化
+// 液晶制御初期化
 void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
 	_option_type = option_type;
     this->_tft = tft_obj;
@@ -178,7 +178,7 @@ void Display::view_wifi_conn() {
 }
 // Webhook中
 void Display::view_webhook() {
-    this->_tft->fillRect(0, 210,  135, 240, WHITE);
+    this->_tft->fillRect(0, 210,  135, 30, WHITE);
     this->_tft->viewBMP(10, 212, 116, 25, (uint8_t *)webhook_img, 10);
 	this->_last_view_type = DISP_TYPE_WEBFOOK;
 }
