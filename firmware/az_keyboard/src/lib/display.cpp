@@ -379,19 +379,21 @@ void Display::view_dakagi() {
 // 打鍵サーモグラフを表示
 void Display::view_dakagi_thermo() {
 	int c, i, k, t;
+	uint16_t set_color;
 	// 最後に表示したのが打鍵サーモじゃなければ一回全て表示
 	if (this->_last_view_type != DISP_TYPE_DKTHERM) {
 		this->_tft->fillRect(0, 0,  240, 10, WHITE);
 		this->_tft->fillRect(0, 92,  240, 43, WHITE);
 		this->_tft->viewBMP(0, 10, 240, 82, (uint8_t *)az_66jp_plate_img, 10);
 		for (i=0; i<KEY_INPUT_MAX; i++) {
-			if (common_cls.key_count[i] <= 0) continue;
+			if (common_cls.key_count[i] < 0 || az66jp_key_position[i][0] == 0 || az66jp_key_position[i][1] == 0) continue;
 			if (common_cls.key_count[i] < 508) {
 				c = common_cls.key_count[i] >> 2;
-				this->_tft->fillRect(az66jp_key_position[i][0], az66jp_key_position[i][1] + 10,  11, 11, thermo_color[c]);
 			} else {
-				this->_tft->fillRect(az66jp_key_position[i][0], az66jp_key_position[i][1] + 10,  11, 11, thermo_color[127]);
+				c = 127;
 			}
+			this->_tft->fillRect(az66jp_key_position[i][0] - 2, az66jp_key_position[i][1] + 8,  15, 15, 0x9492);
+			this->_tft->fillRect(az66jp_key_position[i][0] - 1, az66jp_key_position[i][1] + 9,  12, 12, thermo_color[c]);
 		}
 		this->_last_view_info = 0;
 	}
@@ -399,15 +401,16 @@ void Display::view_dakagi_thermo() {
 	for (i=0; i<PRESS_KEY_MAX; i++) {
 		if (press_key_list[i].key_num < 0) continue;
 		k = press_key_list[i].key_num;
-		if (common_cls.key_count[k] <= 0) continue;
+		if (common_cls.key_count[k] < 0) continue;
 		if (press_key_list[i].unpress_time <= 0) {
-			this->_tft->fillRect(az66jp_key_position[k][0], az66jp_key_position[k][1] + 10,  11, 11, GREEN);
+			set_color = GREEN;
 		} else if (common_cls.key_count[k] < 508) {
 			c = common_cls.key_count[k] >> 2;
-			this->_tft->fillRect(az66jp_key_position[k][0], az66jp_key_position[k][1] + 10,  11, 11, thermo_color[c]);
+			set_color = thermo_color[c];
 		} else {
-			this->_tft->fillRect(az66jp_key_position[k][0], az66jp_key_position[k][1] + 10,  11, 11, thermo_color[127]);
+			set_color = thermo_color[127];
 		}
+		this->_tft->fillRect(az66jp_key_position[k][0] - 1, az66jp_key_position[k][1] + 9,  12, 12, set_color);
 	}
 	this->_last_view_type = DISP_TYPE_DKTHERM;
 }
@@ -415,10 +418,20 @@ void Display::view_dakagi_thermo() {
 // 打鍵QRコードを表示
 void Display::view_dakagi_qr() {
 	int i, j, x, y;
+	// 既にQRコードを表示済みであれば何もしない
 	if (this->_last_view_type == DISP_TYPE_DKQRCOD) return;
+	// WIFIにつながっていなければエラー表示
+	if (!wifi_conn_flag) {
+		this->_tft->fillRect(0, 0,  240, 135, WHITE);
+	    this->_tft->viewBMP(20, 55, 199, 26, (uint8_t *)please_wifi_txt_img, 10);
+		this->view_dakagi_qr_on();
+		this->_last_view_type = 255;
+	    delay(1500);
+		return;
+	}
 	char qrtxt[512];
 	// URL生成
-	sprintf(qrtxt, "https://azkey.jp/66jp/?t=%s", eep_data.uid);
+	sprintf(qrtxt, "http://azkey.jp/az66jp/?t=%s%08x", eep_data.uid, boot_count);
 	i = 0;
 	while (qrtxt[i] > 0) { i++; }
 	// 打鍵データをURLに追加する
@@ -426,14 +439,16 @@ void Display::view_dakagi_qr() {
 		sprintf((char *)&qrtxt[i], "%04x", common_cls.key_count[j]);
 		i += 4;
 	}
+	String res = common_cls.send_webhook_simple((char *)&qrtxt);
+	res.toCharArray(qrtxt, 512);
 	QRCode qrcode;
-	uint8_t qrcodeData[qrcode_getBufferSize(11)];
-	qrcode_initText(&qrcode, qrcodeData, 11, ECC_LOW, qrtxt);
+	uint8_t qrcodeData[qrcode_getBufferSize(6)];
+	qrcode_initText(&qrcode, qrcodeData, 6, ECC_LOW, qrtxt);
     this->_tft->fillRect(0, 0,  240, 135, WHITE);
 	for (uint8_t y = 0; y < qrcode.size; y++) {
 		for (uint8_t x = 0; x < qrcode.size; x++) {
 			if (qrcode_getModule(&qrcode, x, y)) {
-				this->_tft->fillRect((x * 2) + 58, (y * 2) + 6,  2, 2, BLACK);
+				this->_tft->fillRect((x * 3) + 58, (y * 3) + 6,  3, 3, BLACK);
 			}
 		}
 	}

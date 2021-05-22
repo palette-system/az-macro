@@ -18,8 +18,8 @@
 
 
 // キーボード
-#include "src/keyboard/az_macro.h"
-// #include "src/keyboard/az_66jp.h"
+// #include "src/keyboard/az_macro.h"
+#include "src/keyboard/az_66jp.h"
 
 
 #if defined(CONFIG_ARDUHAL_ESP_LOG)
@@ -39,6 +39,9 @@
 
 // JSON のファイルパス
 #define SETTING_JSON_PATH "/setting.json"
+
+// 起動回数を保存するファイルのパス
+#define  BOOT_COUNT_PATH  "/boot_count"
 
 
 // 今押されているボタンの情報
@@ -81,6 +84,7 @@ class AzCommon
         void set_status_led_timer(); // ステータスLED点滅タイマー登録
         void wifi_connect(); // WIFI接続
         void get_domain(char *url, char *domain_name); // URLからドメイン名だけ取得
+        String send_webhook_simple(char *url); // 単純なGETリクエストのWEBフック
         String send_webhook(const JsonObject &prm); // httpかhttpsか判断してリクエストを送信する
         String http_request(char *url, const JsonObject &prm); // httpリクエスト送信
         bool create_setting_json(); // デフォルトの設定json作成
@@ -97,6 +101,7 @@ class AzCommon
         JsonObject get_key_setting(int layer_id, int key_num); // 指定したキーの入力設定を取得する
         void load_data(); // EEPROMからデータをロードする
         void save_data(); // EEPROMに保存する
+        void load_boot_count(); // 起動回数を取得してカウントアップする
         void set_boot_mode(int set_mode); // 起動モードを切り替えてEEPROMに保存
         void change_mode(int set_mode); // モードを切り替えて再起動
         void key_read(); // 現在のキーの状態を取得
@@ -179,6 +184,9 @@ extern int press_key_all_clear;
 
 // EEPROMデータリンク
 extern mrom_data_set eep_data;
+
+// 起動回数
+extern uint32_t boot_count;
 
 // 共通クラスリンク
 extern AzCommon common_cls;

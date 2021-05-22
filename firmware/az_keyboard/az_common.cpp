@@ -58,6 +58,12 @@ press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
 // オールクリア送信フラグ
 int press_key_all_clear;
 
+// eepromのデータ
+mrom_data_set eep_data;
+
+// 起動回数
+uint32_t boot_count;
+
 
 // 入力用ピン情報
 short col_len;
@@ -245,6 +251,25 @@ void AzCommon::get_domain(char *url, char *domain_name) {
         i++;
     }
     domain_name[j] = 0x00;
+}
+
+// webリクエストを送信する(シンプルなGETリクエストのみ)
+String AzCommon::send_webhook_simple(char *url) {
+    int status_code;
+    String res;
+    // httpリクエスト用オブジェクト
+    HTTPClient http;
+    http.begin(url);
+    // GET
+    status_code = http.GET();
+    ESP_LOGD(LOG_TAG, "http status: %D\r\n", status_code);
+    if (status_code == HTTP_CODE_OK) {
+        res = http.getString();
+    } else {
+        res = "";
+    }
+    http.end();
+    return res;
 }
 
 // webリクエストを送信する
@@ -607,6 +632,7 @@ void AzCommon::load_data() {
     }
 }
 
+
 // データをEEPROMに書き込む
 void AzCommon::save_data() {
     //EEPROMに設定を保存する。
@@ -620,6 +646,31 @@ void AzCommon::save_data() {
     EEPROM.commit(); //大事
     delay(200);
     ESP_LOGD(LOG_TAG, "save complete\r\n");
+}
+
+// 起動回数読み込み
+void AzCommon::load_boot_count() {
+    File fp;
+    boot_count = 0;
+    // ファイルが無い場合はデフォルトファイル作成
+    if (SPIFFS.exists(BOOT_COUNT_PATH)) {
+        // から読み込み
+        fp = SPIFFS.open(BOOT_COUNT_PATH, "r");
+        if(!fp){
+            ESP_LOGD(LOG_TAG, "boot count file open error\n");
+            return;
+        }
+        if (fp.available()) {
+            fp.read((uint8_t *)&boot_count, 4);
+        }
+        fp.close();
+    }
+    // カウントアップ
+    boot_count++;
+    // ファイルに書き込み
+    fp = SPIFFS.open(BOOT_COUNT_PATH, "w");
+    fp.write((uint8_t *)&boot_count, 4);
+    fp.close();
 }
 
 // 起動モードを変更してEEPROMに保存

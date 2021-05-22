@@ -113,6 +113,9 @@ document.write("<br><br><br>");
 
 function conv_565(ir, ig, ib) {
     var cr, cg, cb;
+    // ir = parseInt(ir * 0.8);
+    // ig = parseInt(ig * 0.8);
+    // ib = parseInt(ib * 0.8);
     cr = (ir & 0xFF) >> 3;
     cg = (ig & 0xFF) >> 2;
     cb = (ib & 0xFF) >> 3;

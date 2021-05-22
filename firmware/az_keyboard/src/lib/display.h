@@ -35,6 +35,9 @@ const uint16_t thermo_color[128] PROGMEM = {
 	0xF807, 0xF806, 0xF805, 0xF804, 0xF803, 0xF802, 0xF801, 0xF800
 };
 
+
+
+
 #define  DISP_TYPE_STANDBY  0
 #define  DISP_TYPE_SETTING  1
 #define  DISP_TYPE_SAVENOW  2

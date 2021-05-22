@@ -6,9 +6,6 @@
 // 起動モード
 int boot_type;
 
-// eepromのデータ
-mrom_data_set eep_data;
-
 // 共通クラス
 AzCommon common_cls = AzCommon();
 
@@ -58,6 +55,8 @@ void setup() {
     }
     // キーの入力ピンの初期化
     common_cls.pin_setup();
+    // 起動回数を読み込み
+    common_cls.load_boot_count();
     // eepromからデータ読み込み
     common_cls.load_data();
     ESP_LOGD(LOG_TAG, "boot_mode = %D\r\n", eep_data.boot_mode);

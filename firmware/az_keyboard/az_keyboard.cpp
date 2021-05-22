@@ -305,7 +305,13 @@ void AzKeyboard::key_down_action(int key_num) {
     // キーが押された時の動作タイプ取得
     int action_type = key_set["press"]["action_type"].as<signed int>();
     // キーボードの接続が無ければ何もしない(レイヤー切り替え、WEBフック以外)
-    if (action_type != 3 && action_type != 4 && action_type != 6 && action_type != 7 && action_type != 8 && !bleKeyboard.isConnected()) return;
+    if (action_type != 3 && action_type != 4 && action_type != 6 && action_type != 7 && action_type != 8 && !bleKeyboard.isConnected()) {
+        // 押したよリストに追加だけする
+        press_key_list_push(-1, key_num, -1, select_layer_no, -1);
+        // 拡張メソッド実行
+        my_function.key_press(key_num, key_set);
+        return;
+    }
     // 動作タイプ別の動作
     if (action_type == 1) {
         // 通常キー入力
@@ -415,7 +421,13 @@ void AzKeyboard::key_up_action(int key_num) {
         ESP_LOGD(LOG_TAG, "key release action_type: %D - %D - %D\r\n", key_num, i, press_key_list[i].action_type);
         action_type = press_key_list[i].action_type;
         // キーボードの接続が無ければ何もしない(レイヤー切り替え、WEBフック以外)
-        if (action_type != 3 && action_type != 4 && action_type != 6 && action_type != 7 && action_type != 8 && !bleKeyboard.isConnected()) continue;
+        if (action_type != 3 && action_type != 4 && action_type != 6 && action_type != 7 && action_type != 8 && !bleKeyboard.isConnected()) {
+            // 離したよだけやる、離したよカウンターカウント開始
+            press_key_list[i].unpress_time = 1;
+            // 拡張メソッド実行
+            my_function.key_release(press_key_list[i].key_num, press_key_list[i]);
+            continue;
+        }
         if (action_type == 1) {
             // 通常入力
             if (press_key_list[i].key_id & MOUSE_CODE) {
