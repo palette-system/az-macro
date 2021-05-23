@@ -419,7 +419,14 @@ void Display::view_dakagi_thermo() {
 void Display::view_dakagi_qr() {
 	int i, j, x, y;
 	// 既にQRコードを表示済みであれば何もしない
-	if (this->_last_view_type == DISP_TYPE_DKQRCOD) return;
+	if (this->_last_view_type == DISP_TYPE_DKQRCOD) {
+		// 何かキーが押されたらQR表示終了
+		if (this->dakagi_last_view != common_cls.key_count_total) {
+			this->view_dakagi_qr_on();
+			this->_last_view_type = 255;
+		}
+		return;
+	}
 	// WIFIにつながっていなければエラー表示
 	if (!wifi_conn_flag) {
 		this->_tft->fillRect(0, 0,  240, 135, WHITE);
@@ -453,6 +460,7 @@ void Display::view_dakagi_qr() {
 		}
 	}
 	this->_last_view_type = DISP_TYPE_DKQRCOD;
+	this->dakagi_last_view = common_cls.key_count_total;
 }
 
 // 待ち受け画像表示

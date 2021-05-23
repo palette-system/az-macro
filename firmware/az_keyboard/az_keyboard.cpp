@@ -312,6 +312,8 @@ void AzKeyboard::key_down_action(int key_num) {
         my_function.key_press(key_num, key_set);
         return;
     }
+    // 打鍵QRコード表示中は何もしない
+    if (common_cls.on_tft_unit() && disp->_qr_flag) return;
     // 動作タイプ別の動作
     if (action_type == 1) {
         // 通常キー入力

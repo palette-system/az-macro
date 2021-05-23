@@ -138,25 +138,29 @@ b = 255;
 s = "サーモグラフ用rgb565カラーコード<br><br>";
 
 for (r=255; r>0; r-=8) {
-    s += toHex16bit(conv_565(r, g, b)) + ", ";
+    // s += toHex16bit(conv_565(r, g, b)) + ", ";
+    s += "["+r+", "+g+", "+b+"], ";
 }
 r = 0;
 s += "<br>";
 
 for (g=255; g>0; g-=8) {
-    s += toHex16bit(conv_565(r, g, b)) + ", ";
+    // s += toHex16bit(conv_565(r, g, b)) + ", ";
+    s += "["+r+", "+g+", "+b+"], ";
 }
 g = 0;
 s += "<br>";
 
 for (r=0; r<255; r+=8) {
-    s += toHex16bit(conv_565(r, g, b)) + ", ";
+    // s += toHex16bit(conv_565(r, g, b)) + ", ";
+    s += "["+r+", "+g+", "+b+"], ";
 }
 r = 255;
 s += "<br>";
 
 for (b=255; b>0; b-=8) {
-    s += toHex16bit(conv_565(r, g, b)) + ", ";
+    // s += toHex16bit(conv_565(r, g, b)) + ", ";
+    s += "["+r+", "+g+", "+b+"], ";
 }
 b = 0;
 s += "<br>";
