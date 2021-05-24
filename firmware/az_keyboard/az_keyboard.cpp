@@ -95,16 +95,16 @@ void AzKeyboard::key_action_exec() {
             if (common_cls.input_key[i]) {
                 // キーが押された
                 key_down_action(i); // 押された時の動作
-                ankeycls.key_down(i); // 暗記クラスに押したよを送る(暗記用)
                 rgb_led_cls.set_led_buf(i, 1); // LED に押したよを送る
+                ankeycls.key_down(i); // 暗記クラスに押したよを送る(暗記用)
                 // 打鍵数カウントアップ
                 common_cls.key_count[i]++;
                 common_cls.key_count_total++;
             } else {
                 // キーは離された
                 key_up_action(i); // 離された時の動作
-                ankeycls.key_up(i); // 暗記クラスに離したよを送る(暗記用)
                 rgb_led_cls.set_led_buf(i, 0); // LED に離したよを送る
+                ankeycls.key_up(i); // 暗記クラスに離したよを送る(暗記用)
             }
         }
     }
@@ -453,7 +453,7 @@ void AzKeyboard::key_up_action(int key_num) {
             press_mouse_list_remove(key_num); // 移動中リストから削除
         } else if (action_type == 6) {
             // 暗記ボタン
-            ankeycls.ankey_up(key_num);
+            ankeycls.ankey_up(press_key_list[i].layer_id, key_num);
         }
         // スグクリアしない。離したよカウンターカウント開始
         press_key_list[i].unpress_time = 1;

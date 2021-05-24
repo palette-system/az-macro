@@ -136,6 +136,7 @@ void Neopixel::setting_shine_type() {
 	} else {
 		this->_setting.shine_type = 0;
 	}
+	this->hide_all(); // 一旦すべて消す
 	this->setting_save(); // 設定を保存
 	this->setting_change = 4;
 }
@@ -188,6 +189,7 @@ void Neopixel::hide_all() {
 	uint32_t n = this->rgb_led->Color(0, 0, 0);
     // LEDを点灯
     for (i=0; i<this->_led_length; i++) {
+        this->led_buf[i] = 0;
         this->rgb_led->setPixelColor(i, n);
     }
 	// LEDにデータを送る

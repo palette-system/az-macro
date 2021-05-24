@@ -35,7 +35,7 @@ class Ankey
         void output_start(); // 暗記したデータのキー入力開始
         void output_end(); // 暗記したデータのキー入力終了
         void ankey_down(short layer_id, int key_num); // 暗記ボタン押された
-        void ankey_up(int key_num); // 暗記ボタン離された
+        void ankey_up(short layer_id, int key_num); // 暗記ボタン離された
         void loop_exec(); // 定期処理
 };
 

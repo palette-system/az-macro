@@ -100,6 +100,8 @@ void Ankey::input_end() {
 	fp.close();
 	// 暗記ボタンの光を消す
 	rgb_led_cls.select_key_cler();
+	// 全ての光を消す
+	rgb_led_cls.hide_all();
 	// 待ち受け画像表示
     if (common_cls.on_tft_unit()) {
         disp->view_type = disp->_back_view_type;
@@ -146,6 +148,8 @@ void Ankey::output_end() {
 	this->_loop_index = 0;
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
+	// 全ての光を消す
+	rgb_led_cls.hide_all();
     if (common_cls.on_tft_unit()) {
         disp->view_type = disp->_back_view_type;
     }
@@ -157,10 +161,6 @@ void Ankey::ankey_down(short layer_id, int key_num) {
 	if (this->ankey_flag == 2) return;
 	// 暗記中
 	if (this->ankey_flag == 1) {
-		// 暗記開始したボタンなら暗記終了。それ以外の暗記ボタンは無視
-		if (this->ankey_layer_id == layer_id && this->ankey_key_num == key_num) {
-			this->input_end(); // 1回目は暗記開始の時に押されてしまうので、2回目で終了
-		}
 		return;
 	}
 	// 押されてからの経過時間を図るようにindexをリセット
@@ -173,7 +173,13 @@ void Ankey::ankey_down(short layer_id, int key_num) {
 }
 
 // 暗記ボタン離された
-void Ankey::ankey_up(int key_num) {
+void Ankey::ankey_up(short layer_id, int key_num) {
+	// 暗記中で暗記開始したボタンなら暗記終了。それ以外の暗記ボタンは無視
+	if (this->ankey_flag == 1 && this->ankey_layer_id == layer_id && this->ankey_key_num == key_num) {
+		this->input_end();
+		this->ankey_count = 0;
+		return;
+	}
 	// 暗記ボタン押されていなければ何もしない
 	if (this->ankey_count == 0) return;
 	this->ankey_count--;
