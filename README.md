@@ -32,7 +32,13 @@ https://news.yahoo.co.jp/articles/7b6afe8f1dbb792dc17484e3a8a71e1b7dceda1f
 <br><br>
 
 【ブログ】オノフ 様<br>
+組み立て、設定方法<br>
 https://onofuu.com/post-122/
+<br><br>
+
+【ブログ】道具眼日誌 様<br>
+パーツ選び、組み立て、設定方法<br>
+https://do-gugan.com/~furuta/archives/2021/05/az-macro_1.html
 <br><br>
 
 
