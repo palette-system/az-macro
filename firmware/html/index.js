@@ -1283,8 +1283,19 @@ mst.view_option_setting = function(option_set) {
         s += "<tr><td><b>入力反転：</b>　　<b style='font-size: 27px;'>"+invstr+"</b></td><td align='right'>";
         s += "<a href='#' id='rvch_btn' class='update_button' onClick='javascript:mst.foot_inv_edit_btn();return false;'>変更</a>";
         s += "</td></tr>";
+    } else if (mst.option_edit_data.type == "trackball_m") {
+        // AZ-Macro用トラックボール
+        s += "<tr><td colspan='2' style='padding: 12px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td colspan='2'><b>トラックボール向き：</b>　　<select id='trackball_direction' style='font-size: 30px; border: 3px solid black;'>";
+        s += "<option value='0'>　上　</option>";
+        s += "<option value='1'>　右　</option>";
+        s += "<option value='2'>　下　</option>";
+        s += "<option value='3'>　左　</option>";
+        s += "</select>";
+        s += "</td></tr>";
+        
     } else if (mst.is_tft(mst.option_edit_data.type)) {
-        // AZ-Macro用液晶
+        // AZ-Macro,AZ-66JP用液晶
         var op_movie = "再生しない";
         if (mst.option_edit_data.op_movie == "1") op_movie = "再生する";
         s += "<tr><td colspan='2' style='padding: 12px 0;'><hr style='"+hrst+"'></td></tr>";
@@ -1320,7 +1331,11 @@ mst.view_option_setting = function(option_set) {
     set_html("setting_box", s);
     set_html("info_box", "");
     mst.view_box(["info_box", "setting_box"]);
-    if (mst.is_tft(mst.option_edit_data.type)) {
+    if (mst.option_edit_data.type == "trackball_m") {
+        // トラックボールユニット
+        $("trackball_direction").value = mst.option_edit_data.trackball_direction + "";
+    } else if (mst.is_tft(mst.option_edit_data.type)) {
+        // 液晶ユニット
         mst.view_imgdata("stimg_canvas", "stimg.dat");
     }
 };
@@ -1380,6 +1395,12 @@ mst.option_type_select = function() {
         if (select_key == "foot_m") {
             if (!("inversion" in mst.option_edit_data)) {
                 mst.option_edit_data.inversion = "0";
+            }
+        }
+        // トラックボールで向きが無ければ追加
+        if (select_key == "trackball_m") {
+            if (!("trackball_direction" in mst.option_edit_data)) {
+                mst.option_edit_data.trackball_direction = "0"; // デフォルト上
             }
         }
         // 液晶で起動ムービー再生が無ければ追加
@@ -1598,6 +1619,10 @@ mst.option_setting_btn_click = function(save_flag) {
             });
             return;
         }
+    }
+    if (mst.option_edit_data.type == "trackball_m") {
+        // トラックボールなら編集データに方向selectの値を追加する
+        mst.option_edit_data.trackball_direction = $("trackball_direction").value;
     }
     
     // タイプの変更が無ければ配列に反映するだけ

@@ -43,6 +43,9 @@ int keyboard_type_int;
 // オプションタイプの番号
 int option_type_int;
 
+// トラックボールの方向
+uint8_t trackball_direction;
+
 // デフォルトのレイヤー番号と、今選択しているレイヤー番号と、最後に押されたレイヤーボタン
 int default_layer_no;
 int select_layer_no;
@@ -454,6 +457,12 @@ void AzCommon::get_option_type_int() {
     } else if (t.equals("trackball_m")) {
         // トラックボール
         option_type_int = 2;
+        // トラックボールの向きもここで取得
+        if (setting_obj["option_set"].containsKey("trackball_direction")) {
+            trackball_direction = setting_obj["option_set"]["trackball_direction"].as<signed int>();
+        } else {
+            trackball_direction = 0;
+        }
     } else if (t.equals("display_m")) {
         // AZ-Macro用 液晶モジュール
         option_type_int = 3;

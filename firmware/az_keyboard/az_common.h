@@ -32,7 +32,7 @@
 
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000016"
+#define FIRMWARE_VERSION   "000017"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM005"
@@ -165,6 +165,9 @@ extern int keyboard_type_int;
 
 // オプションタイプの番号
 extern int option_type_int;
+
+// トラックボールの方向
+extern uint8_t trackball_direction;
 
 // デフォルトのレイヤー番号と、今選択しているレイヤー番号
 extern int default_layer_no;
