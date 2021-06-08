@@ -245,7 +245,19 @@ void Display::view_led_color() {
 // LED 光らせ方設定表示
 void Display::view_led_shine() {
 }
-
+// 打鍵自動保存設定表示
+void Display::view_dakey_auto_save() {
+}
+// Wifi接続して下さいエラー表示
+void Display::view_error_wifi_conn() {
+	this->_tft->fillRect(0, 0,  135, 240, WHITE);
+	this->_tft->viewBMP(0, 90, 199, 26, (uint8_t *)please_wifi_txt_img, 10);
+	this->_last_view_type = 255;
+	delay(1500);
+}
+// 打鍵数を保存しましたテキスト表示
+void Display::view_dakey_save_comp() {
+}
 
 #endif
 
@@ -415,6 +427,15 @@ void Display::view_dakagi_thermo() {
 	this->_last_view_type = DISP_TYPE_DKTHERM;
 }
 
+// Wifi接続して下さいエラー表示
+void Display::view_error_wifi_conn() {
+	this->_tft->fillRect(0, 0,  240, 135, WHITE);
+	this->_tft->viewBMP(20, 55, 199, 26, (uint8_t *)please_wifi_txt_img, 10);
+	this->_last_view_type = 255;
+	delay(1500);
+}
+
+
 // 打鍵QRコードを表示
 void Display::view_dakagi_qr() {
 	int i, j, x, y;
@@ -429,11 +450,8 @@ void Display::view_dakagi_qr() {
 	}
 	// WIFIにつながっていなければエラー表示
 	if (!wifi_conn_flag) {
-		this->_tft->fillRect(0, 0,  240, 135, WHITE);
-	    this->_tft->viewBMP(20, 55, 199, 26, (uint8_t *)please_wifi_txt_img, 10);
 		this->view_dakagi_qr_on();
-		this->_last_view_type = 255;
-	    delay(1500);
+		this->view_error_wifi_conn();
 		return;
 	}
 	char qrtxt[512];
@@ -527,7 +545,28 @@ void Display::view_led_shine() {
 	this->_wait_index = 150;
     rgb_led_cls.setting_change = 0;
 }
-
+// 打鍵自動保存設定表示
+void Display::view_dakey_auto_save() {
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+    this->_tft->viewBMP(5, 109, 139, 26, (uint8_t *)dakey_auto_save_txt_img, 10);
+	if (key_count_auto_save) {
+	    this->_tft->viewBMP(155, 109, 35, 22, (uint8_t *)on_txt_img, 10);
+	} else {
+	    this->_tft->viewBMP(155, 109, 43, 22, (uint8_t *)off_txt_img, 10);
+	}
+	this->_last_view_info = 6;
+	this->_wait_index = 150;
+    rgb_led_cls.setting_change = 0;
+}
+// 打鍵数を保存しましたテキスト表示
+void Display::view_dakey_save_comp() {
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+	this->_tft->viewBMP(5, 109, 194, 26, (uint8_t *)dakey_save_comp_txt_img, 10);
+	this->_last_view_info = 7;
+	this->_wait_index = 190;
+	this->_info_index = 200;
+	rgb_led_cls.setting_change = 0;
+}
 
 #endif
 

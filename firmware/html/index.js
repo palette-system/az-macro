@@ -472,6 +472,8 @@ mst.create_key_btn = function() {
             // 打鍵設定ボタン
             if (p.press.dakagi_settype == 0) c = "THRM";
             if (p.press.dakagi_settype == 1) c = "QR";
+            if (p.press.dakagi_settype == 2) c = "ASS";
+            if (p.press.dakagi_settype == 3) c = "SAVE";
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 23px;'>鍵<br>"+c+"</div>";
             
         }
@@ -852,6 +854,8 @@ mst.view_key_setting = function(key_id) {
         s += "<select id='dakagi_settype' style='font-size: 30px; border: 3px solid black; width: 350px;'>";
         s += "<option value='0'>サーモ表示</option>";
         s += "<option value='1'>QRコード</option>";
+        s += "<option value='2'>自動保存設定</option>";
+        s += "<option value='3'>打鍵数保存</option>";
         s += "</select>";
         s += "</td></tr>";
 

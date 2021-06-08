@@ -43,6 +43,9 @@
 // 起動回数を保存するファイルのパス
 #define  BOOT_COUNT_PATH  "/boot_count"
 
+// 打鍵数を自動保存するかどうかの設定を保存するファイルパス
+#define  KEY_COUNT_AUTO_SAVE_PATH  "/key_count_auto_save"
+
 
 // 今押されているボタンの情報
 struct press_key_data {
@@ -102,6 +105,8 @@ class AzCommon
         void load_data(); // EEPROMからデータをロードする
         void save_data(); // EEPROMに保存する
         void load_boot_count(); // 起動回数を取得してカウントアップする
+        void load_file_data(char *file_path, uint8_t *load_point, uint16_t load_size); // ファイルから設定値を読み込み
+        void save_file_data(char *file_path, uint8_t *save_point, uint16_t save_size); // ファイルに設定値を書込み
         void set_boot_mode(int set_mode); // 起動モードを切り替えてEEPROMに保存
         void change_mode(int set_mode); // モードを切り替えて再起動
         void key_read(); // 現在のキーの状態を取得
@@ -190,6 +195,9 @@ extern mrom_data_set eep_data;
 
 // 起動回数
 extern uint32_t boot_count;
+
+// 打鍵数を自動保存するかどうか
+extern uint8_t key_count_auto_save;
 
 // 共通クラスリンク
 extern AzCommon common_cls;

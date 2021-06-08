@@ -57,6 +57,9 @@ void setup() {
     common_cls.pin_setup();
     // 起動回数を読み込み
     common_cls.load_boot_count();
+    // 打鍵数を自動保存するかどうかの設定を読み込み
+    key_count_auto_save = 0;
+    common_cls.load_file_data(KEY_COUNT_AUTO_SAVE_PATH, (uint8_t *)&key_count_auto_save, 1);
     // eepromからデータ読み込み
     common_cls.load_data();
     ESP_LOGD(LOG_TAG, "boot_mode = %D\r\n", eep_data.boot_mode);

@@ -4,6 +4,7 @@
 #include "src/lib/ble_keyboard_jis.h"
 #include "src/lib/custom_func.h"
 #include "src/lib/ankey.h"
+#include "src/lib/dakey.h"
 #include "src/lib/paw3204.h"
 
 // BLEキーボードクラス
@@ -17,6 +18,9 @@ Paw3204 pawTrackball = Paw3204();
 
 // 暗記ボタンクラス
 Ankey ankeycls = Ankey();
+
+// 打鍵カウントクラス
+Dakey dakeycls = Dakey();
 
 
 // コンストラクタ
@@ -60,8 +64,11 @@ void AzKeyboard::start_keyboard() {
     // バッテリーレベル
     // bleKeyboard.setBatteryLevel(100);
 
-    // 暗記ボタン
+    // 暗記ボタン初期化
     ankeycls.begin(this);
+
+    // 打鍵クラス初期化
+    dakeycls.begin();
 
     // 各ユニット初期化
     start_unit();
@@ -407,6 +414,12 @@ void AzKeyboard::key_down_action(int key_num) {
         } else if (m == 1) {
             // QRコード表示
             disp->view_dakagi_qr_on();
+        } else if (m == 2) {
+            // 自動保存設定を変更
+            dakeycls.set_auto_save_change();
+        } else if (m == 3) {
+            // 打鍵数をファイルに保存
+            dakeycls.save_dakey();
         }
     }
 
@@ -590,6 +603,9 @@ void AzKeyboard::loop_exec(void) {
 
     // キー入力クリア処理
     press_data_clear();
+
+    // 打鍵数定期処理(自動保存など)
+    dakeycls.loop_exec();
 
     // 各ユニットの定期処理
     unit_loop_exec();

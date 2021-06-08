@@ -67,6 +67,8 @@ mrom_data_set eep_data;
 // 起動回数
 uint32_t boot_count;
 
+// 打鍵数を自動保存するかどうか
+uint8_t key_count_auto_save;
 
 // 入力用ピン情報
 short col_len;
@@ -663,7 +665,7 @@ void AzCommon::load_boot_count() {
     boot_count = 0;
     // ファイルが無い場合はデフォルトファイル作成
     if (SPIFFS.exists(BOOT_COUNT_PATH)) {
-        // から読み込み
+        // boot_count から読み込み
         fp = SPIFFS.open(BOOT_COUNT_PATH, "r");
         if(!fp){
             ESP_LOGD(LOG_TAG, "boot count file open error\n");
@@ -681,6 +683,35 @@ void AzCommon::load_boot_count() {
     fp.write((uint8_t *)&boot_count, 4);
     fp.close();
 }
+
+
+// ファイルから設定値を読み込み
+void AzCommon::load_file_data(char *file_path, uint8_t *load_point, uint16_t load_size) {
+    File fp;
+    // ファイルが無い場合は何もしない
+    if (!SPIFFS.exists(file_path)) return;
+    // ファイル読み込み
+    fp = SPIFFS.open(file_path, "r");
+    if(!fp){
+        ESP_LOGD(LOG_TAG, "file open error\n");
+        return;
+    }
+    if (fp.available()) {
+        fp.read(load_point, load_size);
+    }
+    fp.close();
+}
+
+
+// ファイルに設定値を書込み
+void AzCommon::save_file_data(char *file_path, uint8_t *save_point, uint16_t save_size) {
+    // ファイルに書き込み
+    File fp;
+    fp = SPIFFS.open(file_path, "w");
+    fp.write(save_point, save_size);
+    fp.close();
+}
+
 
 // 起動モードを変更してEEPROMに保存
 void AzCommon::set_boot_mode(int set_mode) {

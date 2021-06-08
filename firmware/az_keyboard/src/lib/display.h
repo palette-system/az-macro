@@ -51,50 +51,53 @@ const uint16_t thermo_color[128] PROGMEM = {
 // クラスの定義
 class Display
 {
-    public:
-        Arduino_ST7789 *_tft; // st7789オブジェクト
-        int  _option_type; // オプションのタイプ
-	    short _width; // 液晶のサイズ幅
-	    short _height; // 液晶のサイズ高さ
-	// 最後に表示した画面
-	// 0=待ち受け、1=設定モード、2=保存中、3=wifi接続中、4=WEBフック中、5=暗記中、6=暗記入力中、7=サーモ表示中、8=QRコード表示中
-	uint8_t  _last_view_type;
-	uint8_t  view_type; // 現在の表示モード(内容は_last_view_typeと一緒)
-	uint8_t  _back_view_type; // １つ前表示していたタイプ
-	// 画面下のinfo枠に最後に表示した内容(0=白枠、1=打鍵数、2=LEDステータス、3=LED明るさ、4=LED色、5=LED光らせ方   255=何も表示していない)
-	uint8_t  _last_view_info;
-	short _wait_index;
-	short _info_index; // infoを表示し続ける時間(待ち受け画面用)
-	int dakagi_last_view; // 最後に表示した打鍵数
-	uint8_t  *_stimg_data; // 待ち受け画像をRAMに読み込むポインタ
-	uint8_t  _stimg_load_flag; // 待ち受け画像をRAMに読み込んでいるかどうか
-	uint8_t  _thermo_flag; // サーモ表示モードかどうか
-	uint8_t  _qr_flag; // 打鍵QRコード表示中かどうか
-        Display();   // コンストラクタ
-        void begin(Arduino_ST7789 *tft_obj, int option_type); // 初期化
-        void view_full_image(uint8_t *image_data); // 画面いっぱいに画像を表示する
-        void view_int(uint16_t x, uint16_t y, int v); // 数字を表示する
-	void view_dakagi(); // 打鍵数表示
-	void view_dakagi_thermo(); // 打鍵サーモグラフ表示
-	void view_dakagi_qr(); // 打鍵QRコードモード表示
-	    void viewBMPspi_head(); // データを流し込んで画像を表示する(ヘッダ)
-	    void viewBMPspi_data(uint8_t *wbuf, int wsize); // データを流し込んで画像を表示する(データ)
-	void view_dakagi_thermo_on(); // サーモグラフモードをON/OFF切り替える
-	void view_dakagi_qr_on(); // 打鍵QRコードモードをON/OFF切り替える
-        void view_black(); // 画面全体黒い画面表示
-        void view_standby_image(); // 待ち受け画面表示
-	void view_led_stat(); // LEDステータス表示
-	void view_led_bright(); // LED 明るさ設定表示
-	void view_led_color(); // LED 色設定表示
-	void view_led_shine(); // LED 光らせ方設定表示
-        void view_setting_mode(); // 設定モード画面表示
-        void view_save(); // 保存中表示
-        void view_wifi_conn(); // WiFi接続中画面表示
-        void view_webhook(); // Webhook中表示
-	void view_ankey_now(); // 暗記中表示
-	void view_ankey_input(); // 暗記入力中表示
-        void open_movie(); // 起動ムービー
-        void loop_exec(); // 定期処理
+	public:
+		Arduino_ST7789 *_tft; // st7789オブジェクト
+		int  _option_type; // オプションのタイプ
+		short _width; // 液晶のサイズ幅
+		short _height; // 液晶のサイズ高さ
+		// 最後に表示した画面
+		// 0=待ち受け、1=設定モード、2=保存中、3=wifi接続中、4=WEBフック中、5=暗記中、6=暗記入力中、7=サーモ表示中、8=QRコード表示中
+		uint8_t  _last_view_type;
+		uint8_t  view_type; // 現在の表示モード(内容は_last_view_typeと一緒)
+		uint8_t  _back_view_type; // １つ前表示していたタイプ
+		// 画面下のinfo枠に最後に表示した内容(0=白枠、1=打鍵数、2=LEDステータス、3=LED明るさ、4=LED色、5=LED光らせ方、6=打鍵自動保存設定、7=打鍵数保存しました   255=何も表示していない)
+		uint8_t  _last_view_info;
+		short _wait_index;
+		short _info_index; // infoを表示し続ける時間(待ち受け画面用)
+		int dakagi_last_view; // 最後に表示した打鍵数
+		uint8_t  *_stimg_data; // 待ち受け画像をRAMに読み込むポインタ
+		uint8_t  _stimg_load_flag; // 待ち受け画像をRAMに読み込んでいるかどうか
+		uint8_t  _thermo_flag; // サーモ表示モードかどうか
+		uint8_t  _qr_flag; // 打鍵QRコード表示中かどうか
+		Display();   // コンストラクタ
+		void begin(Arduino_ST7789 *tft_obj, int option_type); // 初期化
+		void view_full_image(uint8_t *image_data); // 画面いっぱいに画像を表示する
+		void view_int(uint16_t x, uint16_t y, int v); // 数字を表示する
+		void view_dakagi(); // 打鍵数表示
+		void view_dakagi_thermo(); // 打鍵サーモグラフ表示
+		void view_dakagi_qr(); // 打鍵QRコードモード表示
+		void viewBMPspi_head(); // データを流し込んで画像を表示する(ヘッダ)
+		void viewBMPspi_data(uint8_t *wbuf, int wsize); // データを流し込んで画像を表示する(データ)
+		void view_dakagi_thermo_on(); // サーモグラフモードをON/OFF切り替える
+		void view_dakagi_qr_on(); // 打鍵QRコードモードをON/OFF切り替える
+		void view_black(); // 画面全体黒い画面表示
+		void view_standby_image(); // 待ち受け画面表示
+		void view_led_stat(); // LEDステータス表示
+		void view_led_bright(); // LED 明るさ設定表示
+		void view_led_color(); // LED 色設定表示
+		void view_led_shine(); // LED 光らせ方設定表示
+		void view_dakey_auto_save(); // 打鍵自動保存設定表示
+		void view_dakey_save_comp(); // 打鍵数を保存しましたテキスト表示
+		void view_setting_mode(); // 設定モード画面表示
+		void view_save(); // 保存中表示
+		void view_wifi_conn(); // WiFi接続中画面表示
+		void view_webhook(); // Webhook中表示
+		void view_ankey_now(); // 暗記中表示
+		void view_ankey_input(); // 暗記入力中表示
+		void view_error_wifi_conn(); // Wifi接続して下さいエラー表示
+		void open_movie(); // 起動ムービー
+		void loop_exec(); // 定期処理
 };
 
 
