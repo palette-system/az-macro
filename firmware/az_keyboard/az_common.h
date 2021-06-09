@@ -15,6 +15,7 @@
 #include "src/lib/neopixel.h"
 #include "src/lib/Arduino_ST7789_my.h"
 #include "src/lib/display.h"
+#include "src/lib/HTTPClient_my.h"
 
 
 // キーボード
@@ -88,6 +89,7 @@ class AzCommon
         void wifi_connect(); // WIFI接続
         void get_domain(char *url, char *domain_name); // URLからドメイン名だけ取得
         String send_webhook_simple(char *url); // 単純なGETリクエストのWEBフック
+        String send_webhook_post_file(char *url, char *file_path); // POSTでファイルの内容を送信する
         String send_webhook(const JsonObject &prm); // httpかhttpsか判断してリクエストを送信する
         String http_request(char *url, const JsonObject &prm); // httpリクエスト送信
         bool create_setting_json(); // デフォルトの設定json作成

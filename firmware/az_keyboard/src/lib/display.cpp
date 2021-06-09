@@ -454,21 +454,17 @@ void Display::view_dakagi_qr() {
 		this->view_error_wifi_conn();
 		return;
 	}
-	char qrtxt[512];
+	char qrurl[256];
+	char file_path[32];
 	// URL生成
-	sprintf(qrtxt, "http://azkey.jp/az66jp/?t=%s%08x", eep_data.uid, boot_count);
+	sprintf(qrurl, "http://azkey.jp/az66jp/?t=%s%08x", eep_data.uid, boot_count);
 	i = 0;
-	while (qrtxt[i] > 0) { i++; }
-	// 打鍵データをURLに追加する
-	for (j=0; j<KEY_INPUT_MAX; j++) {
-		sprintf((char *)&qrtxt[i], "%04x", common_cls.key_count[j]);
-		i += 4;
-	}
-	String res = common_cls.send_webhook_simple((char *)&qrtxt);
-	res.toCharArray(qrtxt, 512);
+	sprintf(file_path, "/D_%06D", boot_count);
+	String res = common_cls.send_webhook_post_file(qrurl, file_path);
+	res.toCharArray(qrurl, 256);
 	QRCode qrcode;
 	uint8_t qrcodeData[qrcode_getBufferSize(6)];
-	qrcode_initText(&qrcode, qrcodeData, 6, ECC_LOW, qrtxt);
+	qrcode_initText(&qrcode, qrcodeData, 6, ECC_LOW, qrurl);
     this->_tft->fillRect(0, 0,  240, 135, WHITE);
 	for (uint8_t y = 0; y < qrcode.size; y++) {
 		for (uint8_t x = 0; x < qrcode.size; x++) {
@@ -662,5 +658,8 @@ void Display::loop_exec() {
 
 
 	}
+	
+	// this->view_int(2, 2, SPIFFS.totalBytes()); // ファイル領域合計
+	// this->view_int(2, 32, SPIFFS.usedBytes()); // 使用している容量
 }
 

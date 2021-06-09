@@ -277,6 +277,27 @@ String AzCommon::send_webhook_simple(char *url) {
     return res;
 }
 
+
+// POSTでファイルの内容を送信する
+String AzCommon::send_webhook_post_file(char *url, char *file_path) {
+    if (!wifi_conn_flag) return "";
+    status_led_mode = 3;
+    // httpリクエスト用オブジェクト
+    int status_code;
+    HTTPClient_my http;
+    String res_body;
+    http.begin(url);
+    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    status_code = http.sendPostFile(file_path);
+    if (status_code == HTTP_CODE_OK) {
+        res_body = http.getString();
+    } else {
+        res_body = "";
+    }
+    http.end();
+    return res_body;
+}
+
 // webリクエストを送信する
 String AzCommon::send_webhook(const JsonObject &prm) {
     String url = prm["url"].as<String>();
@@ -289,6 +310,7 @@ String AzCommon::send_webhook(const JsonObject &prm) {
         return String("url error");
     }
 }
+
 
 // HTTPリクエストを送信する
 String AzCommon::http_request(char *url, const JsonObject &prm) {

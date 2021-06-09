@@ -47,13 +47,14 @@ void Dakey::save_dakey() {
 	date_now = common_cls.send_webhook_simple("http://azkey.jp/api/date.php");
 	// ファイルに書き込む
 	File fp;
-	sprintf(save_path, "/D_%05D", boot_count);
+	sprintf(save_path, "/D_%06D", boot_count);
 	if (SPIFFS.exists(save_path)){
 		// ファイルがあれば追記
 		fp = SPIFFS.open(save_path, "a");
 	} else {
 		// ファイルが無ければ新規作成
 		fp = SPIFFS.open(save_path, "w");
+		fp.print("data=");
 	}
 	if (!fp) {
 		// ファイル書込み失敗
