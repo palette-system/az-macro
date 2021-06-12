@@ -40,7 +40,9 @@ void Dakey::save_dakey() {
 	// WiFiにつながって無ければ何もしない
 	if (!wifi_conn_flag) {
 		// WiFiに接続して下さいエラー表示
-		disp->view_error_wifi_conn();
+		if (common_cls.on_tft_unit()) {
+			disp->view_error_wifi_conn();
+		}
 		return;
 	}
 	// WEBから現在日時を取得
@@ -54,7 +56,7 @@ void Dakey::save_dakey() {
 	} else {
 		// ファイルが無ければ新規作成
 		fp = SPIFFS.open(save_path, "w");
-		fp.print("data=");
+		fp.printf("uid=%S&boot=%D&data=", eep_data.uid, boot_count);
 	}
 	if (!fp) {
 		// ファイル書込み失敗

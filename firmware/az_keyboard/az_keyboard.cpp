@@ -247,6 +247,7 @@ void AzKeyboard::move_mouse_loop() {
             mx = ((press_mouse_list[i].move_x * press_mouse_list[i].move_speed) / 100);
             my = ((press_mouse_list[i].move_y * press_mouse_list[i].move_speed) / 100);
             bleKeyboard.mouse_move(mx, my, 0, 0);
+            delay(5);
         }
         // index をカウント
         if (press_mouse_list[i].move_index < 1000) press_mouse_list[i].move_index++;

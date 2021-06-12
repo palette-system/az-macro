@@ -30,6 +30,9 @@ AZ-Macroで使用しているファームウェアソースです。<br>
 
 ![ボード設定](/images/board_setting.png)
 
+## AZ-66JP で SPIFFS 領域を16MBにする
+
+[16MBフラッシュのESP32-WROVERでSPIFFSを最大限使えるようにする設定方法](https://kohacraft.com/archives/202012051149.html)
 
 ## こちらのツールを使用させて頂いています
 

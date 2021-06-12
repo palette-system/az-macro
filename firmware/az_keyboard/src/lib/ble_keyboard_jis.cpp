@@ -289,7 +289,7 @@ unsigned short BleKeyboardJIS::code_convert(unsigned short k)
 {
   short i = 0;
   if (this->keyboard_language == 1) {
-    while (this->_codemap_us[i] && i < sizeof(this->_codemap_us)) {
+    while (this->_codemap_us[i]) {
       if (this->_codemap_us[i] == k) {
         return this->_codemap_us[i + 1];
       }

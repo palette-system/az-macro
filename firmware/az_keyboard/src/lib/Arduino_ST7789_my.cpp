@@ -77,20 +77,20 @@ inline void Arduino_ST7789::spiwrite_color(uint16_t send_color, uint16_t send_si
   uint16_t i, j;
   uint8_t wbuf[5120];
   uint8_t hi = send_color >> 8, lo = send_color;
-  j = 0;
-  for (i=0; i<send_size; i++) {
-    wbuf[j] = hi;
-    j++;
-    wbuf[j] = lo;
-    j++;
-    if (j >= 5118) {
-      SPI.writeBytes(wbuf, j);
-      j = 0;
-    }
-  }
-  if (j > 0) {
-    SPI.writeBytes(wbuf, j);
-  }
+	i = 0;
+	while (i < 5120) {
+		wbuf[i] = hi;
+		i++;
+		wbuf[i] = lo;
+		i++;
+	}
+	i = 0;
+	while (i < send_size) {
+		j = send_size - i;
+		if (j >= 2560) j = 2560;
+		SPI.writeBytes(wbuf, j * 2);
+		i += j;
+	}
 }
 
 

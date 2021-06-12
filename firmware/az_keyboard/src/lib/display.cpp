@@ -480,23 +480,35 @@ void Display::view_dakagi_qr() {
 // 待ち受け画像表示
 void Display::view_standby_image() {
 	if (this->_last_view_type == DISP_TYPE_STANDBY) return; // 最後に表示したのが待ち受けなら何もしない
-	if (this->_stimg_load_flag) {
+	if (this->_stimg_load_flag == 1) {
 		// SPRAMにデータロード済みならSPRAMに入ってる待ち受け画像を表示
 		this->_tft->viewBMPspi_head(0, 0, 240, 135);
 		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+	} else if (this->_stimg_load_flag == 2) {
+		// ファイルが無ければデフォルトの待ち受け
+		this->_tft->fillRect(0, 0,  240, 135, BLACK);
 	} else if (ESP.getFreePsram() > 64800) {
 		// SPRAMに空き容量があれば待ち受け画像をSPRAMにロード
-		this->_stimg_data = (uint8_t *)ps_malloc(64800);
 		if(SPIFFS.exists("/stimg.dat")){
+			this->_stimg_data = (uint8_t *)ps_malloc(64800);
 			File fp = SPIFFS.open("/stimg.dat", "r");
 			int s = fp.read(this->_stimg_data, 64800);
 			fp.close();
+			this->_tft->viewBMPspi_head(0, 0, 240, 135);
+			this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+			this->_stimg_load_flag = 1;
+		} else {
+			this->_tft->fillRect(0, 0,  240, 135, BLACK);
+			this->_stimg_load_flag = 2;
 		}
-		this->_tft->viewBMPspi_head(0, 0, 240, 135);
-		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
 	} else {
 		// SPRAMに空きが無ければファイルから直接表示
-	    this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
+		if(SPIFFS.exists("/stimg.dat")){
+			this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
+		} else {
+			this->_tft->fillRect(0, 0,  240, 135, BLACK);
+			this->_stimg_load_flag = 2;
+		}
 	}
 	this->_last_view_type = DISP_TYPE_STANDBY;
 	this->_last_view_info = 255;
