@@ -18,7 +18,7 @@ class Dakey
 		Dakey();   // コンストラクタ
 		void begin(); // 初期化
 		void set_auto_save_change(); // 打鍵数自動保存するかどうかの設定を変更
-		void save_dakey(); // 現在の打鍵数を保存する
+		void save_dakey(uint8_t view_flag); // 現在の打鍵数を保存する
 		void loop_exec(); // 定期処理
 		
 };

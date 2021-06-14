@@ -413,6 +413,8 @@ void AzKeyboard::key_down_action(int key_num) {
             // サーモグラフ表示
             disp->view_dakagi_thermo_on();
         } else if (m == 1) {
+            // 打鍵数をファイルに保存
+            dakeycls.save_dakey(0);
             // QRコード表示
             disp->view_dakagi_qr_on();
         } else if (m == 2) {
@@ -420,7 +422,7 @@ void AzKeyboard::key_down_action(int key_num) {
             dakeycls.set_auto_save_change();
         } else if (m == 3) {
             // 打鍵数をファイルに保存
-            dakeycls.save_dakey();
+            dakeycls.save_dakey(1);
         }
     }
 

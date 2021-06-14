@@ -61,7 +61,7 @@ class Display
 		uint8_t  _last_view_type;
 		uint8_t  view_type; // 現在の表示モード(内容は_last_view_typeと一緒)
 		uint8_t  _back_view_type; // １つ前表示していたタイプ
-		// 画面下のinfo枠に最後に表示した内容(0=白枠、1=打鍵数、2=LEDステータス、3=LED明るさ、4=LED色、5=LED光らせ方、6=打鍵自動保存設定、7=打鍵数保存しました   255=何も表示していない)
+		// 画面下のinfo枠に最後に表示した内容(0=白枠、1=打鍵数、2=LEDステータス、3=LED明るさ、4=LED色、5=LED光らせ方、6=打鍵自動保存設定、7=打鍵数保存しました、8=暗記入力中   255=何も表示していない)
 		uint8_t  _last_view_info;
 		short _wait_index;
 		short _info_index; // infoを表示し続ける時間(待ち受け画面用)

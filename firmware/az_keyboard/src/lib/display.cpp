@@ -366,10 +366,11 @@ void Display::view_ankey_now() {
 }
 // 暗記入力
 void Display::view_ankey_input() {
-    this->_tft->fillRect(0, 0,  240, 135, WHITE);
-    this->_tft->viewBMP(20, 25, 95, 86, (uint8_t *)ankey_icon_img, 10);
-    this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)nyuryokunow_img, 10);
-	this->_last_view_type = 6;
+	if (this->_last_view_info == 8) return;
+	this->_tft->fillRect(0, 105,  240, 30, WHITE);
+    this->_tft->viewBMP(5, 109, 104, 26, (uint8_t *)ankey_input_now_txt_img, 10);
+	this->_last_view_info = 8;
+	
 }
 
 // 打鍵数を表示
@@ -631,7 +632,7 @@ void Display::loop_exec() {
 		this->view_standby_image();
 		// 打鍵表示
 		if (this->_wait_index == 0) {
-			if (this->dakagi_last_view != common_cls.key_count_total) {
+			if (this->dakagi_last_view != common_cls.key_count_total && common_cls.key_count_total != 0) {
 				// 打鍵数が増えたら打鍵数表示
 				this->view_dakagi();
 				this->_info_index = 150;

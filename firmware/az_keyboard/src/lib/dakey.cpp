@@ -12,7 +12,7 @@ void Dakey::begin() {
 	this->last_save_key_count = -1;
 	this->last_save_time = 0;
 	// ‘ÅŒ®”‚ð•Û‘¶(Å‰‚Ì0‚ð•Û‘¶)
-	this->save_dakey();
+	this->save_dakey(0);
 }
 
 
@@ -25,7 +25,7 @@ void Dakey::set_auto_save_change() {
 		// ON‚É‚·‚é
 		key_count_auto_save = 1;
 		// Œ»Ý‚Ì‘ÅŒ®”‚ð•Û‘¶
-		this->save_dakey();
+		this->save_dakey(0);
 	}
 	common_cls.save_file_data(KEY_COUNT_AUTO_SAVE_PATH, (uint8_t *)&key_count_auto_save, 1);
 	disp->view_dakey_auto_save();
@@ -33,7 +33,7 @@ void Dakey::set_auto_save_change() {
 
 
 // Œ»Ý‚Ì‘ÅŒ®”‚ð•Û‘¶‚·‚é
-void Dakey::save_dakey() {
+void Dakey::save_dakey(uint8_t view_flag) {
 	char save_path[32];
 	String date_now;
 	int i;
@@ -83,7 +83,7 @@ void Dakey::save_dakey() {
 	this->last_save_key_count = common_cls.key_count_total;
 	this->last_save_time = millis();
 	// ‘ÅŒ®”‚ð•Û‘¶‚µ‚Ü‚µ‚½‚ð•\Ž¦
-	disp->view_dakey_save_comp();
+	if (view_flag) disp->view_dakey_save_comp();
 	
 }
 
@@ -94,7 +94,7 @@ void Dakey::loop_exec() {
 	if (wifi_conn_flag && // Wifi‚ÉŒq‚ª‚Á‚Ä‚¢‚é
 		key_count_auto_save && // Ž©“®•Û‘¶ON
 		(this->last_save_time + AUTO_SAVE_INTERVAL) < millis() ) { // ÅŒã‚É•Û‘¶‚µ‚½ŽžŠÔ‚©‚çˆê’èˆÈãŽžŠÔ‚ªŒo‚Á‚½‚ç
-		this->save_dakey();
+		this->save_dakey(1);
 	}
 }
 

@@ -8,6 +8,7 @@ Neopixel::Neopixel() {
 	this->_led_length = -1;
 	this->_row_size = -1;
 	this->_col_size = -1;
+	this->lotate_index = 0;
 }
 
 
@@ -183,6 +184,30 @@ uint32_t Neopixel::get_setting_color() {
 	return this->rgb_led->Color(r, g, b);
 };
 
+
+// 0 - 255 に該当する色を取得
+uint32_t Neopixel::get_lotate_color(uint8_t i) {
+	if(i < 85) {
+		return this->rgb_led->Color(
+			(i * 3 * this->_setting.bright) / NEO_BRIGHT_MAX,
+			((255 - (i * 3)) * this->_setting.bright) / NEO_BRIGHT_MAX,
+			0);
+	} else if(i < 170) {
+		i -= 85;
+		return this->rgb_led->Color(
+			((255 - (i * 3)) * this->_setting.bright) / NEO_BRIGHT_MAX,
+			0,
+			(i * 3 * this->_setting.bright) / NEO_BRIGHT_MAX);
+	} else {
+		i -= 170;
+		return this->rgb_led->Color(
+			0,
+			(i * 3 * this->_setting.bright) / NEO_BRIGHT_MAX,
+			((255 - (i * 3)) * this->_setting.bright) / NEO_BRIGHT_MAX);
+	}
+}
+
+
 // 消灯
 void Neopixel::hide_all() {
 	int i;
@@ -232,6 +257,7 @@ void Neopixel::rgb_led_loop_exec() {
     this->rgb_led->show();
 }
 
+
 // ずっと光ってる
 void Neopixel::rgb_led_loop_type_0() {
 	int i;
@@ -241,6 +267,7 @@ void Neopixel::rgb_led_loop_type_0() {
         this->rgb_led->setPixelColor(i, c);
     }
 }
+
 
 // 押すと光る
 void Neopixel::rgb_led_loop_type_1() {
@@ -256,6 +283,7 @@ void Neopixel::rgb_led_loop_type_1() {
     	}
     }
 }
+
 
 // ボタンを押した所から周りに広がっていく
 void Neopixel::rgb_led_loop_type_2() {
@@ -324,23 +352,33 @@ void Neopixel::rgb_led_loop_type_2() {
     for (i=0; i<this->_led_length; i++) {
         this->rgb_led->setPixelColor(i, n);
     }
-	if (this->_setting.status) {
-		
-	    for (i=0; i<this->_led_length; i++) {
-	        if (this->led_buf[i] && this->key_matrix[i] >= 0) {
-	            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], c);
-	        }
-	    }
-	}
+    for (i=0; i<this->_led_length; i++) {
+        if (this->led_buf[i] && this->key_matrix[i] >= 0) {
+            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], c);
+        }
+    }
 }
+
 
 // 
 void Neopixel::rgb_led_loop_type_3() {
-	int i;
+    int i;
+    int csize = this->_col_size;
+    int rsize = this->_row_size;
+    int rmax = this->_led_length - this->_col_size;
+    int cmax = csize - 1;
     // LEDを点灯
     for (i=0; i<this->_led_length; i++) {
-        this->rgb_led->setPixelColor(i, this->rgb_led->Color(0, 0, 0));
+        if (this->key_matrix[i] >= 0) {
+            this->rgb_led->setPixelColor(this->led_num[this->key_matrix[i]], this->get_lotate_color((i + this->lotate_index) % 255));
+        }
     }
+	// ローテーションインデックス更新
+	if (this->lotate_index >= 254) {
+		this->lotate_index = 0;
+	} else {
+		this->lotate_index++;
+	}
 }
 // 
 void Neopixel::rgb_led_loop_type_4() {
