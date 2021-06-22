@@ -852,7 +852,7 @@ mst.view_key_setting = function(key_id) {
         s += "<tr><td colspan='2'>";
         s += "<b>設定の種類 ：</b><br>";
         s += "<select id='dakagi_settype' style='font-size: 30px; border: 3px solid black; width: 350px;'>";
-        s += "<option value='0'>サーモ表示</option>";
+        s += "<option value='0'>ヒートマップ表示</option>";
         s += "<option value='1'>QRコード</option>";
         s += "<option value='2'>自動保存設定</option>";
         s += "<option value='3'>打鍵数保存</option>";
