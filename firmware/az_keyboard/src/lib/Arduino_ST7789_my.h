@@ -85,7 +85,7 @@ class Arduino_ST7789 : public Adafruit_GFX {
            setRotation(uint8_t r),
            invertDisplay(boolean i),
            viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t * bmp_data, uint8_t opa),
-	       viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path),
+	       viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path, int offset),
 	       viewBMPspi_head(int16_t x, int16_t y, int16_t w, int16_t h), // データを流し込んで画像を表示する(ヘッダ)
 	       viewBMPspi_data(uint8_t *wbuf, int wsize), // データを流し込んで画像を表示する(データ)
        init(uint16_t width, uint16_t height);

@@ -39,6 +39,7 @@ void Display::begin(Arduino_ST7789 *tft_obj, int option_type) {
     this->_tft->fillScreen(WHITE);
     this->_tft->setTextSize(1);
     this->_tft->setTextColor(WHITE);
+	this->_info_spot = 0;
 	this->dakagi_last_view = -1;
 	this->_wait_index = 0;
 	this->_stimg_load_flag = 0;
@@ -185,9 +186,6 @@ void Display::view_webhook() {
 // 暗記中
 void Display::view_ankey_now() {
 }
-// 暗記入力
-void Display::view_ankey_input() {
-}
 // 打鍵数を表示
 void Display::view_dakagi() {
 	// 最後に表示したInfoが打鍵数で最後に表示した打鍵数が今の打鍵数と一緒なら何もしない
@@ -228,7 +226,7 @@ void Display::view_standby_image() {
 		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
 	} else {
 		// SPRAMに空きが無ければファイルから直接表示
-	    this->_tft->viewBMPFile(0,0, 135, 240, "/stimg.dat");
+	    this->_tft->viewBMPFile(0,0, 135, 240, "/stimg.dat", 0);
 	}
 	this->_last_view_type = DISP_TYPE_STANDBY;
 	this->_last_view_info = 255;
@@ -364,14 +362,6 @@ void Display::view_ankey_now() {
     this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)ankinow_img, 10);
 	this->_last_view_type = 5;
 }
-// 暗記入力
-void Display::view_ankey_input() {
-	if (this->_last_view_info == 8) return;
-	this->_tft->fillRect(0, 105,  240, 30, WHITE);
-    this->_tft->viewBMP(5, 109, 104, 26, (uint8_t *)ankey_input_now_txt_img, 10);
-	this->_last_view_info = 8;
-	
-}
 
 // 打鍵数を表示
 void Display::view_dakagi() {
@@ -483,11 +473,24 @@ void Display::view_standby_image() {
 	if (this->_last_view_type == DISP_TYPE_STANDBY) return; // 最後に表示したのが待ち受けなら何もしない
 	if (this->_stimg_load_flag == 1) {
 		// SPRAMにデータロード済みならSPRAMに入ってる待ち受け画像を表示
-		this->_tft->viewBMPspi_head(0, 0, 240, 135);
-		this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+		if (this->_info_spot) {
+			// info部分だけ表示
+			this->_tft->viewBMPspi_head(0, 105, 240, 30);
+			this->_tft->viewBMPspi_data((uint8_t *)&this->_stimg_data[50400], 14400);
+			this->_info_spot = 0;
+		} else {
+			// 全体を表示
+			this->_tft->viewBMPspi_head(0, 0, 240, 135);
+			this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
+		}
 	} else if (this->_stimg_load_flag == 2) {
 		// ファイルが無ければデフォルトの待ち受け
-		this->_tft->fillRect(0, 0,  240, 135, BLACK);
+		if (this->_info_spot) {
+			this->_tft->fillRect(0, 105,  240, 30, BLACK);
+			this->_info_spot = 0;
+		} else {
+			this->_tft->fillRect(0, 0,  240, 135, BLACK);
+		}
 	} else if (ESP.getFreePsram() > 64800) {
 		// SPRAMに空き容量があれば待ち受け画像をSPRAMにロード
 		if(SPIFFS.exists("/stimg.dat")){
@@ -505,7 +508,14 @@ void Display::view_standby_image() {
 	} else {
 		// SPRAMに空きが無ければファイルから直接表示
 		if(SPIFFS.exists("/stimg.dat")){
-			this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat");
+			if (this->_info_spot) {
+				// info枠の部分だけ表示
+				this->_tft->viewBMPFile(0,105, 240, 30, "/stimg.dat", 50400);
+				this->_info_spot = 0;
+			} else {
+				// 全体を表示
+				this->_tft->viewBMPFile(0,0, 240, 135, "/stimg.dat", 0);
+			}
 		} else {
 			this->_tft->fillRect(0, 0,  240, 135, BLACK);
 			this->_stimg_load_flag = 2;
@@ -638,6 +648,7 @@ void Display::loop_exec() {
 				this->_info_index = 150;
 			} else if (this->_info_index == 1) {
 				// info表示を終わる時に待ち受け画像を表示しなおしたいので表示してる内容を何もなしにする
+				this->_info_spot = 1;
 				this->_last_view_type = 255;
 			}
 		}
@@ -664,10 +675,6 @@ void Display::loop_exec() {
 	} else if (this->view_type == DISP_TYPE_ANKYNOW) {
 		// 暗記中画面
 		this->view_ankey_now();
-
-	} else if (this->view_type == DISP_TYPE_ANKINPT) {
-		// 暗記入力中
-		this->view_ankey_input();
 
 
 	}

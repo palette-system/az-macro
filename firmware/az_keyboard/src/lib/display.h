@@ -56,12 +56,13 @@ class Display
 		int  _option_type; // オプションのタイプ
 		short _width; // 液晶のサイズ幅
 		short _height; // 液晶のサイズ高さ
+		uint8_t  _info_spot; // 待ち受け等を表示する時インフォメーション部分だけを表示しなおすかどうかのフラグ
 		// 最後に表示した画面
 		// 0=待ち受け、1=設定モード、2=保存中、3=wifi接続中、4=WEBフック中、5=暗記中、6=暗記入力中、7=サーモ表示中、8=QRコード表示中
 		uint8_t  _last_view_type;
 		uint8_t  view_type; // 現在の表示モード(内容は_last_view_typeと一緒)
 		uint8_t  _back_view_type; // １つ前表示していたタイプ
-		// 画面下のinfo枠に最後に表示した内容(0=白枠、1=打鍵数、2=LEDステータス、3=LED明るさ、4=LED色、5=LED光らせ方、6=打鍵自動保存設定、7=打鍵数保存しました、8=暗記入力中   255=何も表示していない)
+		// 画面下のinfo枠に最後に表示した内容(0=白枠、1=打鍵数、2=LEDステータス、3=LED明るさ、4=LED色、5=LED光らせ方、6=打鍵自動保存設定、7=打鍵数保存しました   255=何も表示していない)
 		uint8_t  _last_view_info;
 		short _wait_index;
 		short _info_index; // infoを表示し続ける時間(待ち受け画面用)
@@ -94,7 +95,6 @@ class Display
 		void view_wifi_conn(); // WiFi接続中画面表示
 		void view_webhook(); // Webhook中表示
 		void view_ankey_now(); // 暗記中表示
-		void view_ankey_input(); // 暗記入力中表示
 		void view_error_wifi_conn(); // Wifi接続して下さいエラー表示
 		void open_movie(); // 起動ムービー
 		void loop_exec(); // 定期処理

@@ -375,7 +375,8 @@ void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t
   }
 }
 
-void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path) {
+// 画像ファイルを開いて表示する
+void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, String file_path, int offset) {
     uint8_t wbuf[512];
     int i, b;
     int s = w * h * 2;
@@ -383,6 +384,9 @@ void Arduino_ST7789::viewBMPFile(int16_t x, int16_t y, int16_t w, int16_t h, Str
     digitalWrite(_dc, HIGH);
     if(SPIFFS.exists(file_path)){
         File fp = SPIFFS.open(file_path, "r");
+    	if (offset > 0) {
+    		fp.seek(offset);
+    	}
         i = 0;
         while(fp.available() && s > 0){
         	b = (s < 512)? s: 512;

@@ -134,11 +134,6 @@ void Ankey::output_start() {
 	this->_data_index = 0;
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
-	// 入力中info表示
-    if (common_cls.on_tft_unit()) {
-    	disp->view_type == DISP_TYPE_ANKINPT;
-    	disp->view_ankey_input();
-    }
 }
 
 
@@ -151,9 +146,6 @@ void Ankey::output_end() {
 	this->_azkb->press_data_reset();
 	// 全ての光を消す
 	rgb_led_cls.hide_all();
-    if (common_cls.on_tft_unit()) {
-        disp->_last_view_type = disp->_back_view_type;
-    }
 }
 
 // 暗記ボタン押された
