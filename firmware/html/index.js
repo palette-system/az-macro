@@ -101,7 +101,7 @@ mst.setting_data = {
             }
         }
     },
-    "option_set": {"type": "display_m"}
+    "option_set": {"type": ""}
 };
 
 // ファームウェアのバージョン

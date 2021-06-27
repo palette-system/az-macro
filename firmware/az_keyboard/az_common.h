@@ -19,8 +19,8 @@
 
 
 // キーボード
-// #include "src/keyboard/az_macro.h"
-#include "src/keyboard/az_66jp.h"
+#include "src/keyboard/az_macro.h"
+// #include "src/keyboard/az_66jp.h"
 
 
 #if defined(CONFIG_ARDUHAL_ESP_LOG)
@@ -33,7 +33,7 @@
 
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000018"
+#define FIRMWARE_VERSION   "000019"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM005"

@@ -289,6 +289,60 @@ mst.option_list["display_m"] = {
 	"name": "液晶"
 };
 
+// AZ-Macro４ボタンモジュール
+mst.option_list["button4_m"] = {
+	"keyboard_type": ["az_macro"], // 対応しているキーボードタイプ
+	"name": "4ボタン",
+	"pin": {
+		"row": [],
+		"col": [],
+		"direct": [23, 22, 21, 19, 16, 17, 5, 18, 25, 26, 12, 27],
+		"touch": []
+	},
+	"size": {"width": 600, "height": 530},
+	"keys": [
+		{"id": 0, "x": 11, "y": 35, "width": 115, "height": 115 },
+		{"id": 1, "x": 163, "y": 35, "width": 115, "height": 115 },
+		{"id": 2, "x": 317, "y": 35, "width": 115, "height": 115 },
+		{"id": 3, "x": 471, "y": 35, "width": 115, "height": 115 },
+		{"id": 4, "x": 11, "y": 188, "width": 115, "height": 115 },
+		{"id": 5, "x": 163, "y": 188, "width": 115, "height": 115 },
+		{"id": 6, "x": 317, "y": 188, "width": 115, "height": 115 },
+		{"id": 7, "x": 471, "y": 188, "width": 115, "height": 115 },
+		{"id": 8, "x": 11, "y": 380, "width": 115, "height": 115 },
+		{"id": 9, "x": 163, "y": 380, "width": 115, "height": 115 },
+		{"id": 10, "x": 317, "y": 380, "width": 115, "height": 115 },
+		{"id": 11, "x": 471, "y": 380, "width": 115, "height": 115 },
+	],
+	"parts": [
+		{
+			"type": "polygon",
+			"fill_color": "#666",
+			"fill": true, // 塗りつぶし
+			"path": [[2,2], [598,2], [598,338], [2,338]]
+		},
+		{
+			"type": "polygon",
+			"line_width": 4,
+			"line_color": "black",
+			"path": [[2,2], [598,2], [598,338], [2,338]]
+		},
+		{
+			"type": "polygon",
+			"fill_color": "#666",
+			"fill": true, // 塗りつぶし
+			"path": [[2,360], [598,360], [598,520], [2,520]]
+		},
+		{
+			"type": "polygon",
+			"line_width": 4,
+			"line_color": "black",
+			"path": [[2,360], [598,360], [598,520], [2,520]]
+		},
+	]
+};
+
+
 // AZ-66JP液晶モジュール
 mst.option_list["display_66jp"] = {
 	"keyboard_type": ["az_66jp"], // 対応しているキーボードタイプ
