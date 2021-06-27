@@ -11,8 +11,10 @@ Dakey::Dakey() {
 void Dakey::begin() {
 	this->last_save_key_count = -1;
 	this->last_save_time = 0;
-	// ‘ÅŒ®”‚ğ•Û‘¶(Å‰‚Ì0‚ğ•Û‘¶)
-	this->save_dakey(0);
+	// ‘ÅŒ®”‚ğ•Û‘¶(Å‰‚Ì0‚ğ•Û‘¶)(Wifi‚É‚Â‚È‚ª‚Á‚Ä‚¢‚Ä©“®•Û‘¶ON‚È‚ç‚Î)
+	if (wifi_conn_flag && key_count_auto_save) {
+		this->save_dakey(0);
+	}
 }
 
 
