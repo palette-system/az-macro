@@ -14,19 +14,19 @@ AZ-66JPは無線接続なのでモバイルバッテリー等から給電すれ�
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_typec.jpg"></td>
     <td>USB Type－C</td>
-    <td>接続部分に絶縁テープが貼ってあるのではがしてからはんだ付けして下さい。<br>・モバイルバッテリー、USBアダプタ、PCなどから5V給電</td>
+    <td valign="top">接続部分に絶縁テープが貼ってあるのではがしてからはんだ付けして下さい。<br>・モバイルバッテリー、USBアダプタ、PCなどから5V給電</td>
   </tr>
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_typeb.jpg"></td>
     <td>USB MicroB</td>
-    <td>・モバイルバッテリー、USBアダプタ、PCなどから5V給電<br>
-      専用のバッテリー入りプレートを使用する場合はこちらのMicroBコネクタを使用して下さい。
+    <td valign="top">・モバイルバッテリー、USBアダプタ、PCなどから5V給電<br>
+      専用の「バッテリー内蔵プレートセット」を使用する場合はこちらのMicroBコネクタを使用して下さい。
     </td>
   </tr>
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_bat.jpg"></td>
     <td>その他電源</td>
-    <td>
+    <td valign="top">
     電圧は 3.5～8V で、電流は 500mA 必要です。<br><br>
     ■ 主な対応電池<br>
     　・単三電池 3～4本<br>
