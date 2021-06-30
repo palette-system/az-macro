@@ -54,6 +54,7 @@
 ## ドキュメント
 
 - [キー情報](/docs/az66jp/keydata/)
+- [電源について](/docs/az66jp/power_line/)
 
 <br>
 
