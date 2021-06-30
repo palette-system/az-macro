@@ -1,4 +1,8 @@
-# 電源接続
+# 電源給電
+AZ-66JPは無線接続なのでモバイルバッテリー等から給電すれば使用できます。<br>
+給電用コネクタについては状況に応じて選べるようになっているのでこちらを参考にはんだ付けして下さい。<br>
+<br>
+
 
 ## コネクタ接続
 <table>
@@ -15,7 +19,9 @@
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_typeb.jpg"></td>
     <td>USB MicroB</td>
-    <td>・モバイルバッテリー、USBアダプタ、PCなどから5V給電</td>
+    <td>・モバイルバッテリー、USBアダプタ、PCなどから5V給電<br>
+      専用のバッテリー入りプレートを使用する場合はこちらのMicroBコネクタを使用して下さい。
+    </td>
   </tr>
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_bat.jpg"></td>
