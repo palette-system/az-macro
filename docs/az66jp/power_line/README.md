@@ -10,17 +10,24 @@
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_typec.jpg"></td>
     <td>USB Type－C</td>
-    <td>接続部分に絶縁テープが貼ってあるのではがしてからはんだ付けして下さい。</td>
+    <td>接続部分に絶縁テープが貼ってあるのではがしてからはんだ付けして下さい。<br>・モバイルバッテリー、USBアダプタ、PCなどから5V給電</td>
   </tr>
   <tr>
     <td><img src="/images/az66jp/az66jp_pw_typeb.jpg"></td>
     <td>USB MicroB</td>
-    <td></td>
+    <td>・モバイルバッテリー、USBアダプタ、PCなどから5V給電</td>
   </tr>
   <tr>
-    <td><img src="/images/az66jp/az66jp_pw_jump.jpg"></td>
+    <td><img src="/images/az66jp/az66jp_pw_bat.jpg"></td>
     <td>その他電源</td>
-    <td></td>
+    <td>
+    電圧は 3.5～8V で、電流は 500mA 必要です。<br><br>
+    ■ 主な対応電池<br>
+    　・単三電池 3～4本<br>
+    　・18650（PSEマーク付きの物）
+    ※ 8V 以上の電圧を流すと壊れます。
+    ※ CR2021などのボタン電池では電流が足りません。
+    </td>
   </tr>
 </table>
 
