@@ -134,7 +134,7 @@
   </tr>
   <tr>
     <td><img src="/images/az66jp/battery.jpg" width="400"></td>
-    <td>モバイルバッテリー<br> <a href="https://www.amazon.co.jp/gp/product/B083NMPH4L/" _target="blank">リンク</a></td>
+    <td>モバイルバッテリー<br> <a href="https://www.amazon.co.jp/gp/product/B083NMPH4L/" target="_blank">リンク</a></td>
     <td valign="center">1</td>
   </tr>
 </table>
