@@ -2,6 +2,10 @@
 
 ![AZ-66JP](/images/az66jp/az66jp.jpg)
 
+<br>
+
+[商品写真](/docs/az66jp/photos/)
+
 <br><br>
 
 [製品特徴](/docs/az66jp/features/)
