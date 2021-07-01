@@ -97,7 +97,7 @@
   </tr>
   <tr>
     <td><img src="/images/az66jp/sponzi_A.jpg" width="400"></td>
-    <td>スポンジA <br>　(PCBとボトムプレートの間用)<br><br>スポンジB <br>　(ボトムプレートの裏用)</td>
+    <td>スポンジA <br>　(ボトムプレートの表用)<br><br>スポンジB <br>　(ボトムプレートの裏用)</td>
     <td valign="center">1</td>
   </tr>
   <tr>
@@ -124,7 +124,7 @@
   </tr>
   <tr>
     <td><img src="/images/az66jp/sponzi_B.jpg" width="400"></td>
-    <td>スポンジA <br>　(PCBとボトムプレートの間用)<br><br>スポンジB <br>　(ボトムプレートの裏用)</td>
+    <td>スポンジA <br>　(ボトムプレートの表用)<br><br>スポンジB <br>　(ボトムプレートの裏用)</td>
     <td valign="center">1</td>
   </tr>
   <tr>
@@ -134,7 +134,7 @@
   </tr>
   <tr>
     <td><img src="/images/az66jp/battery.jpg" width="400"></td>
-    <td>モバイルバッテリー</td>
+    <td>モバイルバッテリー<br> <a href="https://www.amazon.co.jp/gp/product/B083NMPH4L/" _target="blank">リンク</a></td>
     <td valign="center">1</td>
   </tr>
 </table>
