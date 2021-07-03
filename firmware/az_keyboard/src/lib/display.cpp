@@ -485,12 +485,7 @@ void Display::view_standby_image() {
 		}
 	} else if (this->_stimg_load_flag == 2) {
 		// ファイルが無ければデフォルトの待ち受け
-		if (this->_info_spot) {
-			this->_tft->fillRect(0, 105,  240, 30, BLACK);
-			this->_info_spot = 0;
-		} else {
-			this->_tft->fillRect(0, 0,  240, 135, BLACK);
-		}
+	    this->_tft->viewBMP(0, 0, 240, 135, (uint8_t *)stimg_default_img, 10);
 	} else if (ESP.getFreePsram() > 64800) {
 		// SPRAMに空き容量があれば待ち受け画像をSPRAMにロード
 		if(SPIFFS.exists("/stimg.dat")){
@@ -502,7 +497,7 @@ void Display::view_standby_image() {
 			this->_tft->viewBMPspi_data(this->_stimg_data, 64800);
 			this->_stimg_load_flag = 1;
 		} else {
-			this->_tft->fillRect(0, 0,  240, 135, BLACK);
+		    this->_tft->viewBMP(0, 0, 240, 135, (uint8_t *)stimg_default_img, 10);
 			this->_stimg_load_flag = 2;
 		}
 	} else {
