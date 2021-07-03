@@ -679,7 +679,5 @@ void Display::loop_exec() {
 
 	}
 	
-	// this->view_int(2, 2, SPIFFS.totalBytes()); // ファイル領域合計
-	// this->view_int(2, 32, SPIFFS.usedBytes()); // 使用している容量
 }
 

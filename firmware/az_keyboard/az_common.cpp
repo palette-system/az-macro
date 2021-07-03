@@ -811,3 +811,27 @@ bool AzCommon::on_tft_unit(void) {
     }
     return false;
 }
+
+// 指定した文字から始まるファイルすべて削除
+void AzCommon::delete_indexof_all(String check_str) {
+    File dirp = SPIFFS.open("/");
+    File filep = dirp.openNextFile();
+    String file_path;
+    while(filep){
+        file_path = String(filep.name());
+        if (file_path.indexOf("/" + check_str) == 0) {
+            SPIFFS.remove(file_path);
+        }
+        filep = dirp.openNextFile();
+    }
+}
+
+// ファイル領域合計サイズを取得
+int AzCommon::spiffs_total(void) {
+    return SPIFFS.totalBytes();
+}
+
+// 使用しているファイル領域サイズを取得
+int AzCommon::spiffs_used(void) {
+    return SPIFFS.usedBytes();
+}

@@ -11,6 +11,8 @@ Dakey::Dakey() {
 void Dakey::begin() {
 	this->last_save_key_count = -1;
 	this->last_save_time = 0;
+	// とりあえず過去分の打鍵数は毎回削除
+	common_cls.delete_indexof_all("D_");
 	// 打鍵数を保存(最初の0を保存)(Wifiにつながっていて自動保存ONならば)
 	if (wifi_conn_flag && key_count_auto_save) {
 		this->save_dakey(0);
@@ -45,6 +47,11 @@ void Dakey::save_dakey(uint8_t view_flag) {
 		if (common_cls.on_tft_unit()) {
 			disp->view_error_wifi_conn();
 		}
+		return;
+	}
+	// ファイルの空き容量が10kbを下回ったら何もしない
+	int size_free = common_cls.spiffs_total() - common_cls.spiffs_used();
+	if (size_free < 10240) {
 		return;
 	}
 	// WEBから現在日時を取得

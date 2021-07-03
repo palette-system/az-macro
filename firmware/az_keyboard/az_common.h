@@ -119,6 +119,9 @@ class AzCommon
         uint16_t key_count[KEY_INPUT_MAX]; // キー別の打鍵した数
         uint16_t key_count_total;
         bool on_tft_unit(void); // 液晶ディスプレイが付いているか
+        void delete_indexof_all(String check_str); // 指定した文字から始まるファイルすべて削除
+        int spiffs_total(void); // ファイル領域合計サイズを取得
+        int spiffs_used(void); // 使用しているファイル領域サイズを取得
     
     private:
 
