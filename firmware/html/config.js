@@ -446,7 +446,7 @@ mst.key_list = [
 	{"key": "4141", "char": "=", "value": "="}, // 45 + shift
 	{"key": "135", "char": "<span style='font-family: Arial;'>\\</span>", "value": "<span style='font-family: Arial;'>\\</span>"},
 	{"key": "137", "char": "&yen;", "value": "&yen;"},
-	{"key": "53", "char": "h/w", "value": "半角/全角"},
+	{"key": "53", "char": "e/j", "value": "半角/全角"},
 
 	{"key": "39", "char": "0", "value": "0"},
 	{"key": "30", "char": "1", "value": "1"},

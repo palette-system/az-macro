@@ -470,9 +470,9 @@ mst.create_key_btn = function() {
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 23px;'>LED<br>"+c+"</div>";
         } else if (p.press.action_type == 8) {
             // 打鍵設定ボタン
-            if (p.press.dakagi_settype == 0) c = "THRM";
+            if (p.press.dakagi_settype == 0) c = "HM";
             if (p.press.dakagi_settype == 1) c = "QR";
-            if (p.press.dakagi_settype == 2) c = "ASS";
+            if (p.press.dakagi_settype == 2) c = "ATS";
             if (p.press.dakagi_settype == 3) c = "SAVE";
             h += "<div id='key_top_"+i+"' style='color: black; font-size: 23px;'>鍵<br>"+c+"</div>";
             

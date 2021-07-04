@@ -40,7 +40,9 @@
 				"key_0": {
 					"press": {
 						"action_type": 1,
-						"key": [53]
+						"key": [
+							53
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -48,7 +50,9 @@
 				"key_1": {
 					"press": {
 						"action_type": 1,
-						"key": [43]
+						"key": [
+							43
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -56,7 +60,9 @@
 				"key_2": {
 					"press": {
 						"action_type": 1,
-						"key": [57]
+						"key": [
+							57
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -64,7 +70,9 @@
 				"key_3": {
 					"press": {
 						"action_type": 1,
-						"key": [225]
+						"key": [
+							225
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -72,7 +80,9 @@
 				"key_4": {
 					"press": {
 						"action_type": 1,
-						"key": [224]
+						"key": [
+							224
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -80,7 +90,9 @@
 				"key_5": {
 					"press": {
 						"action_type": 1,
-						"key": [30]
+						"key": [
+							30
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -88,7 +100,9 @@
 				"key_6": {
 					"press": {
 						"action_type": 1,
-						"key": [20]
+						"key": [
+							20
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -96,7 +110,9 @@
 				"key_7": {
 					"press": {
 						"action_type": 1,
-						"key": [4]
+						"key": [
+							4
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -104,15 +120,17 @@
 				"key_8": {
 					"press": {
 						"action_type": 1,
-						"key": [29]
+						"key": [
+							29
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
 				},
 				"key_9": {
 					"press": {
-						"action_type": 1,
-						"key": [227]
+						"action_type": 3,
+						"layer": 1
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -120,7 +138,9 @@
 				"key_10": {
 					"press": {
 						"action_type": 1,
-						"key": [31]
+						"key": [
+							31
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -128,7 +148,9 @@
 				"key_11": {
 					"press": {
 						"action_type": 1,
-						"key": [26]
+						"key": [
+							26
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -136,7 +158,9 @@
 				"key_12": {
 					"press": {
 						"action_type": 1,
-						"key": [22]
+						"key": [
+							22
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -144,7 +168,9 @@
 				"key_13": {
 					"press": {
 						"action_type": 1,
-						"key": [27]
+						"key": [
+							27
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -152,7 +178,9 @@
 				"key_15": {
 					"press": {
 						"action_type": 1,
-						"key": [32]
+						"key": [
+							32
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -160,7 +188,9 @@
 				"key_16": {
 					"press": {
 						"action_type": 1,
-						"key": [8]
+						"key": [
+							8
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -168,7 +198,9 @@
 				"key_17": {
 					"press": {
 						"action_type": 1,
-						"key": [7]
+						"key": [
+							7
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -176,7 +208,9 @@
 				"key_18": {
 					"press": {
 						"action_type": 1,
-						"key": [6]
+						"key": [
+							6
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -184,7 +218,9 @@
 				"key_20": {
 					"press": {
 						"action_type": 1,
-						"key": [33]
+						"key": [
+							33
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -192,7 +228,9 @@
 				"key_21": {
 					"press": {
 						"action_type": 1,
-						"key": [21]
+						"key": [
+							21
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -200,7 +238,9 @@
 				"key_22": {
 					"press": {
 						"action_type": 1,
-						"key": [9]
+						"key": [
+							9
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -208,15 +248,20 @@
 				"key_23": {
 					"press": {
 						"action_type": 1,
-						"key": [25]
+						"key": [
+							25
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
 				},
 				"key_24": {
 					"press": {
-						"action_type": 6,
-						"ankey_file": "abcd"
+						"action_type": 1,
+						"key": [
+							226
+						],
+						"repeat_interval": "51"
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -224,7 +269,9 @@
 				"key_25": {
 					"press": {
 						"action_type": 1,
-						"key": [34]
+						"key": [
+							34
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -232,7 +279,9 @@
 				"key_26": {
 					"press": {
 						"action_type": 1,
-						"key": [23]
+						"key": [
+							23
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -240,7 +289,9 @@
 				"key_27": {
 					"press": {
 						"action_type": 1,
-						"key": [10]
+						"key": [
+							10
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -248,7 +299,9 @@
 				"key_28": {
 					"press": {
 						"action_type": 1,
-						"key": [5]
+						"key": [
+							5
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -256,7 +309,9 @@
 				"key_29": {
 					"press": {
 						"action_type": 1,
-						"key": [44]
+						"key": [
+							44
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -264,7 +319,9 @@
 				"key_30": {
 					"press": {
 						"action_type": 1,
-						"key": [35]
+						"key": [
+							35
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -272,7 +329,9 @@
 				"key_31": {
 					"press": {
 						"action_type": 1,
-						"key": [28]
+						"key": [
+							28
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -280,7 +339,9 @@
 				"key_32": {
 					"press": {
 						"action_type": 1,
-						"key": [11]
+						"key": [
+							11
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -288,7 +349,9 @@
 				"key_33": {
 					"press": {
 						"action_type": 1,
-						"key": [17]
+						"key": [
+							17
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -296,7 +359,10 @@
 				"key_34": {
 					"press": {
 						"action_type": 1,
-						"key": [226]
+						"key": [
+							227
+						],
+						"repeat_interval": "51"
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -304,7 +370,9 @@
 				"key_35": {
 					"press": {
 						"action_type": 1,
-						"key": [36]
+						"key": [
+							36
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -312,7 +380,9 @@
 				"key_36": {
 					"press": {
 						"action_type": 1,
-						"key": [24]
+						"key": [
+							24
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -320,7 +390,9 @@
 				"key_37": {
 					"press": {
 						"action_type": 1,
-						"key": [13]
+						"key": [
+							13
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -328,7 +400,9 @@
 				"key_38": {
 					"press": {
 						"action_type": 1,
-						"key": [16]
+						"key": [
+							16
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -336,7 +410,9 @@
 				"key_40": {
 					"press": {
 						"action_type": 1,
-						"key": [37]
+						"key": [
+							37
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -344,7 +420,9 @@
 				"key_41": {
 					"press": {
 						"action_type": 1,
-						"key": [12]
+						"key": [
+							12
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -352,7 +430,9 @@
 				"key_42": {
 					"press": {
 						"action_type": 1,
-						"key": [14]
+						"key": [
+							14
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -360,15 +440,17 @@
 				"key_43": {
 					"press": {
 						"action_type": 1,
-						"key": [54]
+						"key": [
+							54
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
 				},
 				"key_44": {
 					"press": {
-						"action_type": 1,
-						"key": [8]
+						"action_type": 6,
+						"ankey_file": "Ah162aqb8"
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -376,7 +458,9 @@
 				"key_45": {
 					"press": {
 						"action_type": 1,
-						"key": [38]
+						"key": [
+							38
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -384,7 +468,9 @@
 				"key_46": {
 					"press": {
 						"action_type": 1,
-						"key": [18]
+						"key": [
+							18
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -392,7 +478,9 @@
 				"key_47": {
 					"press": {
 						"action_type": 1,
-						"key": [15]
+						"key": [
+							15
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -400,15 +488,17 @@
 				"key_48": {
 					"press": {
 						"action_type": 1,
-						"key": [55]
+						"key": [
+							55
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
 				},
 				"key_49": {
 					"press": {
-						"action_type": 1,
-						"key": [4]
+						"action_type": 6,
+						"ankey_file": "Aafgx9p5o"
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -416,7 +506,9 @@
 				"key_50": {
 					"press": {
 						"action_type": 1,
-						"key": [39]
+						"key": [
+							39
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -424,7 +516,9 @@
 				"key_51": {
 					"press": {
 						"action_type": 1,
-						"key": [19]
+						"key": [
+							19
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -432,7 +526,9 @@
 				"key_52": {
 					"press": {
 						"action_type": 1,
-						"key": [51]
+						"key": [
+							51
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -440,7 +536,9 @@
 				"key_53": {
 					"press": {
 						"action_type": 1,
-						"key": [56]
+						"key": [
+							56
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -448,7 +546,9 @@
 				"key_54": {
 					"press": {
 						"action_type": 1,
-						"key": [80]
+						"key": [
+							80
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -456,7 +556,9 @@
 				"key_55": {
 					"press": {
 						"action_type": 1,
-						"key": [45]
+						"key": [
+							45
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -464,7 +566,9 @@
 				"key_56": {
 					"press": {
 						"action_type": 1,
-						"key": [47]
+						"key": [
+							47
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -472,7 +576,9 @@
 				"key_57": {
 					"press": {
 						"action_type": 1,
-						"key": [52]
+						"key": [
+							52
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -480,7 +586,9 @@
 				"key_58": {
 					"press": {
 						"action_type": 1,
-						"key": [135]
+						"key": [
+							135
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -488,7 +596,9 @@
 				"key_59": {
 					"press": {
 						"action_type": 1,
-						"key": [82]
+						"key": [
+							82
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -496,7 +606,9 @@
 				"key_60": {
 					"press": {
 						"action_type": 1,
-						"key": [46]
+						"key": [
+							46
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -504,7 +616,9 @@
 				"key_61": {
 					"press": {
 						"action_type": 1,
-						"key": [48]
+						"key": [
+							48
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -512,7 +626,9 @@
 				"key_62": {
 					"press": {
 						"action_type": 1,
-						"key": [50]
+						"key": [
+							50
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -520,7 +636,9 @@
 				"key_64": {
 					"press": {
 						"action_type": 1,
-						"key": [81]
+						"key": [
+							81
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -528,7 +646,9 @@
 				"key_65": {
 					"press": {
 						"action_type": 1,
-						"key": [137]
+						"key": [
+							137
+						]
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -536,7 +656,10 @@
 				"key_66": {
 					"press": {
 						"action_type": 1,
-						"key": [42]
+						"key": [
+							42
+						],
+						"repeat_interval": "51"
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -544,15 +667,18 @@
 				"key_67": {
 					"press": {
 						"action_type": 1,
-						"key": [40]
+						"key": [
+							40
+						],
+						"repeat_interval": "51"
 					},
 					"long_press": {},
 					"long_press_time": 0
 				},
 				"key_68": {
 					"press": {
-						"action_type": 1,
-						"key": [229]
+						"action_type": 8,
+						"dakagi_settype": 3
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -560,7 +686,577 @@
 				"key_69": {
 					"press": {
 						"action_type": 1,
-						"key": [79]
+						"key": [
+							79
+						]
+					},
+					"long_press": {},
+					"long_press_time": 0
+				}
+			}
+		},
+		"layer_1": {
+			"name": "レイヤー1",
+			"keys": {
+				"key_0": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							41
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_5": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							58
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_10": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							59
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_15": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							60
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_20": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							61
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_25": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							62
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_30": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							63
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_35": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							64
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_40": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							65
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_45": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							66
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_50": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_55": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_60": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_65": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_66": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							76
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_1": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_6": {
+					"press": {
+						"action_type": 7,
+						"led_setting_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_11": {
+					"press": {
+						"action_type": 7,
+						"led_setting_type": 1
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_16": {
+					"press": {
+						"action_type": 7,
+						"led_setting_type": 2
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_21": {
+					"press": {
+						"action_type": 7,
+						"led_setting_type": 3
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_26": {
+					"press": {
+						"action_type": 7,
+						"led_setting_type": 4
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_31": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_36": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_41": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_46": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_51": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_56": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_61": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_2": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_7": {
+					"press": {
+						"action_type": 8,
+						"dakagi_settype": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_12": {
+					"press": {
+						"action_type": 8,
+						"dakagi_settype": 1
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_17": {
+					"press": {
+						"action_type": 8,
+						"dakagi_settype": 2
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_22": {
+					"press": {
+						"action_type": 8,
+						"dakagi_settype": 3
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_27": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_32": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_37": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_42": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_47": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_52": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_57": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_62": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_67": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							40
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_3": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							225
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_8": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_13": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_18": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_23": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_28": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_33": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_38": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_43": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_48": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_53": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							16385
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_58": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							16386
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_68": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							229
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_4": {
+					"press": {
+						"action_type": 1,
+						"key": [
+							224
+						],
+						"repeat_interval": "51"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_9": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_24": {
+					"press": {
+						"action_type": 6,
+						"ankey_file": "A21z6ekld"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_29": {
+					"press": {
+						"action_type": 6,
+						"ankey_file": "A3bagqw6d"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_34": {
+					"press": {
+						"action_type": 6,
+						"ankey_file": "A6jbutnmr"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_44": {
+					"press": {
+						"action_type": 6,
+						"ankey_file": "Auedn2k6m"
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_49": {
+					"press": {
+						"action_type": 0
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_54": {
+					"press": {
+						"action_type": 5,
+						"move": {
+							"x": "-38",
+							"y": "0",
+							"speed": "11"
+						}
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_59": {
+					"press": {
+						"action_type": 5,
+						"move": {
+							"x": "0",
+							"y": "-39",
+							"speed": "10"
+						}
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_64": {
+					"press": {
+						"action_type": 5,
+						"move": {
+							"x": "0",
+							"y": "38",
+							"speed": "11"
+						}
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_69": {
+					"press": {
+						"action_type": 5,
+						"move": {
+							"x": "37",
+							"y": "0",
+							"speed": "11"
+						}
 					},
 					"long_press": {},
 					"long_press_time": 0
@@ -571,6 +1267,5 @@
 	"option_set": {
 		"type": "display_66jp",
 		"op_movie": "1"
-		
 	}
 }
