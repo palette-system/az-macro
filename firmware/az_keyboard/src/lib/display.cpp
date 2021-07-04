@@ -485,7 +485,14 @@ void Display::view_standby_image() {
 		}
 	} else if (this->_stimg_load_flag == 2) {
 		// ファイルが無ければデフォルトの待ち受け
-	    this->_tft->viewBMP(0, 0, 240, 135, (uint8_t *)stimg_default_img, 10);
+		if (this->_info_spot) {
+			// info部分だけ表示
+			this->_tft->viewBMP(0, 105, 240, 30, (uint8_t *)&stimg_default_img[50400], 10);
+			this->_info_spot = 0;
+		} else {
+			// 全体を表示
+			this->_tft->viewBMP(0, 0, 240, 135, (uint8_t *)stimg_default_img, 10);
+		}
 	} else if (ESP.getFreePsram() > 64800) {
 		// SPRAMに空き容量があれば待ち受け画像をSPRAMにロード
 		if(SPIFFS.exists("/stimg.dat")){
