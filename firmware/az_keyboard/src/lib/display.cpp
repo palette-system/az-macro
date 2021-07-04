@@ -203,6 +203,9 @@ void Display::view_dakagi() {
 // 打鍵サーモグラフを表示
 void Display::view_dakagi_thermo() {
 }
+// 打鍵ヒートマップで今押されて緑色になっている所をヒートマップカラーにする
+void Display::view_daken_key_reset() {
+}
 // 打鍵QRコードを表示
 void Display::view_dakagi_qr() {
 }
@@ -416,6 +419,27 @@ void Display::view_dakagi_thermo() {
 		this->_tft->fillRect(az66jp_key_position[k][0] - 1, az66jp_key_position[k][1] + 9,  12, 12, set_color);
 	}
 	this->_last_view_type = DISP_TYPE_DKTHERM;
+}
+
+// 打鍵ヒートマップで今押されて緑色になっている所をヒートマップカラーにする
+void Display::view_daken_key_reset() {
+	// ヒートマップ表示中で無ければ何もしない
+	if (this->_last_view_type != DISP_TYPE_DKTHERM) return;
+	int i, k, c;
+	uint16_t set_color;
+	// 今押されているキーの色のみ更新
+	for (i=0; i<PRESS_KEY_MAX; i++) {
+		if (press_key_list[i].key_num < 0) continue;
+		k = press_key_list[i].key_num;
+		if (common_cls.key_count[k] < 0) continue;
+		if (common_cls.key_count[k] < 508) {
+			c = common_cls.key_count[k] >> 2;
+			set_color = thermo_color[c];
+		} else {
+			set_color = thermo_color[127];
+		}
+		this->_tft->fillRect(az66jp_key_position[k][0] - 1, az66jp_key_position[k][1] + 9,  12, 12, set_color);
+	}
 }
 
 // Wifi接続して下さいエラー表示

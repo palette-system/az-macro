@@ -67,6 +67,10 @@ void Ankey::input_start() {
 		this->_andata[i].type = 0;
 		this->_andata[i].key_num = 0;
 	}
+	// ヒートマップ表示中であればヒートマップ上の推してるボタンも全て消す
+    if (common_cls.on_tft_unit()) {
+    	disp->view_daken_key_reset();
+    }
 	// 開始時入力状態をリセット
 	this->_azkb->press_data_reset();
 	common_cls.input_key[this->ankey_key_num] = 1;
@@ -86,6 +90,10 @@ void Ankey::input_end() {
 	// 暗記終了
 	this->ankey_flag = 0; // 処理なし
 	this->_data_index = 0;
+	// ヒートマップ表示中であればヒートマップ上の推してるボタンも全て消す
+    if (common_cls.on_tft_unit()) {
+    	disp->view_daken_key_reset();
+    }
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
 	// 記憶データをファイルに出力
@@ -132,6 +140,10 @@ void Ankey::output_start() {
 	// 入力処理開始
 	this->ankey_flag = 2; // キー入力中
 	this->_data_index = 0;
+	// ヒートマップ表示中であればヒートマップ上の推してるボタンも全て消す
+    if (common_cls.on_tft_unit()) {
+    	disp->view_daken_key_reset();
+    }
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
 }
@@ -142,6 +154,10 @@ void Ankey::output_end() {
 	this->ankey_flag = 0; // 動作無し
 	this->_data_index = 0;
 	this->_loop_index = 0;
+	// ヒートマップ表示中であればヒートマップ上の推してるボタンも全て消す
+    if (common_cls.on_tft_unit()) {
+    	disp->view_daken_key_reset();
+    }
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
 	// 全ての光を消す

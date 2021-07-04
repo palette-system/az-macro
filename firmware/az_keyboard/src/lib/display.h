@@ -77,6 +77,7 @@ class Display
 		void view_int(uint16_t x, uint16_t y, int v); // 数字を表示する
 		void view_dakagi(); // 打鍵数表示
 		void view_dakagi_thermo(); // 打鍵サーモグラフ表示
+		void view_daken_key_reset(); // 打鍵ヒートマップで今押されて緑色になっている所をヒートマップカラーにする
 		void view_dakagi_qr(); // 打鍵QRコードモード表示
 		void viewBMPspi_head(); // データを流し込んで画像を表示する(ヘッダ)
 		void viewBMPspi_data(uint8_t *wbuf, int wsize); // データを流し込んで画像を表示する(データ)
