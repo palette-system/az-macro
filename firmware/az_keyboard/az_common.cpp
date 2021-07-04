@@ -812,6 +812,16 @@ bool AzCommon::on_tft_unit(void) {
     return false;
 }
 
+// 全てのファイルを削除
+void AzCommon::delete_all(void) {
+    File dirp = SPIFFS.open("/");
+    File filep = dirp.openNextFile();
+    while(filep){
+        SPIFFS.remove(filep.name());
+        filep = dirp.openNextFile();
+    }
+}
+
 // 指定した文字から始まるファイルすべて削除
 void AzCommon::delete_indexof_all(String check_str) {
     File dirp = SPIFFS.open("/");

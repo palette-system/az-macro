@@ -205,13 +205,8 @@ bool handleUrl(String path) {
 
     } else if (path.indexOf("/init_setting_json") == 0) {
         // 設定の初期化
-        if (common_cls.create_setting_json()) {
-            // 成功
-            server.send(200,"text/plan", "OK");
-        } else {
-            // 失敗
-            server.send(500,"text/plan", "NG");
-        }
+        common_cls.delete_all(); // 全てのファイルを削除
+        server.send(200,"text/plan", "OK");
 
     } else if (path.indexOf("/get_ap_list") == 0) {
         // WIFIのアクセスポイントのリスト教えて

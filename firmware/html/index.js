@@ -136,6 +136,8 @@ mst.end_flag = false;
 // 終了タイプ
 mst.end_type = 0;
 
+// 削除するファイルリスト
+mst.delete_file_list = [];
 
 // 初期処理
 mst.init = function() {
@@ -239,15 +241,19 @@ mst.save_setting_json = function() {
     if (mst.setting_data.option_set.type && mst.option_list[mst.setting_data.option_set.type] && mst.option_list[mst.setting_data.option_set.type].pin) {
         mst.setting_data.keyboard_pin = mst.option_list[mst.setting_data.option_set.type].pin;
     }
-    api_path = "/upload_setting_json";
-    if (mst.end_type == 2) api_path = "/upload_setting_json_reload";
-    ajax_post(api_path, JSON.stringify(mst.setting_data), function(stat, res) {
-        if (!stat) {
-            set_html("info_box", "ページを閉じて下さい");
-            mst.view_box(["info_box"]);
-            return;
-        }
-        set_html("info_box", "終了中..");
+    // 使っていない暗記ファイル削除
+    mst.delete_ankey_file(function() {
+        // JSON保存
+        api_path = "/upload_setting_json";
+        if (mst.end_type == 2) api_path = "/upload_setting_json_reload";
+        ajax_post(api_path, JSON.stringify(mst.setting_data), function(stat, res) {
+            if (!stat) {
+                set_html("info_box", "ページを閉じて下さい");
+                mst.view_box(["info_box"]);
+                return;
+            }
+            set_html("info_box", "終了中..");
+        });
     });
 };
 
@@ -285,6 +291,22 @@ mst.file_send = function(url_path, file_name, blob_data, cb_func) {
 // 指定したファイルを削除する
 mst.file_delete = function(file_name, cb_func) {
     ajax("delete_file_" + file_name, "text", cb_func);
+};
+
+mst.file_delete_list = function(file_list, cb_func) {
+    if (file_list) {
+        mst.delete_file_list = file_list;
+    }
+    console.log(mst.delete_file_list.length);
+    if (!mst.delete_file_list.length) {
+        cb_func();
+        return;
+    }
+    var file_name = mst.delete_file_list.pop();
+    ajax("delete_file_" + file_name, "text", function() {
+        mst.file_delete_list(null, cb_func);
+    });
+
 };
 
 
@@ -1003,6 +1025,48 @@ mst.key_setting_btn_click = function(type_id) {
     mst.view_box(["info_box", "layer_box", "layer_menu", "key_img_box", "top_menu_box", "menu_box"]);
 };
 
+// 暗記ボタンとして設定されているかチェック
+mst.check_ankey_file = function(file_name) {
+    var i, j, p;
+    for (i in mst.setting_data.layers) {
+        layer_data = mst.setting_data.layers[i];
+        for (j in layer_data["keys"]) {
+            key_data = layer_data["keys"][j];
+            p = key_data["press"];
+            if (p["action_type"] != 6) continue; // 暗記ボタンで無ければ無視
+            if (!p["ankey_file"]) continue; // 暗記ファイルの指定が無ければ無視
+            if (p["ankey_file"] == file_name) return true; // 設定されている暗記ファイルだった
+        }
+    }
+    return false;
+}
+
+
+// 使用していない暗記ボタン用ファイルを削除
+mst.delete_ankey_file = function(cb_func) {
+    // ファイルリスト取得
+    ajax("/file_list", "text", function(stat, res) {
+        if (!stat || !res) {
+            cb_func(false);
+            return;
+        }
+        var i;
+        var file_list = JSON.parse(res);
+        var delete_file_list = [];
+        for (i in file_list["data"]) {
+            file_path = file_list["data"][i];
+            if (file_path.substr(0, 2) != "/A") continue; // 暗記ファイル以外は無視
+            file_name = file_path.substr(1);
+            // 使用していない暗記ファイルであれば削除
+            if (!mst.check_ankey_file(file_name)) {
+                // 削除リストに追加
+                delete_file_list.push(file_name);
+            }
+            
+        }
+        mst.file_delete_list(delete_file_list, cb_func);
+    });
+};
 
 
 // 終了ボタン end_type : 0 = 保存せずに終了 / 1 = 保存して終了 / 2 = 保存して設定モードで再起動
