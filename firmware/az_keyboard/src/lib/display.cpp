@@ -123,6 +123,12 @@ void Display::view_dakagi_qr_on() {
 }
 
 
+// 画面を真っ暗にする
+void Display::view_full_black() {
+    this->_tft->fillScreen(BLACK);
+}
+
+
 // 起動ムービー(AZ-Macro用)
 #ifdef KEYBOARD_AZMACRO
 void Display::open_movie() {
@@ -185,6 +191,9 @@ void Display::view_webhook() {
 }
 // 暗記中
 void Display::view_ankey_now() {
+}
+// 設定の初期化が完了しました画面表示
+void Display::view_setting_init_comp() {
 }
 // 打鍵数を表示
 void Display::view_dakagi() {
@@ -364,6 +373,12 @@ void Display::view_ankey_now() {
     this->_tft->viewBMP(20, 25, 95, 86, (uint8_t *)ankey_icon_img, 10);
     this->_tft->viewBMP(135, 55, 75, 25, (uint8_t *)ankinow_img, 10);
 	this->_last_view_type = 5;
+}
+// 設定の初期化が完了しました画面表示
+void Display::view_setting_init_comp() {
+	this->_tft->fillRect(0, 0,  240, 135, WHITE);
+	this->_tft->viewBMP(20, 55, 195, 26, (uint8_t *)setting_init_txt_img, 10);
+	this->_last_view_type = 255;
 }
 
 // 打鍵数を表示

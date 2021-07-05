@@ -67,6 +67,29 @@ void setup() {
     // 0番目のキーが押されていたら設定モードにする
     common_cls.key_read(); // キーの状態を取得
     if (common_cls.input_key[SETTING_MODE_KEY]) boot_type = 1;
+    // 0番目と3番目と4番目のキーが押されていて、1番目と2番目は離されていたら初期化（１，２が離されているのを確認する事で上に物が乗ってて全押しされて誤って初期化されないようにしている）
+    if (common_cls.input_key[0] && !common_cls.input_key[1] && !common_cls.input_key[2] && common_cls.input_key[3] && common_cls.input_key[4]) {
+        // 全てのファイルを削除
+        common_cls.delete_all();
+        // ディスプレイに初期化完了の表示
+        if (common_cls.on_tft_unit()) {
+            disp->view_setting_init_comp();
+        }
+        // キーが離されたら終了して再起動
+        while (true) {
+            common_cls.key_read(); // キーの状態を取得
+            // 0～4全てのキーが離されたら終了
+            if (!common_cls.input_key[0] && !common_cls.input_key[1] && !common_cls.input_key[2] && !common_cls.input_key[3] && !common_cls.input_key[4]) break;
+            delay(50);
+        }
+        // 画面を真っ暗にする
+        if (common_cls.on_tft_unit()) {
+            disp->view_full_black();
+        }
+        // キーボードモードに切り替え
+        common_cls.change_mode(0);
+        return;
+    }
     // 4～5番目のキーが押されていたらデフォルトレイヤーを切り替える
     common_cls.set_default_layer_no();
     if (boot_type == 1) {

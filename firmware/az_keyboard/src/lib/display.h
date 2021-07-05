@@ -74,6 +74,7 @@ class Display
 		Display();   // コンストラクタ
 		void begin(Arduino_ST7789 *tft_obj, int option_type); // 初期化
 		void view_full_image(uint8_t *image_data); // 画面いっぱいに画像を表示する
+		void view_full_black(); // 画面を真っ暗にする
 		void view_int(uint16_t x, uint16_t y, int v); // 数字を表示する
 		void view_dakagi(); // 打鍵数表示
 		void view_dakagi_thermo(); // 打鍵サーモグラフ表示
@@ -96,6 +97,7 @@ class Display
 		void view_wifi_conn(); // WiFi接続中画面表示
 		void view_webhook(); // Webhook中表示
 		void view_ankey_now(); // 暗記中表示
+		void view_setting_init_comp(); // 設定の初期化が完了しました画面表示
 		void view_error_wifi_conn(); // Wifi接続して下さいエラー表示
 		void open_movie(); // 起動ムービー
 		void loop_exec(); // 定期処理
