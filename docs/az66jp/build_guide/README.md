@@ -124,7 +124,8 @@
     <td><img src="/images/az66jp/test_1.jpg" width="400"><br><img src="/images/az66jp/jumper.jpg" width="400"></td>
     <td valign="top">
       66スイッチ全てはんだ付けが終わらない途中の状態でもスイッチの接触確認ができます。<br>
-      まずPCB裏面の矢印部分にジャンパーを差し込んで下さい。
+      まずPCB裏面の矢印部分にジャンパーを挿しこんで下さい。<br><br>
+      ※ ここで「VUSB」と「VIN」の間に差し込んだジャンパーは完成後も抜かずに挿したままにして下さい。
     </td>
   </tr>
   <tr>
