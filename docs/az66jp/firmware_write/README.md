@@ -23,7 +23,7 @@ AZ-66JPのファームウェアの初期セットアップ手順の説明をし�
 ## AZ-66JPの電源をONにする
 USBコネクタにモバイルバッテリーなどの電源を接続し、スイッチをONにします。
 
-![電源スイッチ](/images/power_switch.jpg)  
+![電源スイッチ](/images/az66jp/power_switch.jpg)  
 <br><br>
 
 
@@ -31,8 +31,8 @@ USBコネクタにモバイルバッテリーなどの電源を接続し、ス�
 ## 設定画面からファームウェア書込み
 
 - AZ-66JPの電源を入れるとスイッチチェックのプログラムが動きますが、この状態でPCからAZ-66JPのWiFiへ接続できるようになっています。
-![ファイルの選択](/images/switch_check.jpg)
-![ファイルの選択](/images/wifi_ap.jpg)
+![ファイルの選択](/images/az66jp/switch_check.jpg)
+![ファイルの選択](/images/az66jp/wifi_ap.jpg)
   
   
 - Wifiに接続できるとファームウェア書込み画面が表示されます。  
