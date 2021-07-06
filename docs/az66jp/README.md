@@ -21,6 +21,7 @@
 <br><br>
 
 
+- [組み立て手順](/docs/az66jp/build_guide/)
 - [キー情報](/docs/az66jp/keydata/)
 - [電源について](/docs/az66jp/power_line/)
 

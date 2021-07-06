@@ -62,7 +62,7 @@ https://do-gugan.com/~furuta/archives/2021/05/az-macro_1.html
 ## ファームウェア
 
 - [ソース](/firmware/)
-- [binファイル](/firmware/bin/)
+- [binファイル](/firmware/bin/azmacro/)
 <br><br>
 
 ## ハードウェアデータ
