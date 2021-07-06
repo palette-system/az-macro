@@ -140,7 +140,7 @@ void led_loop() {
     if (rgbled_step < 5) return;
     rgbled_step = 0;
     rgbled_index++;
-    if (rgbled_index >= 66) return;
+    if (rgbled_index > 66) return;
     for (i=0; i<RGBLED_LENGTH; i++) {
         if (i < rgbled_index) {
             rgb_led->setPixelColor(i, rgb_led->Color(0, 0, 1));
