@@ -9,6 +9,10 @@
 
 [入っている物](/docs/az66jp/builtin_parts/)
 
+[別途必要な物](/docs/az66jp/builtin_parts/#キットに含まれない別途用意が必要な物)
+
+
+
 <br>
 
 
