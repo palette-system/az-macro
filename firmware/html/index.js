@@ -1361,6 +1361,13 @@ mst.view_option_setting = function(option_set) {
         s += "<option value='3'>　左　</option>";
         s += "</select>";
         s += "</td></tr>";
+        s += "<tr><td colspan='2' style='padding: 40px 0;'> </td></tr>";
+        s += "<tr><td colspan='2'><b>カーソル移動速度：</b>";
+        s += "<center>";
+        s += "<table style='width: 420px;'><tr><td align='left'>ゆっくり</td><td align='right'>早い</td></tr></table>";
+        s += "<input type='range' id='trackball_speed' name='trackball_speed' min='4' max='80' style='width: 420px;' value='"+mst.option_edit_data.trackball_speed+"' onChange='javascript:mst.view_move_input(\"repeat_interval\");'>";
+        s += "</center>";
+        s += "</td></tr>";
         
     } else if (mst.is_tft(mst.option_edit_data.type)) {
         // AZ-Macro,AZ-66JP用液晶
@@ -1469,6 +1476,9 @@ mst.option_type_select = function() {
         if (select_key == "trackball_m") {
             if (!("trackball_direction" in mst.option_edit_data)) {
                 mst.option_edit_data.trackball_direction = "0"; // デフォルト上
+            }
+            if (!("trackball_speed" in mst.option_edit_data)) { // トラックボールカーソル移動速度
+                mst.option_edit_data.trackball_speed = "20"; // デフォルト10
             }
         }
         // 液晶で起動ムービー再生が無ければ追加
@@ -1689,8 +1699,9 @@ mst.option_setting_btn_click = function(save_flag) {
         }
     }
     if (mst.option_edit_data.type == "trackball_m") {
-        // トラックボールなら編集データに方向selectの値を追加する
+        // トラックボールなら編集データに方向selectの値とカーソル移動速度を追加する
         mst.option_edit_data.trackball_direction = $("trackball_direction").value;
+        mst.option_edit_data.trackball_speed = $("trackball_speed").value;
     }
     
     // タイプの変更が無ければ配列に反映するだけ

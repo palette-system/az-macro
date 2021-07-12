@@ -24,6 +24,8 @@ https://www.youtube.com/watch?v=hTy6ZXIW0Vs
 <br><br>
 
 【記事】AKIBA PC Hotline 様<br>
+https://akiba-pc.watch.impress.co.jp/docs/news/news/1336355.html
+<br>
 https://akiba-pc.watch.impress.co.jp/docs/news/news/1306228.html
 <br>
 

@@ -46,6 +46,9 @@ int option_type_int;
 // トラックボールの方向
 uint8_t trackball_direction;
 
+// トラックボールのカーソル移動速度
+uint8_t trackball_speed;
+
 // デフォルトのレイヤー番号と、今選択しているレイヤー番号と、最後に押されたレイヤーボタン
 int default_layer_no;
 int select_layer_no;
@@ -486,6 +489,12 @@ void AzCommon::get_option_type_int() {
             trackball_direction = setting_obj["option_set"]["trackball_direction"].as<signed int>();
         } else {
             trackball_direction = 0;
+        }
+        // トラックボールの速度も取得
+        if (setting_obj["option_set"].containsKey("trackball_speed")) {
+            trackball_speed = setting_obj["option_set"]["trackball_speed"].as<signed int>();
+        } else {
+            trackball_speed = 10;
         }
     } else if (t.equals("display_m")) {
         // AZ-Macro用 液晶モジュール

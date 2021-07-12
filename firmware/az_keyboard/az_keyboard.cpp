@@ -559,24 +559,29 @@ void AzKeyboard::press_data_clear() {
 
 // ユニットごとの定期処理
 void AzKeyboard::unit_loop_exec(void) {
+    int x, y;
     if (option_type_int == 2) {
         // トラックボール
         paw3204_xy p = pawTrackball.getxy();
-        if (p.x > 3 || p.x < -3 || p.y > 3 || p.y < -3) {
+        if (p.x > 2 || p.x < -2 || p.y > 2 || p.y < -2) {
             if (trackball_direction == 0) {
                 // 向き 上
-                bleKeyboard.mouse_move(((p.y * -1) / 2), (p.x / 2), 0, 0);
+                x = p.y * trackball_speed * -1;
+                y = p.x * trackball_speed;
             } else if (trackball_direction == 1) {
                 // 向き 右
-                bleKeyboard.mouse_move((p.x / 2), (p.y / 2), 0, 0);
+                x = p.x * trackball_speed;
+                y = p.y * trackball_speed;
             } else if (trackball_direction == 2) {
                 // 向き 下
-                bleKeyboard.mouse_move((p.y / 2), ((p.x * -1) / 2), 0, 0);
+                x = p.y * trackball_speed;
+                y = p.x * trackball_speed * -1;
             } else if (trackball_direction == 3) {
                 // 向き 左
-                bleKeyboard.mouse_move(((p.x * -1) / 2), ((p.y * -1) / 2), 0, 0);
-              
+                x = p.x * trackball_speed * -1;
+                y = p.y * trackball_speed * -1;
             }
+            bleKeyboard.mouse_move(x / 40, y / 40, 0, 0);
         }
     }
 }
