@@ -3,14 +3,13 @@
 ![AZ-66JP](/images/az66jp/az66jp.jpg)
 
 
-[商品写真](/docs/az66jp/photos/)
-
 [製品特徴](/docs/az66jp/features/)
 
 [入っている物](/docs/az66jp/builtin_parts/)
 
 [別途必要な物](/docs/az66jp/parts_prepare/)
 
+[商品写真](/docs/az66jp/photos/)
 
 
 <br>
