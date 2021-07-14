@@ -25,6 +25,7 @@
 
 
 - [組み立て手順](/docs/az66jp/build_guide/)
+- [暗記ボタンの使い方](/docs/az66jp/ankey/)
 - [キー情報](/docs/az66jp/keydata/)
 - [電源について](/docs/az66jp/power_line/)
 
