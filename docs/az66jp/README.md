@@ -1,6 +1,6 @@
 # 暗記キーボード (AZ-66JP)
 
-![AZ-66JP](/images/az66jp/az66jp.jpg)
+![AZ-66JP](/images/az66jp/az66jp_top.jpg)
 
 
 [製品特徴](/docs/az66jp/features/)
