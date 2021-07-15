@@ -36,8 +36,8 @@
     </td>
   </tr>
   <tr>
-    <td><img src="/images/az66jp/led_setting_8.jpg" width="400"><br>
-    <img src="/images/az66jp/led_setting_9.jpg" width="400"></td>
+    <td><img src="/images/az66jp/led_setting_9.jpg" width="400"><br>
+    <img src="/images/az66jp/led_setting_4.jpg" width="400"></td>
     <td valign="top">
     <b>キー：</b> Fn ＋ T<br><br>
     <b>光らせ方変更</b><br>
