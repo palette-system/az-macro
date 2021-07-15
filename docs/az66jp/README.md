@@ -25,10 +25,18 @@
 
 
 - [組み立て手順](/docs/az66jp/build_guide/)
+- [設定画面の入り方](/docs/setting/az66jp/README.md)
+- [設定マニュアル](/docs/setting/README.md)
+
+<br>
+
 - [暗記ボタンの使い方](/docs/az66jp/ankey/)
 - [打鍵ヒートマップの使い方](/docs/az66jp/heatmap/)
 - [カラーLEDの設定方法](/docs/az66jp/rgbled/)
 - [キー情報](/docs/az66jp/keydata/)
+
+<br>
+
 - [電源について](/docs/az66jp/power_line/)
 
 <br>
