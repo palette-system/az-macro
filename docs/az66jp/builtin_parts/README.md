@@ -42,7 +42,7 @@
   <tr>
     <td><img src="/images/az66jp/switch_spacer.jpg" width="400"></td>
     <td>電源スイッチ用スペーサー</td>
-    <td valign="center">70</td>
+    <td valign="center">1</td>
   </tr>
   <tr>
     <td><img src="/images/az66jp/consrue.jpg" width="400"></td>
@@ -52,7 +52,7 @@
   <tr>
     <td><img src="/images/az66jp/jumper.jpg" width="400"></td>
     <td>ジャンパー</td>
-    <td valign="center">1</td>
+    <td valign="center">2</td>
   </tr>
   <tr>
     <td><img src="/images/az66jp/rgb_led.jpg" width="400"></td>
