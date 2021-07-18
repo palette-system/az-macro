@@ -132,7 +132,7 @@ void Neopixel::setting_color_type() {
 
 // LEDの光らせ方変更
 void Neopixel::setting_shine_type() {
-	if (this->_setting.shine_type < 5) {
+	if (this->_setting.shine_type < 3) {
 		this->_setting.shine_type++;
 	} else {
 		this->_setting.shine_type = 0;
