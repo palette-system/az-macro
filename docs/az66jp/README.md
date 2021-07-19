@@ -18,7 +18,7 @@
 
 <br>
 【記事】 TALP キーボードブログ 様<br>
-https://talpkeyboard.net/news/60f2d7e60d4f3a210fe2a80b
+https://www.talpkeyboard.com/entry/2021/07/17/220259
 <br><br>
 
 
