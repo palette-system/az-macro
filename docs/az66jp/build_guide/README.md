@@ -294,6 +294,12 @@
 ## プレートの固定
 <table>
   <tr>
+    <td><img src="/images/az66jp/az66jp_pw_jump.jpg" width="400"></td>
+    <td valign="top">
+      PCBプレートの裏側の電源ラインを付属しているジャンパーで「VUSB」と「VIN」ショートして繋げて下さい。
+    </td>
+  </tr>
+  <tr>
     <td><img src="/images/az66jp/plate_10.jpg" width="400"></td>
     <td valign="top">
       ボトムプレートの上にPCBプレートを乗せます。
