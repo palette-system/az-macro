@@ -211,6 +211,17 @@ unsigned short BleKeyboardJIS::modifiers_release(unsigned short k) {
   return k;
 };
 
+// Shiftを離す
+void BleKeyboardJIS::shift_release() {
+  int i;
+  this->_keyReport.modifiers &= ~(0x22);
+  for (i=0; i<6; i++) {
+    if (this->_keyReport.keys[i] == 225 || this->_keyReport.keys[i] == 225) {
+      this->_keyReport.keys[i] = 0;
+    }
+  }
+}
+
 unsigned short BleKeyboardJIS::modifiers_media_press(unsigned short k) {
   if (k == 8193) { // Eject
     this->_mediaKeyReport[0] |= 0x01;
@@ -289,12 +300,27 @@ unsigned short BleKeyboardJIS::code_convert(unsigned short k)
 {
   short i = 0;
   if (this->keyboard_language == 1) {
+    // US キーボード
     while (this->_codemap_us[i]) {
       if (this->_codemap_us[i] == k) {
         return this->_codemap_us[i + 1];
       }
       i += 2;
     }
+  } else if (this->keyboard_language == 2) {
+    // 日本語キーボード(US記号)
+    if (!this->onShift()) return k; // Shift が押されていなければそのまま
+    if (k == 31) { this->shift_release(); return 47; } // 2 -> @ (Shiftを離す)
+    if (k == 35) { this->shift_release(); return 46; } // 6 -> ^ (Shiftを離す)
+    if (k == 36) { return 4131; } // 7 -> &
+    if (k == 37) { return 4148; } // 8 -> *
+    if (k == 38) { return 4133; } // 9 -> (
+    if (k == 39) { return 4134; } // 0 -> )
+    if (k == 45) { return 4231; } // - -> _
+    if (k == 4141) { return 4147; } // = -> +
+    if (k == 51) { this->shift_release(); return 52; } // ; -> : (Shiftを離す)
+    if (k == 4132) { return 4127; } // ' -> "
+    if (k == 4143) { return 4142; } // ` -> ~
   }
   return k;
 };
@@ -439,3 +465,15 @@ void BleKeyboardJIS::releaseAll(void)
   this->sendReport(&this->_keyReport);
   this->sendReport(&this->_mediaKeyReport);
 };
+
+// Shiftが押されている状態かどうか(物理的に)
+bool BleKeyboardJIS::onShift()
+{
+  int i;
+  for (i=0; i<PRESS_KEY_MAX; i++) {
+    if (press_key_list[i].key_num < 0) continue; // 押されたよデータ無ければ無視
+    if (press_key_list[i].unpress_time > 0) continue; // 離したよカウントが始まっていたら押していないので無視
+    if (press_key_list[i].key_id == 225 || press_key_list[i].key_id == 229) return true; // ShiftコードならばShiftが押されている
+  }
+  return false;
+}

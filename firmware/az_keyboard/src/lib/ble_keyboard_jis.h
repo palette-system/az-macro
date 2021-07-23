@@ -11,6 +11,8 @@
 #include "NimBLECharacteristic.h"
 
 #include "ble_callbacks.h"
+#include "../../az_common.h"
+
 
 #define JIS_SHIFT 0x1000
 #define MOUSE_CODE 0x2000
@@ -374,6 +376,7 @@ class BleKeyboardJIS
     bool isConnected(void);
     unsigned short modifiers_press(unsigned short k);
     unsigned short modifiers_release(unsigned short k);
+    void shift_release(); // Shiftを離す
     unsigned short modifiers_media_press(unsigned short k);
     unsigned short modifiers_media_release(unsigned short k);
     unsigned short code_convert(unsigned short k);
@@ -387,6 +390,7 @@ class BleKeyboardJIS
     size_t press_raw(unsigned short k);
     size_t release_raw(unsigned short k);
     void releaseAll(void);
+    bool onShift(); // Shiftが押されている状態かどうか(物理的に)
 };
 
 

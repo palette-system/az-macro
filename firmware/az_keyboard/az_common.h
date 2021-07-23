@@ -33,7 +33,7 @@
 
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000020"
+#define FIRMWARE_VERSION   "000021"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM005"
