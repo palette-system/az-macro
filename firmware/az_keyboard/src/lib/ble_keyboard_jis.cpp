@@ -216,7 +216,7 @@ void BleKeyboardJIS::shift_release() {
   int i;
   this->_keyReport.modifiers &= ~(0x22);
   for (i=0; i<6; i++) {
-    if (this->_keyReport.keys[i] == 225 || this->_keyReport.keys[i] == 225) {
+    if (this->_keyReport.keys[i] == 225 || this->_keyReport.keys[i] == 229) {
       this->_keyReport.keys[i] = 0;
     }
   }
@@ -321,6 +321,7 @@ unsigned short BleKeyboardJIS::code_convert(unsigned short k)
     if (k == 51) { this->shift_release(); return 52; } // ; -> : (Shiftを離す)
     if (k == 4132) { return 4127; } // ' -> "
     if (k == 4143) { return 4142; } // ` -> ~
+    if (k == 135) { return 4233; } // \ -> |
   }
   return k;
 };
