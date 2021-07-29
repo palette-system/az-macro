@@ -165,7 +165,8 @@ esp32wrover.build.core=esp32
 esp32wrover.build.variant=esp32
 esp32wrover.build.board=ESP32_DEV
 
-esp32wrover.build.f_cpu=240000000L
+# esp32wrover.build.f_cpu=240000000L
+esp32wrover.build.f_cpu=80000000L
 esp32wrover.build.flash_size=4MB
 esp32wrover.build.flash_freq=40m
 esp32wrover.build.flash_mode=dio

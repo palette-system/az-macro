@@ -638,6 +638,7 @@ void Display::loop_exec() {
     // this->_tft->fillRect(0, 0,  240, 50, BLACK);
     // this->_tft->setCursor(4, 4);
     // this->_tft->setTextSize(2);
+    // this->_tft->printf("%D / %D / %D\n", getXtalFrequencyMhz(), getCpuFrequencyMhz(), getApbFrequency());
     // this->_tft->printf("%D / %D\n", ESP.getHeapSize(), ESP.getFreeHeap());
     // this->_tft->printf("%D / %D\n", ESP.getPsramSize(), ESP.getFreePsram());
     // this->_tft->printf("%D / %D\n", ESP.getFlashChipSize(), ESP.getFlashChipSpeed());
