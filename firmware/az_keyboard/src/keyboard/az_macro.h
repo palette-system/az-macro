@@ -33,7 +33,7 @@
 #define WEBFOOK_BUF_SIZE 512
 
 // 設定JSONのバッファサイズ
-#define SETTING_JSON_BUF_SIZE 10240
+#define SETTING_JSON_BUF_SIZE 51200
 
 // 設定モードに入るためのキー番号
 #define SETTING_MODE_KEY 0

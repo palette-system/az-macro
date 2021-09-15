@@ -13,7 +13,7 @@ Neopixel::Neopixel() {
 
 
 // LED制御初期化
-void Neopixel::begin(short data_pin, short row_size, short col_size, int *select_layer) {
+void Neopixel::begin(short data_pin, short row_size, short col_size, int *select_layer, int8_t *led_num, int8_t *key_matrix) {
     int i;
     this->_data_pin = data_pin;
     this->_led_length = (row_size * col_size);
@@ -22,10 +22,8 @@ void Neopixel::begin(short data_pin, short row_size, short col_size, int *select
 	this->_select_layer_no = select_layer;
     this->led_buf = new int8_t[this->_led_length];
     for (i=0; i<this->_led_length; i++) { this->led_buf[i] = 0; }
-    this->led_num = new int8_t[this->_led_length];
-    for (i=0; i<this->_led_length; i++) { this->led_num[i] = -1; }
-    this->key_matrix = new int8_t[this->_led_length];
-    for (i=0; i<this->_led_length; i++) { this->key_matrix[i] = -1; }
+    this->led_num = led_num;
+    this->key_matrix = key_matrix;
 	// 消灯フラグ(最初は１回消灯させる)
 	this->_hide_flag = 1;
 	// 設定ファイル読み込み

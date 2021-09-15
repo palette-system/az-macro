@@ -281,9 +281,6 @@ void start_wifi() {
     
     //無線LAN接続AP(アクセスポイント)モード
     WiFi.mode(WIFI_AP_STA);
-    String ap_pass = setting_obj["ap"]["pass"].as<String>();
-    char ap_pass_char[32];
-    ap_pass.toCharArray(ap_pass_char, 32);
     WiFi.softAP(eep_data.ap_ssid, ap_pass_char);
 
     // DNSサーバー起動
