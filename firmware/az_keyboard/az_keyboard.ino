@@ -34,6 +34,7 @@ void setup() {
         disp->begin(tft, option_type_int);
     }
     // RGB_LEDクラス初期化
+    ESP_LOGD(LOG_TAG, "rgb_led_cls.begin %D %D %D", rgb_pin, matrix_row, matrix_col);
     if (rgb_pin > 0 && matrix_row > 0 && matrix_col > 0) {
         rgb_led_cls.begin( rgb_pin, matrix_row, matrix_col, &select_layer_no, led_num, key_matrix);
     }
@@ -50,7 +51,7 @@ void setup() {
     boot_type = eep_data.boot_mode;
     // 0番目のキーが押されていたら設定モードにする
     common_cls.key_read(); // キーの状態を取得
-    if (common_cls.input_key[SETTING_MODE_KEY]) boot_type = 1;
+    if (common_cls.input_key[SETTING_MODE_KEY] || common_cls.input_key[44]) boot_type = 1;
     // 0番目と3番目と4番目のキーが押されていて、1番目と2番目は離されていたら初期化（１，２が離されているのを確認する事で上に物が乗ってて全押しされて誤って初期化されないようにしている）
     if (common_cls.input_key[0] && !common_cls.input_key[1] && !common_cls.input_key[2] && common_cls.input_key[3] && common_cls.input_key[4]) {
         // 全てのファイルを削除

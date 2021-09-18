@@ -208,6 +208,7 @@ uint32_t Neopixel::get_lotate_color(uint8_t i) {
 
 // 消灯
 void Neopixel::hide_all() {
+	if (this->_data_pin < 0) return; // RGB_LEDが無ければ何もしない
 	int i;
 	uint32_t n = this->rgb_led->Color(0, 0, 0);
     // LEDを点灯

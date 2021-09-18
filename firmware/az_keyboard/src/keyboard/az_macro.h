@@ -32,6 +32,9 @@
 // WEBフック用のバッファサイズ
 #define WEBFOOK_BUF_SIZE 512
 
+// JSONバッファにPSRAMを使うかのフラグ
+#define SETTING_JSON_BUF_PSRAM 0
+
 // 設定JSONのバッファサイズ
 #define SETTING_JSON_BUF_SIZE 51200
 

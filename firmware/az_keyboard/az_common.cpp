@@ -427,7 +427,7 @@ int split_num(char *c) {
 // JSONデータを読み込む
 void AzCommon::load_setting_json() {
     // セッティングJSONを保持する領域
-    DynamicJsonDocument setting_doc(SETTING_JSON_BUF_SIZE);
+    SpiRamJsonDocument setting_doc(SETTING_JSON_BUF_SIZE);
     JsonObject setting_obj;
 
     // ファイルが無い場合はデフォルトファイル作成
@@ -662,9 +662,9 @@ void AzCommon::load_setting_json() {
     rgb_pin = -1;
     if (setting_obj.containsKey("rgb_pin")) rgb_pin = setting_obj["rgb_pin"].as<signed int>();
     matrix_row = -1;
-    if (setting_obj.containsKey("matrix_row")) rgb_pin = setting_obj["matrix_row"].as<signed int>();
+    if (setting_obj.containsKey("matrix_row")) matrix_row = setting_obj["matrix_row"].as<signed int>();
     matrix_col = -1;
-    if (setting_obj.containsKey("matrix_col")) rgb_pin = setting_obj["matrix_col"].as<signed int>();
+    if (setting_obj.containsKey("matrix_col")) matrix_col = setting_obj["matrix_col"].as<signed int>();
 
     led_num_length = setting_obj["led_num"].size();
     key_matrix_length = setting_obj["key_matrix"].size();
@@ -815,11 +815,11 @@ void AzCommon::pin_setup() {
     // output ピン設定 (colで定義されているピンを全てoutputにする)
     int i;
     for (i=0; i<col_len; i++) {
-        pinMode(col_list[i], OUTPUT_OPEN_DRAIN);
+        if (!AZ_DEBUG_MODE || (col_list[i] != 1 && col_list[i] != 3)) pinMode(col_list[i], OUTPUT_OPEN_DRAIN);
     }
     // row で定義されているピンを全てinputにする
     for (i=0; i<row_len; i++) {
-        pinMode(row_list[i], INPUT_PULLUP);
+        if (!AZ_DEBUG_MODE || (row_list[i] != 1 && row_list[i] != 3)) pinMode(row_list[i], INPUT_PULLUP);
     }
     // direct(スイッチ直接続)で定義されているピンを全てinputにする
     for (i=0; i<direct_len; i++) {
@@ -1006,7 +1006,7 @@ void AzCommon::key_read(void) {
         // 対象のcolピンのみ lowにする
         for (j=0; j<col_len; j++) {
             if (i == j) { s = 0; } else { s = 1; }
-            digitalWrite(col_list[j], s);
+            if (!AZ_DEBUG_MODE || (col_list[j] != 1 && col_list[j] != 3)) digitalWrite(col_list[j], s);
         }
         delayMicroseconds(50);
         // row の分キー入力チェック

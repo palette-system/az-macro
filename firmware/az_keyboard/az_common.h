@@ -33,7 +33,7 @@
 
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000023"
+#define FIRMWARE_VERSION   "000024"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM005"
@@ -47,6 +47,7 @@
 // 打鍵数を自動保存するかどうかの設定を保存するファイルパス
 #define  KEY_COUNT_AUTO_SAVE_PATH  "/key_count_auto_save"
 
+#define  AZ_DEBUG_MODE 0
 
 // 今押されているボタンの情報
 struct press_key_data {
@@ -107,6 +108,32 @@ struct setting_wifi {
     char *pass;
 };
 
+
+// ArduinoJSON SPRAM用の定義
+struct SpiRamAllocator {
+    void* allocate(size_t size) {
+        if (SETTING_JSON_BUF_PSRAM) {
+            return heap_caps_malloc(size, MALLOC_CAP_SPIRAM);
+        } else {
+            return malloc(size);
+        }
+    }
+    void deallocate(void* pointer) {
+        if (SETTING_JSON_BUF_PSRAM) {
+            heap_caps_free(pointer);
+        } else {
+            free(pointer);
+        }
+    }
+    void* reallocate(void* ptr, size_t new_size) {
+        if (SETTING_JSON_BUF_PSRAM) {
+            return heap_caps_realloc(ptr, new_size, MALLOC_CAP_SPIRAM);
+        } else {
+            return realloc(ptr, new_size);
+        }
+    }
+};
+using SpiRamJsonDocument = BasicJsonDocument<SpiRamAllocator>;
 
 // クラスの定義
 class AzCommon

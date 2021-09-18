@@ -87,6 +87,7 @@ void Ankey::input_start() {
 void Ankey::input_end() {
 	int i, data_size;
 	data_size = this->_data_index * sizeof(ankey_data);
+	ESP_LOGD(LOG_TAG, "ankey input_end 1: %D", data_size);
 	// 暗記終了
 	this->ankey_flag = 0; // 処理なし
 	this->_data_index = 0;
@@ -94,10 +95,13 @@ void Ankey::input_end() {
     if (common_cls.on_tft_unit()) {
     	disp->view_daken_key_reset();
     }
+	ESP_LOGD(LOG_TAG, "ankey input_end 2");
 	// 入力状態をリセット
 	this->_azkb->press_data_reset();
+	ESP_LOGD(LOG_TAG, "ankey input_end 3: %D %D", this->ankey_layer_id, this->ankey_key_num);
 	// 記憶データをファイルに出力
 	setting_key_press key_set = common_cls.get_key_setting(this->ankey_layer_id, this->ankey_key_num); // 暗記キーの設定情報取得
+	ESP_LOGD(LOG_TAG, "ankey input_end : %S\r\n", key_set.data);
 	String fpath = "/" + String(key_set.data);
 	File fp = SPIFFS.open(fpath, "w");
 	if (!fp) {
@@ -166,6 +170,7 @@ void Ankey::output_end() {
 
 // 暗記ボタン押された
 void Ankey::ankey_down(short layer_id, int key_num) {
+	ESP_LOGD(LOG_TAG, "ankey ankey_down 1: %D %D %D", layer_id, key_num, this->ankey_flag);
 	// 暗記入力中は他の暗記キー全て無視
 	if (this->ankey_flag == 2) return;
 	// 暗記中
@@ -183,8 +188,10 @@ void Ankey::ankey_down(short layer_id, int key_num) {
 
 // 暗記ボタン離された
 void Ankey::ankey_up(short layer_id, int key_num) {
+	ESP_LOGD(LOG_TAG, "ankey ankey_up 1: %D %D %D", layer_id, key_num, this->ankey_flag);
 	// 暗記中で暗記開始したボタンなら暗記終了。それ以外の暗記ボタンは無視
 	if (this->ankey_flag == 1 && this->ankey_layer_id == layer_id && this->ankey_key_num == key_num) {
+		ESP_LOGD(LOG_TAG, "ankey ankey_up -> input_end");
 		this->input_end();
 		this->ankey_count = 0;
 		return;
