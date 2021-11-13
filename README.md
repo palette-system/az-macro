@@ -58,6 +58,7 @@ https://do-gugan.com/~furuta/archives/2021/05/az-macro_1.html
 - [WEBHookマニュアル](/docs/webhook/)
 - [ファームウェアの更新手順](/docs/firmware_update/)
 - [入力できるキーの一覧](/docs/key_list/)
+- [トラックボールユニットの設定](/docs/track_unit/)
 <br><br>
 
 
