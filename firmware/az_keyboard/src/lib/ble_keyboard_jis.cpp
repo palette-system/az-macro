@@ -11,6 +11,7 @@
 // コールバッククラス
 static DescriptorCallbacks dscCallbacks;
 static CharacteristicCallbacks chrCallbacks;
+static RemapDescriptorCallbacks RemapDscCallbacks;
 
 // コンストラクタ
 BleKeyboardJIS::BleKeyboardJIS(std::string deviceName, std::string deviceManufacturer)
@@ -77,10 +78,8 @@ void BleKeyboardJIS::taskServer(void* pvParameter)
     bleKeyboardInstance->pDeviceInfoService = bleKeyboardInstance->pServer->createService("180A"); // <-デバイスインフォのUUID
     bleKeyboardInstance->pPnpCharacteristic = bleKeyboardInstance->pDeviceInfoService->createCharacteristic("2A50", NIMBLE_PROPERTY::READ);
     uint8_t sig = 0x02;
-    uint16_t vid = 0xe502;
-    uint16_t pid = 0xa111;
     uint16_t version = 0x0210; 
-    uint8_t pnp[] = { sig, (uint8_t) (vid >> 8), (uint8_t) vid, (uint8_t) (pid >> 8), (uint8_t) pid, (uint8_t) (version >> 8), (uint8_t) version };
+    uint8_t pnp[] = { sig, (uint8_t) (hid_vid >> 8), (uint8_t) hid_vid, (uint8_t) (hid_pid >> 8), (uint8_t) hid_pid, (uint8_t) (version >> 8), (uint8_t) version };
     bleKeyboardInstance->pPnpCharacteristic->setValue(pnp, sizeof(pnp));
     bleKeyboardInstance->pPnpCharacteristic->setCallbacks(&chrCallbacks);
 
@@ -157,6 +156,24 @@ void BleKeyboardJIS::taskServer(void* pvParameter)
     bleKeyboardInstance->pBatteryLevelDescriptor->setNamespace(1);
     bleKeyboardInstance->pBatteryLevelDescriptor->setUnit(0x27ad);
     bleKeyboardInstance->pBatteryLevelDescriptor->setCallbacks(&dscCallbacks);
+
+
+    // remap Input
+    bleKeyboardInstance->pInputCharacteristic4 = bleKeyboardInstance->pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC); // Report
+    bleKeyboardInstance->pDesc5 = bleKeyboardInstance->pInputCharacteristic4->createDescriptor( "2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20); // Report Reference
+    uint8_t desc5_val[] = { INPUT_REP_REF_RAW_ID, 0x01 }; // Report ID 4 を Input に設定
+    bleKeyboardInstance->pDesc5->setValue((uint8_t*) desc5_val, 2);
+    bleKeyboardInstance->pDesc5->setCallbacks(&RemapDscCallbacks);
+
+
+    // remap Output
+    RemapOutputCallbacks* remapOutputClass = new RemapOutputCallbacks();
+    remapOutputClass->pInputCharacteristic = bleKeyboardInstance->pInputCharacteristic4;
+    bleKeyboardInstance->pOutputCharacteristic2 = bleKeyboardInstance->pHidService->createCharacteristic("2A4D", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+    bleKeyboardInstance->pOutputCharacteristic2->setCallbacks(remapOutputClass);
+    bleKeyboardInstance->pDesc6 = bleKeyboardInstance->pOutputCharacteristic2->createDescriptor("2908", NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC, 20);
+    uint8_t desc6_val[] = { INPUT_REP_REF_RAW_ID, 0x02}; // Report ID 4 を Output に設定
+    bleKeyboardInstance->pDesc6->setValue((uint8_t*) desc6_val, 2);
 
 
     /** Start the services when finished creating all Characteristics and Descriptors */

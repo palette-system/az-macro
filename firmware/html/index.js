@@ -562,9 +562,7 @@ mst.get_key_setting_num = function(key_id) {
     // 設定データが無ければデフォルトを設定
     if (!mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + key_id]) {
         mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + key_id] = {
-            "press": {"action_type": 0}, // 処理なし
-            "long_press": {},
-            "long_press_time": 0
+            "press": {"action_type": 0} // 処理なし
         };
     }
     // 設定データを返す
@@ -636,6 +634,15 @@ mst.get_layer_name = function(layer_no) {
     return mst.setting_data.layers["layer_" + layer_no].name;
 };
 
+// レイヤー切り替えタイプの名前を取得
+mst.get_layer_type_name = function(layer_type) {
+    var i;
+    for (i in mst.layer_move_type_list) {
+        if (mst.layer_move_type_list[i].key == layer_type) return mst.layer_move_type_list[i].value;
+    }
+    return "";
+};
+
 // 入力タイプ選択(データが無い場合はここでデフォルトのデータを入れる)
 mst.select_input_type = function() {
     var i, l = [];
@@ -654,12 +661,16 @@ mst.select_input_type = function() {
                 mst.key_edit_data.press.key = [4];
                 mst.key_edit_data.press.repeat_interval = 51;
             }
+            if (!("hold" in mst.key_edit_data.press)) {
+                mst.key_edit_data.press.hold = 0;
+            }
         } else if (mst.key_edit_data.press.action_type == 2) {
             // テキスト入力
             if (!("text" in mst.key_edit_data.press)) mst.key_edit_data.press.text = "";
         } else if (mst.key_edit_data.press.action_type == 3) {
             // レイヤー切り替え
             if (!("layer" in mst.key_edit_data.press)) mst.key_edit_data.press.layer = 0;
+            if (!("layer_type" in mst.key_edit_data.press)) mst.key_edit_data.press.layer_type = 0x51;
         } else if (mst.key_edit_data.press.action_type == 4) {
             // WEBフック
             if (!("webhook" in mst.key_edit_data.press)) mst.key_edit_data.press.webhook = {"url": "http://palette-system.com/ct/", "header": [], "post": "", "keyoutput": 0};
@@ -695,10 +706,49 @@ mst.select_input_key = function(num) {
     });
 };
 
+// HOLDキー選択用リスト作成
+mst.get_hold_key_list = function() {
+    var i;
+    var m = obj_clone(mst.hold_list);
+    var x = mst.get_layer_list();
+    for (i in x) {
+        m.push({"key": 0x40 + parseInt(x[i].key), "value": x[i].value});
+    }
+    m.push({"key": 0x56, "value": "SwapHand"});
+    return m;
+};
+
+// HOLDキー名前取得
+mst.get_hold_key_name = function(k) {
+    var i;
+    var m = mst.get_hold_key_list();
+    for (i in m) {
+        if (k == m[i].key) return m[i].value;
+    }
+    return "";
+};
+
+// HOLDキー選択
+mst.select_hold_key = function() {
+    var m = mst.get_hold_key_list();
+    mst.select_exec(m, mst.key_edit_data.press.hold, function(select_key) {
+        mst.key_edit_data.press.hold = parseInt(select_key);
+        mst.view_key_setting(mst.key_edit_kid);
+    });
+};
+
 // 切り替えレイヤーの選択
 mst.select_change_layer = function() {
     mst.select_exec(mst.get_layer_list(), mst.key_edit_data.press.layer+"", function(select_key) {
         mst.key_edit_data.press.layer = parseInt(select_key);
+        mst.view_key_setting(mst.key_edit_kid);
+    });
+};
+
+// レイヤーの切り替え方選択
+mst.select_change_layer_type = function() {
+    mst.select_exec(mst.layer_move_type_list, mst.key_edit_data.press.layer_type, function(select_key) {
+        mst.key_edit_data.press.layer_type = parseInt(select_key);
         mst.view_key_setting(mst.key_edit_kid);
     });
 };
@@ -793,7 +843,14 @@ mst.view_key_setting = function(key_id) {
             s += "</td></tr>";
         }
         if (pss.repeat_interval === undefined) pss.repeat_interval = 51;
+        if (pss.hold === undefined) pss.hold = 0;
         console.log(pss);
+        s += "<tr><td colspan='2' style='padding: 20px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td colspan='2'>";
+        s += "<b>長押しキー：</b>　<font id='hold_key_val'>"+mst.get_hold_key_name(pss.hold)+"</font>";
+        s += "</td></tr><tr><td colspan='2' align='right'>";
+        s += "<a href='#' class='update_button' onClick='javascript:mst.select_hold_key(); return false;'>変更</a>";
+        s += "</td></tr>";
         s += "<tr><td colspan='2' style='padding: 20px 0;'><hr style='"+hrst+"'></td></tr>";
         s += "<tr><td colspan='2'>";
         s += "<b>連打間隔：</b>　<font id='move_repeat_interval_val'></font><br><br>";
@@ -814,8 +871,10 @@ mst.view_key_setting = function(key_id) {
         s += "<b>レイヤー：</b><br><font style='font-size: 40px;'>"+mst.get_layer_name(pss.layer)+"</font></td><td align='right'>";
         s += "<a href='#' class='update_button' onClick='javascript:mst.select_change_layer(); return false;'>変更</a>";
         s += "</td></tr>";
-        s += "<tr><td colspan='2'>";
-        s += "<br><br><font style='font-size: 30px;'>※ このキーを押している間、指定したレイヤーの動作に切り替わります。</font><br><br>";
+        s += "<tr><td colspan='2' style='padding: 20px 0;'><hr style='"+hrst+"'></td></tr>";
+        s += "<tr><td>";
+        s += "<b>切り替え方：</b><br><font style='font-size: 20px;'>"+mst.get_layer_type_name(pss.layer_type)+"</font></td><td align='right'>";
+        s += "<a href='#' class='update_button' onClick='javascript:mst.select_change_layer_type(); return false;'>変更</a>";
         s += "</td></tr>";
     } else if (at == 4) {
         // WEBフック
@@ -997,29 +1056,33 @@ mst.key_setting_btn_click = function(type_id) {
     // 決定ならば設定データ更新
     var s;
     if (type_id == 1) {
-        s = {"action_type": mst.key_edit_data.press.action_type};
-        if (s.action_type == 1) { // 通常キー入力
-            s.key =  mst.key_edit_data.press.key;
-            s.repeat_interval = $("move_repeat_interval").value
-        } else if (s.action_type == 2) { // テキスト入力
-            s.text =  mst.key_edit_data.press.text;
-        } else if (s.action_type == 3) { // レイヤー切り替え
-            s.layer =  mst.key_edit_data.press.layer;
-        } else if (s.action_type == 4) { // WEBフック
+        s = {
+            "press": {"action_type": mst.key_edit_data.press.action_type, "hold": 0}
+        };
+        if (s.press.action_type == 1) { // 通常キー入力
+            s.press.key =  mst.key_edit_data.press.key;
+            s.press.hold = mst.key_edit_data.press.hold;
+            s.press.repeat_interval = $("move_repeat_interval").value
+        } else if (s.press.action_type == 2) { // テキスト入力
+            s.press.text =  mst.key_edit_data.press.text;
+        } else if (s.press.action_type == 3) { // レイヤー切り替え
+            s.press.layer =  mst.key_edit_data.press.layer;
+            s.press.layer_type =  mst.key_edit_data.press.layer_type;
+        } else if (s.press.action_type == 4) { // WEBフック
             mst.key_edit_data.press.webhook.url = $("url_text").value;
             mst.key_edit_data.press.webhook.post = $("webhook_post_text").value;
             mst.key_edit_data.press.webhook.keyoutput = parseInt($("webhook_keyoutput").value);
-            s.webhook =  mst.key_edit_data.press.webhook;
-        } else if (s.action_type == 5) { // マウス移動
-            s.move = {"x": $("move_x").value, "y": $("move_y").value, "speed": $("move_speed").value};
-        } else if (s.action_type == 6) { // 暗記ボタン
-            s.ankey_file = mst.key_edit_data.press.ankey_file;
-        } else if (s.action_type == 7) { // LED設定ボタン
-            s.led_setting_type = parseInt($("led_setting_type").value);
-        } else if (s.action_type == 8) { // 打鍵設定ボタン
-            s.dakagi_settype = parseInt($("dakagi_settype").value);
+            s.press.webhook =  mst.key_edit_data.press.webhook;
+        } else if (s.press.action_type == 5) { // マウス移動
+            s.press.move = {"x": $("move_x").value, "y": $("move_y").value, "speed": $("move_speed").value};
+        } else if (s.press.action_type == 6) { // 暗記ボタン
+            s.press.ankey_file = mst.key_edit_data.press.ankey_file;
+        } else if (s.press.action_type == 7) { // LED設定ボタン
+            s.press.led_setting_type = parseInt($("led_setting_type").value);
+        } else if (s.press.action_type == 8) { // 打鍵設定ボタン
+            s.press.dakagi_settype = parseInt($("dakagi_settype").value);
         }
-        mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + mst.key_edit_kid].press = s;
+        mst.setting_data.layers["layer_" + mst.edit_layer].keys["key_" + mst.key_edit_kid] = s;
     }
     mst.key_edit_kid = -1;
     mst.key_edit_data = null;

@@ -33,7 +33,7 @@
 
 
 // ファームウェアのバージョン文字
-#define FIRMWARE_VERSION   "000024"
+#define FIRMWARE_VERSION   "000101"
 
 // EEPROMに保存しているデータのバージョン文字列
 #define EEP_DATA_VERSION    "AZM005"
@@ -55,6 +55,7 @@ struct press_key_data {
     short layer_id; // キーを押した時のレイヤーID
     short key_num; // キー番号
     short key_id; // 送信した文字
+    short press_time; // キーを押してからどれくらい経ったか
     short unpress_time; // キーを離してからどれくらい経ったか
     short repeat_interval; // 連打の間隔
     short repeat_index; // 現在の連打カウント
@@ -83,6 +84,7 @@ struct mrom_data_set {
 struct setting_normal_input {
     uint8_t key_length;
     uint16_t *key;
+    uint16_t hold;
     short repeat_interval;
 };
 
@@ -91,6 +93,12 @@ struct setting_mouse_move {
     int16_t x;
     int16_t y;
     int16_t speed;
+};
+
+// レイヤー切り替え
+struct setting_layer_move {
+    int8_t layer_id;
+    int8_t layer_type;
 };
 
 // キーを押した時の設定
@@ -151,6 +159,9 @@ class AzCommon
         String http_request(char *url, const JsonObject &prm); // httpリクエスト送信
         bool create_setting_json(); // デフォルトの設定json作成
         void load_setting_json(); // jsonデータロード
+        void clear_keymap(); // キーマップ用に確保しているメモリを解放
+        void get_keymap(JsonObject setting_obj); // JSONデータからキーマップの情報を読み込む
+        void remap_save_setting_json(); // REMAPで受け取ったデータをJSONデータに書き込む
         void set_default_layer_no(); // デフォルトレイヤー設定
         void get_keyboard_type_int(String t); // キーボードのタイプ番号を取得
         void get_option_type_int(JsonObject setting_obj); // オプションタイプの番号を取得
@@ -184,6 +195,10 @@ class AzCommon
     private:
 
 };
+
+// hid
+extern uint16_t hid_vid;
+extern uint16_t hid_pid;
 
 // ステータスピン番号
 extern int status_pin;
@@ -261,6 +276,9 @@ extern press_key_data press_key_list[PRESS_KEY_MAX];
 // 押している最中のマウス移動
 extern press_mouse_data press_mouse_list[PRESS_MOUSE_MAX];
 
+// マウスのスクロールボタンが押されているか
+extern bool mouse_scroll_flag;
+
 // オールクリア送信フラグ
 extern int press_key_all_clear;
 
@@ -279,6 +297,11 @@ extern AzCommon common_cls;
 
 // 設定JSONオブジェクト
 extern JsonObject setting_obj;
+
+// remapに送る用のデータ
+extern uint8_t  *setting_remap;
+extern uint16_t  layer_max;
+extern uint16_t  key_max;
 
 // キーが押された時の設定
 extern uint16_t setting_length;

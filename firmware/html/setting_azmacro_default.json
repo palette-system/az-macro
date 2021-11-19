@@ -3,6 +3,8 @@
 		"pass": ""
 	},
 	"wifi": [],
+	"vendorId": "0xe502",
+	"productId": "0x0200",
 	"status_pin": 32,
 	"rgb_pin": -1,
 	"rgb_len": 0,
