@@ -41,6 +41,9 @@ https://onofuu.com/post-122/
 【ブログ】道具眼日誌 様<br>
 パーツ選び、組み立て、設定方法<br>
 https://do-gugan.com/~furuta/archives/2021/05/az-macro_1.html
+<br>
+トラックボールの組み立て、設定方法<br>
+https://do-gugan.com/~furuta/archives/2021/07/az-macro_trackball.html
 <br><br>
 
 

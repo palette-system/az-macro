@@ -17,10 +17,35 @@
 ## メディア
 
 <br>
+【動画】Daihuku Keyboard 様<br>
+組み立て、操作説明、打鍵音<br>
+https://www.youtube.com/watch?v=kJmM8BKnjaU
+<br><br>
+
+<br>
+【動画】 ゲームギーク 様<br>
+組み立て、操作説明、打鍵音<br>
+https://www.youtube.com/watch?v=-eazsS1PuPM
+<br><br>
+
+<br>
 【記事】 TALP キーボードブログ 様<br>
 https://www.talpkeyboard.com/entry/2021/07/17/220259
 <br><br>
 
+<br>
+【記事】 koktoh の雑記帳 様<br>
+https://koktoh.hatenablog.com/entry/2021/08/11/175421
+<br><br>
+
+【記事】AKIBA PC Hotline 様<br>
+https://akiba-pc.watch.impress.co.jp/docs/news/news/1341471.html
+<br><br>
+
+<br>
+【動画】 ほぼ週刊キーボードニュース 様<br>
+https://www.youtube.com/watch?v=489qCrel4ew
+<br><br>
 
 
 ## ドキュメント
