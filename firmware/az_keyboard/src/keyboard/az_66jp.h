@@ -48,3 +48,10 @@
 // 暗記ボタンで暗記できる数
 #define ANKEY_DATA_MAX_LENGTH  512
 
+// remap用 デフォルトの vid  pid
+#define BLE_HID_VID  0xE502
+#define BLE_HID_PID  0x0300
+
+// remap用 データ送信時のキー数
+#define REMAP_KEY_MAX  70
+

@@ -218,7 +218,7 @@ void AzCommon::common_start() {
     }
     // マウスのスクロールボタンが押されているか
     mouse_scroll_flag = false;
-    // Serial.begin(115200);
+    if (AZ_DEBUG_MODE) Serial.begin(115200);
 }
 
 
@@ -490,19 +490,13 @@ void AzCommon::load_setting_json() {
         hidstr = setting_obj["vendorId"].as<String>();
         hid_vid = (uint16_t) strtol(&hidstr[2], NULL, 16);
     } else {
-        hid_vid = 0x0000;
+        hid_vid = BLE_HID_VID;
     }
     if (setting_obj.containsKey("productId")) {
         hidstr = setting_obj["productId"].as<String>();
         hid_pid = (uint16_t) strtol(&hidstr[2], NULL, 16);
     } else {
-        if (keyboard_type_int == 1) {
-            hid_pid = 0x0200; // az-macro
-        } else if (keyboard_type_int == 2) {
-            hid_pid = 0x0300; // az-66jp
-        } else {
-            hid_pid = 0x0000;
-        }
+        hid_pid = BLE_HID_PID;
     }
     // デフォルトのレイヤー番号設定
     default_layer_no = setting_obj["default_layer"].as<signed int>();
@@ -542,12 +536,7 @@ void AzCommon::load_setting_json() {
     // キーの設定を取得
     // まずは設定の数を取得
     layer_max = 0;
-    key_max = (col_len * row_len) + direct_len + touch_len;
-    if (keyboard_type_int == 1) {
-        key_max = 12; // az-macro
-    } else if (keyboard_type_int == 2) {
-        key_max = 66; // az-66jp
-    }
+    key_max = REMAP_KEY_MAX;
     this->get_keymap(setting_obj);
 
 
