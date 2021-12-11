@@ -100,9 +100,7 @@ void Ankey::input_end() {
 	this->_azkb->press_data_reset();
 	ESP_LOGD(LOG_TAG, "ankey input_end 3: %D %D", this->ankey_layer_id, this->ankey_key_num);
 	// 記憶データをファイルに出力
-	setting_key_press key_set = common_cls.get_key_setting(this->ankey_layer_id, this->ankey_key_num); // 暗記キーの設定情報取得
-	ESP_LOGD(LOG_TAG, "ankey input_end : %S\r\n", key_set.data);
-	String fpath = "/" + String(key_set.data);
+	String fpath = "/A" + String(this->ankey_layer_id) + String("_") + String(this->ankey_key_num);
 	File fp = SPIFFS.open(fpath, "w");
 	if (!fp) {
 		// ファイル書込み失敗
@@ -124,8 +122,7 @@ void Ankey::input_end() {
 // 暗記したデータのキー入力開始
 void Ankey::output_start() {
 	// 記憶データをファイルから読み込む
-	setting_key_press key_set = common_cls.get_key_setting(this->ankey_layer_id, this->ankey_key_num); // 暗記キーの設定情報取得
-	String fpath = "/" + String(key_set.data);
+	String fpath = "/A" + String(this->ankey_layer_id) + String("_") + String(this->ankey_key_num);
 	File fp = SPIFFS.open(fpath, "r");
 	if (!fp) {
 		// ファイル読み込み失敗

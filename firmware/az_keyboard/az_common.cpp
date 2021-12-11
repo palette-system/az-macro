@@ -618,8 +618,6 @@ void AzCommon::clear_keymap() {
             delete[] setting_press[i].data;
         } else if (setting_press[i].action_type == 5) { // マウス移動
             delete setting_press[i].data;
-        } else if (setting_press[i].action_type == 6) { // 暗記ボタン
-            delete[] setting_press[i].data;
         } else if (setting_press[i].action_type == 7) { // LED設定ボタン
             delete setting_press[i].data;
         } else if (setting_press[i].action_type == 8) { // 打鍵設定ボタン
@@ -720,10 +718,6 @@ void AzCommon::get_keymap(JsonObject setting_obj) {
 
             } else if (setting_press[i].action_type == 6) {
                 // 暗記ボタン
-                text_str = press_obj["ankey_file"].as<String>();
-                m = text_str.length() + 1;
-                setting_press[i].data = new char[m];
-                text_str.toCharArray(setting_press[i].data, m);
 
             } else if (setting_press[i].action_type == 7) {
                 // LED設定ボタン
@@ -823,6 +817,32 @@ void AzCommon::get_keymap(JsonObject setting_obj) {
             if (mouse_move_input.y > 0) s = 0xF1;
             if (mouse_move_input.x < 0) s = 0xF2;
             if (mouse_move_input.x > 0) s = 0xF3;
+            setting_remap[m] = (s >> 8) & 0xff;
+            setting_remap[m + 1] = s & 0xff;
+        } else if (at == 6) {
+            // 暗記ボタン
+            s = 0x3001;
+            setting_remap[m] = (s >> 8) & 0xff;
+            setting_remap[m + 1] = s & 0xff;
+        } else if (at == 7) {
+            // LED 設定ボタン
+            k = *setting_press[i].data;
+            s = 0x00;
+            if (k == 0) s = 0x5cbf; // ON / OFF
+            if (k == 1) s = 0x5cbe; // 明るさアップ
+            if (k == 2) s = 0x5cbd; // 明るさダウン
+            if (k == 3) s = 0x5cc0; // 色変更
+            if (k == 4) s = 0x5cc1; // 光らせ方変更
+            setting_remap[m] = (s >> 8) & 0xff;
+            setting_remap[m + 1] = s & 0xff;
+        } else if (at == 8) {
+            // 打鍵設定ボタン
+            k = *setting_press[i].data;
+            s = 0x00;
+            if (k == 0) s = 0x3010; // サーモグラフ表示
+            if (k == 1) s = 0x3011; // 打鍵数をファイルに保存
+            if (k == 2) s = 0x3012; // 自動保存設定を変更
+            if (k == 3) s = 0x3013; // 打鍵数をファイルに保存
             setting_remap[m] = (s >> 8) & 0xff;
             setting_remap[m + 1] = s & 0xff;
         }
@@ -936,6 +956,21 @@ void AzCommon::remap_save_setting_json() {
                 if (k == 0xF6) s = 0x4004; // 中クリック
                 if (k == 0xFD) s = 0x4005; // スクロールボタン
                 keyarray_obj.add(s);
+            } else if (h == 0x30 && l == 0x01) { // 暗記ボタン
+                press_obj["action_type"] = 6; // 暗記ボタン
+            } else if (h == 0x5C && (l == 0xBD || l == 0xBE || l == 0xBF || l == 0xC0 || l == 0xC1)) { // LED設定ボタン
+                press_obj["action_type"] = 7; // LED設定ボタン
+                if (l == 0xBD) press_obj["led_setting_type"] = 2; // 明るさ ダウン
+                if (l == 0xBE) press_obj["led_setting_type"] = 1; // 明るさ アップ
+                if (l == 0xBF) press_obj["led_setting_type"] = 0; // ON / OFF
+                if (l == 0xC0) press_obj["led_setting_type"] = 3; // カラー変更
+                if (l == 0xC1) press_obj["led_setting_type"] = 4; // 光り方変更
+            } else if (h == 0x30 && l >= 0x10 && l <= 0x13) { // 打鍵設定ボタン
+                press_obj["action_type"] = 8; // 打鍵設定ボタン
+                if (l == 0x10) press_obj["dakagi_settype"] = 0; // サーモグラフ表示
+                if (l == 0x11) press_obj["dakagi_settype"] = 1; // 打鍵数をファイルに保存
+                if (l == 0x12) press_obj["dakagi_settype"] = 2; // 自動保存設定を変更
+                if (l == 0x13) press_obj["dakagi_settype"] = 3; // 打鍵数をファイルに保存
             }
         }
     }
