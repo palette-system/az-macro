@@ -1008,6 +1008,8 @@ void AzCommon::get_keyboard_type_int(String t) {
         keyboard_type_int = 1;
     } else if (t.equals("az_66jp")) {
         keyboard_type_int = 2;
+    } else if (t.equals("az_4key")) {
+        keyboard_type_int = 3;
     }
 }
 

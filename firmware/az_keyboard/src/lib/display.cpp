@@ -59,7 +59,9 @@ void Display::view_full_image(uint8_t *image_data) {
 	this->_tft->viewBMP(0, 0, this->_width, this->_height, image_data, 10);
 }
 
-// 数字を表示
+
+#if AZ_DISPLAY_ENABLE
+// 数字を表示 (ディスプレイフラグON)
 void Display::view_int(uint16_t x, uint16_t y, int v) {
 	char s[12];
 	uint8_t *set_img;
@@ -83,7 +85,11 @@ void Display::view_int(uint16_t x, uint16_t y, int v) {
 	}
 	
 }
-
+#else
+// 数字を表示 (ディスプレイフラグOFF)
+void Display::view_int(uint16_t x, uint16_t y, int v) {
+}
+#endif
 
 // データを流し込んで画像を表示する(ヘッダ)
 void Display::viewBMPspi_head() {
@@ -626,6 +632,68 @@ void Display::view_dakey_save_comp() {
 	this->_wait_index = 190;
 	this->_info_index = 200;
 	rgb_led_cls.setting_change = 0;
+}
+
+#endif
+
+
+// ディスプレイフラグがOFF
+#if !AZ_DISPLAY_ENABLE
+void Display::open_movie() {
+}
+// 設定モード画面表示
+void Display::view_setting_mode() {
+}
+// 保存中画面表示
+void Display::view_save() {
+}
+// wifi 接続中
+void Display::view_wifi_conn() {
+}
+// Webhook中
+void Display::view_webhook() {
+}
+// 暗記中
+void Display::view_ankey_now() {
+}
+// 設定の初期化が完了しました画面表示
+void Display::view_setting_init_comp() {
+}
+// 打鍵数を表示
+void Display::view_dakagi() {
+}
+// 打鍵サーモグラフを表示
+void Display::view_dakagi_thermo() {
+}
+// 打鍵ヒートマップで今押されて緑色になっている所をヒートマップカラーにする
+void Display::view_daken_key_reset() {
+}
+// 打鍵QRコードを表示
+void Display::view_dakagi_qr() {
+}
+// 待ち受け画像表示
+void Display::view_standby_image() {
+}
+// LED ステータス表示
+void Display::view_led_stat() {
+}
+// LED 明るさ設定表示
+void Display::view_led_bright() {
+}
+// LED 色設定表示
+void Display::view_led_color() {
+}
+// LED 光らせ方設定表示
+void Display::view_led_shine() {
+}
+// 打鍵自動保存設定表示
+void Display::view_dakey_auto_save() {
+}
+// Wifi接続して下さいエラー表示
+void Display::view_error_wifi_conn() {
+}
+// 打鍵数を保存しましたテキスト表示
+void Display::view_dakey_save_comp() {
 }
 
 #endif

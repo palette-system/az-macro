@@ -177,6 +177,42 @@ mst.key_pattern_list["az_66jp"] = {
 };
 
 
+// AZ 4key
+mst.key_pattern_list["az_4key"] = {
+	"name": "AZ 4key",
+	"pin": {
+		"row": [],
+		"col": [],
+		"direct": [19, 18, 21, 22],
+		"touch": []
+	},
+	"status_pin": 25,
+	"rgb_pin": 26,
+	"rgb_len": 4,
+	"size": {"width": 340, "height": 340},
+	"keys": [
+		{"id": 0, "x": 30, "y": 35, "width": 115, "height": 115 },
+		{"id": 1, "x": 183, "y": 35, "width": 115, "height": 115 },
+		{"id": 2, "x": 30, "y": 188, "width": 115, "height": 115 },
+		{"id": 3, "x": 183, "y": 188, "width": 115, "height": 115 }
+	],
+	"parts": [
+		{
+			"type": "polygon",
+			"fill_color": "#666",
+			"fill": true, // 塗りつぶし
+			"path": [[2,2], [338,2], [338,338], [2,338]]
+		},
+		{
+			"type": "polygon",
+			"line_width": 4,
+			"line_color": "black",
+			"path": [[2,2], [338,2], [338,338], [2,338]]
+		},
+	]
+};
+
+
 // オプションのリスト
 mst.option_list = {};
 

@@ -21,6 +21,7 @@
 // キーボード
 #include "src/keyboard/az_macro.h"
 // #include "src/keyboard/az_66jp.h"
+// #include "src/keyboard/az_4key.h"
 
 
 #if defined(CONFIG_ARDUHAL_ESP_LOG)
