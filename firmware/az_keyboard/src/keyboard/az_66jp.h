@@ -48,6 +48,9 @@
 // 暗記ボタンで暗記できる数
 #define ANKEY_DATA_MAX_LENGTH  512
 
+// Neopixデータ送信周波数(400 or 800)
+#define AZ_NEO_KHZ 400
+
 // ディスプレイモジュールの有無
 #define AZ_DISPLAY_ENABLE true
 

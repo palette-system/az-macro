@@ -1,0 +1,64 @@
+{
+	"ap": {
+		"pass": ""
+	},
+	"wifi": [],
+	"vendorId": "0xe502",
+	"productId": "0x0400",
+	"status_pin": 25,
+	"rgb_pin": 26,
+	"rgb_len": 4,
+	"matrix_row": 2,
+	"matrix_col": 2,
+	"led_num": [0, 1, 2, 3],
+	"key_matrix": [0, 1, 2, 3],
+	"keyboard_language": 0,
+	"keyboard_type": "az_4key",
+	"keyboard_pin": {
+		"row": [],
+		"col": [],
+		"direct": [19, 18, 21, 22],
+		"touch": []
+	},
+	"default_layer": 0,
+	"layers": {
+		"layer_0": {
+			"name": "レイヤー0",
+			"keys": {
+				"key_0": {
+					"press": {
+						"action_type": 1,
+						"key": [4]
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_1": {
+					"press": {
+						"action_type": 1,
+						"key": [5]
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_2": {
+					"press": {
+						"action_type": 1,
+						"key": [6]
+					},
+					"long_press": {},
+					"long_press_time": 0
+				},
+				"key_3": {
+					"press": {
+						"action_type": 1,
+						"key": [7]
+					},
+					"long_press": {},
+					"long_press_time": 0
+				}
+			}
+		}
+	},
+	"option_set": {"type": ""}
+}
