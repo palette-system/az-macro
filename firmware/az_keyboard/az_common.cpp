@@ -6,6 +6,9 @@ uint8_t  *setting_remap;
 uint16_t  layer_max;
 uint16_t  key_max;
 
+// remap用 キー入力テスト中フラグ
+uint16_t  remap_input_test;
+
 // キーが押された時の設定
 uint16_t setting_length;
 setting_key_press *setting_press;
@@ -219,6 +222,8 @@ void AzCommon::common_start() {
     // マウスのスクロールボタンが押されているか
     mouse_scroll_flag = false;
     if (AZ_DEBUG_MODE) Serial.begin(115200);
+    // remap用 キー入力テスト中フラグ
+    remap_input_test = 0;
 }
 
 

@@ -57,3 +57,7 @@
 // remap用 データ送信時のキー数
 #define REMAP_KEY_MAX  12
 
+// remap用col,row (remap用JSON内で定義したROWとCOL)
+#define REMAP_ROW  1
+#define REMAP_COL  12
+

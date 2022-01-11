@@ -21,6 +21,7 @@
 // キーボード
 #include "src/keyboard/az_macro.h"
 // #include "src/keyboard/az_66jp.h"
+// #include "src/keyboard/az_68us.h"
 // #include "src/keyboard/az_4key.h"
 
 
@@ -37,7 +38,7 @@
 #define FIRMWARE_VERSION   "000102"
 
 // EEPROMに保存しているデータのバージョン文字列
-#define EEP_DATA_VERSION    "AZM005"
+#define EEP_DATA_VERSION    "AZM006"
 
 // JSON のファイルパス
 #define SETTING_JSON_PATH "/setting.json"
@@ -48,7 +49,7 @@
 // 打鍵数を自動保存するかどうかの設定を保存するファイルパス
 #define  KEY_COUNT_AUTO_SAVE_PATH  "/key_count_auto_save"
 
-#define  AZ_DEBUG_MODE 0
+#define  AZ_DEBUG_MODE 1
 
 // 今押されているボタンの情報
 struct press_key_data {
@@ -303,6 +304,9 @@ extern JsonObject setting_obj;
 extern uint8_t  *setting_remap;
 extern uint16_t  layer_max;
 extern uint16_t  key_max;
+
+// remap用 キー入力テスト中フラグ
+extern uint16_t  remap_input_test;
 
 // キーが押された時の設定
 extern uint16_t setting_length;

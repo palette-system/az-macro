@@ -213,6 +213,112 @@ mst.key_pattern_list["az_4key"] = {
 };
 
 
+// AZ-68US
+mst.key_pattern_list["az_68us"] = {
+	"name": "AZ 68US",
+	"pin": {
+		"row": [32, 35, 34, 39, 36],
+		"col": [33, 25, 26, 27, 14, 12, 13, 21, 19, 18, 5, 4, 2, 15],
+		"direct": [],
+		"touch": []
+	},
+	"status_pin": -1,
+//	"rgb_pin": 23,
+	"rgb_pin": -1,
+	"rgb_len": -1,
+	"led_num": [],
+	"key_matrix": [],
+	"size": {"width": 1477, "height": 445},
+	"keys": [
+		{"id": 0, "x": 8, "y": 6, "width": 66, "height": 66 },
+		{"id": 5, "x": 98, "y": 6 , "width": 66, "height": 66 },
+		{"id": 10, "x": 189, "y": 6 , "width": 66, "height": 66 },
+		{"id": 15, "x": 279, "y": 6 , "width": 66, "height": 66 },
+		{"id": 20, "x": 370, "y": 6 , "width": 66, "height": 66 },
+		{"id": 25, "x": 460, "y": 6 , "width": 66, "height": 66 },
+		{"id": 30, "x": 551, "y": 6 , "width": 66, "height": 66 },
+		{"id": 35, "x": 642, "y": 6 , "width": 66, "height": 66 },
+		{"id": 40, "x": 733, "y": 6 , "width": 66, "height": 66 },
+		{"id": 45, "x": 824, "y": 6 , "width": 66, "height": 66 },
+		{"id": 50, "x": 914, "y": 6 , "width": 66, "height": 66 },
+		{"id": 55, "x": 1005, "y": 6 , "width": 66, "height": 66 },
+		{"id": 60, "x": 1096, "y": 6 , "width": 66, "height": 66 },
+		{"id": 65, "x": 1188, "y": 6 , "width": 130, "height": 66 },
+		{"id": 64, "x": 1397, "y": 6 , "width": 66, "height": 66 },
+
+		{"id": 1, "x": 16 , "y": 96, "width": 99, "height": 66 },
+		{"id": 6, "x": 143, "y": 96, "width": 66, "height": 66 },
+		{"id": 11, "x": 234, "y": 96, "width": 66, "height": 66 },
+		{"id": 16, "x": 324, "y": 96, "width": 66, "height": 66 },
+		{"id": 21, "x": 416, "y": 96, "width": 66, "height": 66 },
+		{"id": 26, "x": 506, "y": 96, "width": 66, "height": 66 },
+		{"id": 31, "x": 596, "y": 96, "width": 66, "height": 66 },
+		{"id": 36, "x": 688, "y": 96, "width": 66, "height": 66 },
+		{"id": 41, "x": 778, "y": 96, "width": 66, "height": 66 },
+		{"id": 46, "x": 869, "y": 96, "width": 66, "height": 66 },
+		{"id": 51, "x": 959, "y": 96, "width": 66, "height": 66 },
+		{"id": 56, "x": 1050, "y": 96, "width": 66, "height": 66 },
+		{"id": 61, "x": 1141, "y": 96, "width": 66, "height": 66 },
+		{"id": 66, "x": 1231, "y": 96, "width": 99, "height": 66 },
+		{"id": 59, "x": 1397, "y": 96 , "width": 66, "height": 66 },
+
+		{"id": 2, "x": 16, "y": 187, "width": 115, "height": 66 },
+		{"id": 7, "x": 166, "y": 187, "width": 66, "height": 66 },
+		{"id": 12, "x": 256, "y": 187, "width": 66, "height": 66 },
+		{"id": 17, "x": 347, "y": 187, "width": 66, "height": 66 },
+		{"id": 22, "x": 438, "y": 187, "width": 66, "height": 66 },
+		{"id": 27, "x": 529, "y": 187, "width": 66, "height": 66 },
+		{"id": 32, "x": 619, "y": 187, "width": 66, "height": 66 },
+		{"id": 37, "x": 710, "y": 187, "width": 66, "height": 66 },
+		{"id": 42, "x": 801, "y": 187, "width": 66, "height": 66 },
+		{"id": 47, "x": 891, "y": 187, "width": 66, "height": 66 },
+		{"id": 52, "x": 982, "y": 187, "width": 66, "height": 66 },
+		{"id": 57, "x": 1073, "y": 187, "width": 66, "height": 66 },
+		{"id": 62, "x": 1164, "y": 187, "width": 149, "height": 66 },
+		{"id": 54, "x": 1397, "y": 187, "width": 66, "height": 66 },
+
+		{"id": 3, "x": 16, "y": 278, "width": 165, "height": 66 },
+		{"id": 8, "x": 212, "y": 278, "width": 66, "height": 66 },
+		{"id": 13, "x": 302, "y": 278, "width": 66, "height": 66 },
+		{"id": 18, "x": 393, "y": 278, "width": 66, "height": 66 },
+		{"id": 23, "x": 483, "y": 278, "width": 66, "height": 66 },
+		{"id": 28, "x": 575, "y": 278, "width": 66, "height": 66 },
+		{"id": 33, "x": 665, "y": 278, "width": 66, "height": 66 },
+		{"id": 38, "x": 756, "y": 278, "width": 66, "height": 66 },
+		{"id": 43, "x": 846, "y": 278, "width": 66, "height": 66 },
+		{"id": 48, "x": 937, "y": 278, "width": 66, "height": 66 },
+		{"id": 53, "x": 1027, "y": 278, "width": 66, "height": 66 },
+		{"id": 58, "x": 1118, "y": 278, "width": 66, "height": 66 },
+		{"id": 63, "x": 1209, "y": 278, "width": 66, "height": 66 },
+		{"id": 48, "x": 1307, "y": 278, "width": 66, "height": 66 },
+
+		{"id": 4, "x": 18, "y": 369, "width": 83, "height": 66 },
+		{"id": 9, "x": 131, "y": 369, "width": 83, "height": 66 },
+		{"id": 14, "x": 244, "y": 369, "width": 83, "height": 66 },
+		{"id": 19, "x": 360, "y": 369, "width": 582, "height": 66 },
+		{"id": 24, "x": 975, "y": 369, "width": 83, "height": 66 },
+		{"id": 29, "x": 1088, "y": 369, "width": 83, "height": 66 },
+		{"id": 34, "x": 1217, "y": 369, "width": 66, "height": 66 },
+		{"id": 39, "x": 1307, "y": 369, "width": 66, "height": 66 },
+		{"id": 44, "x": 1397, "y": 369, "width": 66, "height": 66 },
+	],
+	"parts": [
+		{
+			"type": "polygon",
+			"fill_color": "#666",
+			"fill": true, // 塗りつぶし
+			"path": [[2,2], [1471,2], [1471,443], [2,443]]
+		},
+		{
+			"type": "polygon",
+			"line_width": 4,
+			"line_color": "black",
+			"path": [[2,2], [1471,2], [1471,443], [2,443]]
+		},
+	]
+};
+
+
 // オプションのリスト
 mst.option_list = {};
 

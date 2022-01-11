@@ -93,6 +93,11 @@ void AzKeyboard::start_unit() {
 
 // 前回のキーのステータスと比較して変更があった物だけ処理を実行する
 void AzKeyboard::key_action_exec() {
+    if (remap_input_test) {
+      // Serial.printf("remap_input_test: %d\n", remap_input_test);
+      remap_input_test--;
+      return;
+    }
     // 暗記データのキー入力中は何もしない
     if (ankeycls.ankey_flag == 2) return;
     // キー入力チェック

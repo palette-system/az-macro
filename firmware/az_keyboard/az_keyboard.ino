@@ -36,7 +36,7 @@ void setup() {
     // RGB_LEDクラス初期化
     ESP_LOGD(LOG_TAG, "rgb_led_cls.begin %D %D %D", rgb_pin, matrix_row, matrix_col);
     if (rgb_pin > 0 && matrix_row > 0 && matrix_col > 0) {
-        rgb_led_cls.begin( rgb_pin, matrix_row, matrix_col, &select_layer_no, led_num, key_matrix);
+        rgb_led_cls.begin( rgb_pin, matrix_row, matrix_col, &select_layer_no, led_num, key_matrix, AZ_NEO_KHZ);
     }
     // キーの入力ピンの初期化
     common_cls.pin_setup();

@@ -172,10 +172,10 @@ void RemapOutputCallbacks::onWrite(NimBLECharacteristic* me) {
 	switch (*command_id) {
 		case id_get_keyboard_value: { // 0x02 キーボードの情報を送る
 			switch (command_data[0]) {
-				case id_uptime: { // 0x01
+				case id_uptime: { // 0x01 起動してからどれくらい経ったか
 					break;
 				}
-				case id_layout_options: { // 0x02 レイアウトオプション
+				case id_layout_options: { // 0x02 レイアウトオプション（？）
 					remap_buf[2] = 0x00;
 					remap_buf[3] = 0x00;
 					remap_buf[4] = 0x00;
@@ -183,22 +183,22 @@ void RemapOutputCallbacks::onWrite(NimBLECharacteristic* me) {
 					break;
 				}
 				case id_switch_matrix_state: { // 0x03 スイッチの状態(入力テスト用)
-					remap_buf[2] = 0x00;
-					remap_buf[3] = 0x00;
-					remap_buf[4] = 0x00;
-					remap_buf[5] = 0x00;
-					m = 3;
+					for (i=2; i<data_length; i++) remap_buf[i] = 0x00;
+					m = 2;
 					for (i=0; i<key_input_length; i++) {
 						remap_buf[m] |= common_cls.input_key[i] << (i % 8);
 						if ((i %8) == 7) m++;
 					}
+					remap_input_test = 50;
 					break;
 				}
 			}
 			break;
 		}
 		case id_dynamic_keymap_set_keycode: { // 0x05 設定した内容を保存
-			m = (remap_buf[1] * key_max * 2) + (remap_buf[3] * 2);
+			m = (remap_buf[1] * REMAP_COL * REMAP_ROW  * 2) // レイヤー
+				+ (remap_buf[2] * REMAP_COL * 2) // ROW
+				+ (remap_buf[3] * 2); // COL
 			setting_remap[m] = remap_buf[4];
 			setting_remap[m + 1] = remap_buf[5];
 			remap_change_flag = 1;
