@@ -47,6 +47,11 @@ https://do-gugan.com/~furuta/archives/2021/07/az-macro_trackball.html
 <br><br>
 
 
+【ツイート　イラスト】かわなえ 様<br>
+https://twitter.com/kawai_nae/status/1494585308452585475
+<br><br>
+
+
 ## ドキュメント
   
   ※キット購入の方も、組み立て済みの方もまずは「ファームウェアの初期セットアップ」を行って下さい。
